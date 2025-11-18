@@ -1,0 +1,15 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.Login" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryDark</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/colorSecondaryDark</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryDark</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <!-- Customize your theme here. -->
+        <item name="colorOnBackground">@color/colorOnBackgroundDark</item>
+    </style>
+</resources>

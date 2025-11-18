@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".application.mvvm.view.LoginFragment">
+
+    <TextView
+        style="@style/MyTitleActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_login" />
+
+    <EditText
+        style="@style/MyEditText"
+        android:id="@+id/inputName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="username"
+        android:hint="@string/check_user"
+        android:inputType="text"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center">
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints="password"
+            android:hint="@string/password_user"
+            android:inputType="textPassword"
+            android:textSize="20sp"
+            android:textAlignment="textStart"
+            android:textStyle="normal"
+            android:textColorHint="?attr/colorOnSecondary"
+            android:layout_gravity="start"
+            android:ems="10"
+            android:maxLength="28"/>
+        <ImageButton
+            android:id="@+id/btnSeePassword"
+            style="@style/MyImageButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:contentDescription="@string/see_password"
+            android:src="@android:drawable/ic_menu_view"/>
+    </LinearLayout>
+
+    <Button
+        style="@style/MyButton"
+        android:id="@+id/btnLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"/>
+
+</LinearLayout>

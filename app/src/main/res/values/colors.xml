@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Icono Background -->
+    <color name="ic_launcher_background">#487DF4</color>
+    <!-- Color Light -->
+    <color name="colorPrimaryLight">#487DF4</color>
+    <color name="colorOnPrimaryLight">#FFFFFF</color>
+    <color name="colorSecondaryLight">#487DF4</color>
+    <color name="colorOnSecondaryLight">#000000</color>
+    <color name="colorOnBackgroundLight">#FFFFFF</color>
+    <!-- Color Dark -->
+    <color name="colorPrimaryDark">#BCDDFF</color>
+    <color name="colorOnPrimaryDark">#000000</color>
+    <color name="colorSecondaryDark">#BCDDFF</color>
+    <color name="colorOnSecondaryDark">#FFFFFF</color>
+    <color name="colorOnBackgroundDark">#000000</color>
+</resources>

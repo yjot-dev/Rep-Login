@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="title_login">INICIO DE SESION</string>
+    <string name="title_register">REGISTRO DE USUARIO</string>
+    <string name="title_recovery">CAMBIO DE CLAVE</string>
+    <string name="title_user">GESTION DE USUARIO</string>
+    <string name="name_user">NOMBRE DE USUARIO</string>
+    <string name="password_user">CLAVE DE USUARIO</string>
+    <string name="email_user">CORREO DE USUARIO</string>
+    <string name="code_user">CODIGO A VALIDAR</string>
+    <string name="check_user">NOMBRE O CORREO</string>
+    <string name="login">INICIAR SESION</string>
+    <string name="register">REGISTRAR USUARIO</string>
+    <string name="update">ACTUALIZAR USUARIO</string>
+    <string name="delete">ELIMINAR USUARIO</string>
+    <string name="logout">CERRAR SESION</string>
+    <string name="recovery">CAMBIAR CLAVE</string>
+    <string name="see_password">VER CLAVE</string>
+    <string name="code">ENVIAR CODIGO</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
