@@ -1,4 +1,4 @@
-package com.yjotdev.login.infrastructure.adapter
+package com.yjotdev.login.infrastructure.network.core
 
 import okhttp3.ResponseBody
 import retrofit2.Converter

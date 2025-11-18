@@ -1,4 +1,4 @@
-package com.yjotdev.login.infrastructure.adapter
+package com.yjotdev.login.infrastructure.network.client
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -7,8 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.yjotdev.login.BuildConfig
-import com.yjotdev.login.infrastructure.datasource.EmailApi
-import com.yjotdev.login.infrastructure.datasource.UserApi
+import com.yjotdev.login.infrastructure.network.api.EmailApi
+import com.yjotdev.login.infrastructure.network.api.UserApi
+import com.yjotdev.login.infrastructure.network.core.NullOnEmptyConverterFactory
 
 @Singleton
 class Api @Inject constructor(

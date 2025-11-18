@@ -1,13 +1,13 @@
-package com.yjotdev.login.infrastructure.repositories
+package com.yjotdev.login.infrastructure.repository
 
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.yjotdev.login.domain.entity.UserEntity
 import com.yjotdev.login.domain.port.UserPort
 import com.yjotdev.login.domain.core.Result
-import com.yjotdev.login.infrastructure.adapter.Api
-import com.yjotdev.login.infrastructure.core.safeApiCallForBody
-import com.yjotdev.login.infrastructure.core.safeApiCallForUnit
+import com.yjotdev.login.infrastructure.network.client.Api
+import com.yjotdev.login.infrastructure.network.core.safeApiCallForBody
+import com.yjotdev.login.infrastructure.network.core.safeApiCallForUnit
 /**
  * Implementación del UserPort.
  * Esta clase pertenece a la capa de Infraestructura.

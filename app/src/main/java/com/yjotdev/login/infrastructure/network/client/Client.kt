@@ -1,4 +1,4 @@
-package com.yjotdev.login.infrastructure.adapter
+package com.yjotdev.login.infrastructure.network.client
 
 import android.content.Context
 import android.util.Log

@@ -7,8 +7,8 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import com.yjotdev.login.domain.port.UserPort
 import com.yjotdev.login.domain.port.EmailPort
-import com.yjotdev.login.infrastructure.repositories.UserRepository
-import com.yjotdev.login.infrastructure.repositories.EmailRepository
+import com.yjotdev.login.infrastructure.repository.UserRepository
+import com.yjotdev.login.infrastructure.repository.EmailRepository
 
 @Module
 @InstallIn(SingletonComponent::class)

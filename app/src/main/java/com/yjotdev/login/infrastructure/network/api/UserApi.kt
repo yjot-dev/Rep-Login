@@ -1,4 +1,4 @@
-package com.yjotdev.login.infrastructure.datasource
+package com.yjotdev.login.infrastructure.network.api
 
 import retrofit2.Response
 import retrofit2.http.Body
