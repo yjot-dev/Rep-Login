@@ -26,11 +26,8 @@ class MenuFragment : Fragment(), Navigation {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Navegación interna del menú
-        binding.btnLoginMenu.setOnClickListener { navigateTo(1) }
-        binding.btnRegisterMenu.setOnClickListener { navigateTo(2) }
-        binding.btnRecoveryMenu.setOnClickListener { navigateTo(3) }
+        setupClickListeners()
         // Navegación al Login por default
         if (savedInstanceState == null) {
             navigateTo(1)
@@ -40,7 +37,6 @@ class MenuFragment : Fragment(), Navigation {
     override fun navigateTo(destination: Int) {
         val fragmentManager = childFragmentManager
         val transaction = fragmentManager.beginTransaction()
-
         val fragmentToShow = when (destination) {
             1 -> LoginFragment()
             2 -> RegisterFragment()
@@ -51,11 +47,16 @@ class MenuFragment : Fragment(), Navigation {
             }
             else -> null
         }
-
         fragmentToShow?.let {
             transaction.replace(R.id.fragmentAdmin, it)
             transaction.addToBackStack(null)
             transaction.commit()
         }
+    }
+
+    private fun setupClickListeners(){
+        binding.btnLoginMenu.setOnClickListener { navigateTo(1) }
+        binding.btnRegisterMenu.setOnClickListener { navigateTo(2) }
+        binding.btnRecoveryMenu.setOnClickListener { navigateTo(3) }
     }
 }
