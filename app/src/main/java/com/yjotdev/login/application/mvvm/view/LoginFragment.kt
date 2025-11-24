@@ -14,14 +14,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import com.yjotdev.login.R
 import dagger.hilt.android.AndroidEntryPoint
-import com.yjotdev.login.application.mvvm.viewmodel.UserViewModel
+import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.application.navigation.Navigation
 import com.yjotdev.login.databinding.FragmentLoginBinding
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-    private val viewModel: UserViewModel by activityViewModels()
+    private val viewModel: UiViewModel by activityViewModels()
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(

@@ -2,7 +2,7 @@ package com.yjotdev.login.application.mvvm.model
 
 import com.yjotdev.login.domain.entity.UserEntity
 
-data class UserModel(
+data class UiModel(
     val randomCode: Int = 0,
     val error: String? = null,
     val user: UserEntity? = null,

@@ -16,12 +16,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.yjotdev.login.R
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.databinding.FragmentRegisterBinding
-import com.yjotdev.login.application.mvvm.viewmodel.UserViewModel
+import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
 
-    private val viewModel: UserViewModel by activityViewModels()
+    private val viewModel: UiViewModel by activityViewModels()
     private lateinit var binding: FragmentRegisterBinding
 
     override fun onCreateView(

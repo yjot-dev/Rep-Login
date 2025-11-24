@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.random.Random
-import com.yjotdev.login.application.mvvm.model.UserModel
+import com.yjotdev.login.application.mvvm.model.UiModel
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.entity.EmailEntity
 import com.yjotdev.login.domain.entity.UserEntity
@@ -22,7 +22,7 @@ import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
 import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
 
 @HiltViewModel
-class UserViewModel @Inject constructor(
+class UiViewModel @Inject constructor(
     private val findUserUseCase: FindUserUseCase,
     private val insertUserUseCase: InsertUserUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
@@ -31,8 +31,8 @@ class UserViewModel @Inject constructor(
     private val emailUseCase: EmailUseCase
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(UserModel())
-    val uiState: StateFlow<UserModel> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UiModel())
+    val uiState: StateFlow<UiModel> = _uiState.asStateFlow()
 
     override fun onCleared() {
         super.onCleared()
@@ -42,7 +42,7 @@ class UserViewModel @Inject constructor(
      * Limpia el estado del ViewModel
      */
     fun cleanState() {
-        _uiState.value = UserModel()
+        _uiState.value = UiModel()
     }
     /**
      * Cambia estado del codigo aleatorio para el usuario

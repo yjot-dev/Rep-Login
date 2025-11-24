@@ -34,7 +34,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:contentDescription="@string/login"
-            android:src="@drawable/login_48" />
+            android:src="@drawable/login_70" />
 
         <ImageButton
             android:id="@+id/btnRegisterMenu"
@@ -42,7 +42,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:contentDescription="@string/register"
-            android:src="@drawable/register_48" />
+            android:src="@drawable/register_70" />
 
         <ImageButton
             android:id="@+id/btnRecoveryMenu"
@@ -50,7 +50,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:contentDescription="@string/recovery"
-            android:src="@drawable/recovery_48" />
+            android:src="@drawable/recovery_70" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

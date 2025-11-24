@@ -16,12 +16,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 import kotlinx.coroutines.launch
 import com.yjotdev.login.databinding.FragmentRecoveryBinding
-import com.yjotdev.login.application.mvvm.viewmodel.UserViewModel
+import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
 
 @AndroidEntryPoint
 class RecoveryFragment : Fragment() {
 
-    private val viewModel: UserViewModel by activityViewModels()
+    private val viewModel: UiViewModel by activityViewModels()
     private lateinit var binding: FragmentRecoveryBinding
 
     override fun onCreateView(

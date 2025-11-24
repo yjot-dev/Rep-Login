@@ -20,9 +20,9 @@
         - `view`: Contiene las UI (pantallas) de la aplicación.
             - `NombreDePantallaView.kt`
         - `viewmodel`: Contiene la lógica de UI de la aplicación.
-            - `NombreDePantallaViewModel.kt`
+            - `UiViewModel.kt`
         - `model`: Contiene los modelos de datos de la UI (Data Class, `UiState`).
-            - `NombreDePantallaModel.kt`
+            - `UiModel.kt`
     - `navigation`: Lógica de navegación.
     - **(Condicional) Si el paradigma es `UI_COMPOSE`:**
         - `components`: Composables reutilizables en varias UI.
@@ -40,9 +40,9 @@
             - `view`: Contiene las UI (pantallas) de la aplicación.
                 - `NombreDePantallaView.kt`
             - `viewmodel`: Contiene la lógica de UI de la aplicación.
-                - `NombreDePantallaViewModel.kt`
+                - `UiViewModel.kt`
             - `model`: Contiene los modelos de datos de la UI (Data Class, `UiState`).
-                - `NombreDePantallaModel.kt`
+                - `UiModel.kt`
         - `navigation`: Lógica de navegación.
         - **(Condicional) Si el paradigma es `UI_COMPOSE`:**
             - `components`: Composables reutilizables en varias UI.

@@ -14,7 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import dagger.hilt.android.AndroidEntryPoint
-import com.yjotdev.login.application.mvvm.viewmodel.UserViewModel
+import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.databinding.FragmentUserBinding
 import com.yjotdev.login.MainActivity
 import com.yjotdev.login.R
@@ -22,7 +22,7 @@ import com.yjotdev.login.R
 @AndroidEntryPoint
 class UserFragment : Fragment() {
 
-    private val viewModel: UserViewModel by activityViewModels()
+    private val viewModel: UiViewModel by activityViewModels()
     private lateinit var binding: FragmentUserBinding
 
     override fun onCreateView(
