@@ -11,13 +11,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import dagger.hilt.android.AndroidEntryPoint
+import com.yjotdev.login.R
 import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.databinding.FragmentUserBinding
-import com.yjotdev.login.MainActivity
-import com.yjotdev.login.R
 
 @AndroidEntryPoint
 class UserFragment : Fragment() {
@@ -67,7 +67,7 @@ class UserFragment : Fragment() {
 
         binding.btnLogout.setOnClickListener {
             viewModel.cleanState()
-            (requireActivity() as? MainActivity)?.replaceMenuWith(MenuFragment())
+            findNavController().navigate(R.id.action_user_to_login)
         }
     }
 

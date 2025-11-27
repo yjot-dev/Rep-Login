@@ -12,10 +12,10 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.yjotdev.login.R
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.application.navigation.Navigation
 import com.yjotdev.login.databinding.FragmentLoginBinding
 
 @AndroidEntryPoint
@@ -75,7 +75,7 @@ class LoginFragment : Fragment() {
 
                     if (uiState.wasFound) {
                         viewModel.clearFlags()
-                        (parentFragment as? Navigation)?.navigateTo(4)
+                        findNavController().navigate(R.id.action_login_to_user)
                     }
                 }
             }

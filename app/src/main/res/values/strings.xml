@@ -9,12 +9,12 @@
     <string name="email_user">CORREO DE USUARIO</string>
     <string name="code_user">CODIGO A VALIDAR</string>
     <string name="check_user">NOMBRE O CORREO</string>
-    <string name="login">INICIAR SESION</string>
-    <string name="register">REGISTRAR USUARIO</string>
+    <string name="login">INGRESAR</string>
+    <string name="register">REGISTRARSE</string>
     <string name="update">ACTUALIZAR USUARIO</string>
     <string name="delete">ELIMINAR USUARIO</string>
     <string name="logout">CERRAR SESION</string>
-    <string name="recovery">CAMBIAR CLAVE</string>
+    <string name="recovery">RECUPERAR</string>
     <string name="see_password">VER CLAVE</string>
     <string name="code">ENVIAR CODIGO</string>
     <!-- TODO: Remove or change this placeholder text -->

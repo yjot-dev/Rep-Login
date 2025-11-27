@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,77 +9,79 @@
     <TextView
         style="@style/MyTitleActivity"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:text="@string/title_user" />
 
     <EditText
-        style="@style/MyEditText"
         android:id="@+id/inputName"
+        style="@style/MyEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="username"
         android:hint="@string/name_user"
-        android:inputType="text"/>
+        android:inputType="text" />
 
     <EditText
-        style="@style/MyEditText"
         android:id="@+id/inputEmail"
+        style="@style/MyEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="emailAddress"
         android:hint="@string/email_user"
-        android:inputType="textEmailAddress"/>
+        android:inputType="textEmailAddress" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/short2_dp"
+        android:layout_marginBottom="@dimen/short2_dp"
+        android:orientation="horizontal">
+
         <EditText
             android:id="@+id/inputPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:autofillHints="password"
+            android:ems="10"
             android:hint="@string/password_user"
             android:inputType="textPassword"
-            android:textSize="20sp"
+            android:maxLength="28"
             android:textAlignment="textStart"
-            android:textStyle="normal"
             android:textColorHint="?attr/colorOnSecondary"
-            android:layout_gravity="start"
-            android:ems="10"
-            android:maxLength="28"/>
+            android:textSize="20sp"
+            android:textStyle="normal" />
+
         <ImageButton
             android:id="@+id/btnSeePassword"
             style="@style/MyImageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/short3_dp"
+            android:layout_height="@dimen/short3_dp"
             android:layout_gravity="end"
             android:contentDescription="@string/see_password"
-            android:src="@android:drawable/ic_menu_view"/>
+            android:src="@android:drawable/ic_menu_view" />
     </LinearLayout>
 
     <Button
-        style="@style/MyButton"
         android:id="@+id/btnUpdate"
+        style="@style/MyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/update"/>
+        android:text="@string/update" />
 
     <Button
-        style="@style/MyButton"
         android:id="@+id/btnDelete"
+        style="@style/MyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/delete"/>
+        android:text="@string/delete" />
 
     <Button
-        style="@style/MyButton"
         android:id="@+id/btnLogout"
+        style="@style/MyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logout"/>
+        android:text="@string/logout" />
 
 </LinearLayout>

@@ -26,8 +26,8 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/short2_dp"
+        android:layout_marginBottom="@dimen/short2_dp"
         android:layout_gravity="center">
         <EditText
             android:id="@+id/inputPassword"
@@ -46,8 +46,8 @@
         <ImageButton
             android:id="@+id/btnSeePassword"
             style="@style/MyImageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/short3_dp"
+            android:layout_height="@dimen/short3_dp"
             android:layout_gravity="end"
             android:contentDescription="@string/see_password"
             android:src="@android:drawable/ic_menu_view"/>

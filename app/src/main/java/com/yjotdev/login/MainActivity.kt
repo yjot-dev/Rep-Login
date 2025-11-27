@@ -10,21 +10,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import android.graphics.Color
 import android.os.Build
+import android.view.View
 import android.view.WindowManager
 import androidx.activity.SystemBarStyle
 import androidx.core.view.WindowCompat
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.databinding.ActivityMainBinding
-import com.yjotdev.login.application.mvvm.view.MenuFragment
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +36,24 @@ class MainActivity : AppCompatActivity() {
         // Configura la IU de la actividad
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        // Si es la primera vez que se crea, muestra el MenuFragment
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentMenu, MenuFragment())
-                .commit()
+        // Inicializa el NavController
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.fragmentNav) as NavHostFragment
+        navController = navHostFragment.navController
+        // Vincula NavController con el BottomMenu
+        binding.bottomMenu.setupWithNavController(navController)
+        // Logica del BottomMenu
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment,
+                R.id.registerFragment,
+                R.id.recoveryFragment -> {
+                    binding.bottomMenu.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.bottomMenu.visibility = View.GONE
+                }
+            }
         }
     }
 
@@ -46,12 +62,6 @@ class MainActivity : AppCompatActivity() {
         if (!hasPermissions(this)) {
             requirePermission()
         }
-    }
-
-    fun replaceMenuWith(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentMenu, fragment)
-            .commit()
     }
 
     private fun requirePermission(): Boolean{

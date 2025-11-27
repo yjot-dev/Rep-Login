@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/loginFragment"
+        android:title="@string/login"
+        android:icon="@drawable/login_70" />
+
+    <item
+        android:id="@+id/registerFragment"
+        android:title="@string/register"
+        android:icon="@drawable/register_70" />
+
+    <item
+        android:id="@+id/recoveryFragment"
+        android:title="@string/recovery"
+        android:icon="@drawable/recovery_70" />
+</menu>
