@@ -90,6 +90,14 @@
                 - `core`: Utilidades de red como `safeApiCall` o conversores.
                     - `NetworkUtils.kt`
                     - `NullOnEmptyConverterFactory.kt`
+        - **(Condicional) Si se usa Machine Learning local (ej: TensorFlow Lite, MLKit):**
+            - `ml`: Clases relacionadas con el procesamiento de modelos de IA.
+                - `source`: Clases que interactúan directamente con el intérprete (Interpreter).
+                    - `NombreDelModeloSource.kt`
+                - `model`: Modelos específicos de entrada/salida del intérprete (no confundir con Domain Entities).
+                    - `InputTensorModel.kt`
+                - `utils`: Utilidades de procesamiento de imagen (Bitmaps, tensores).
+                    - `ImageProcessorHelper.kt`
         - **(Opcional) Si la aplicación requiere servicios en segundo plano:**
             - `service`: Contiene implementaciones de `Service` de Android.
                 - `NombreDelServicio.kt`
