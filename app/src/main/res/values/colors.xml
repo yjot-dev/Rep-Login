@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Icono Background -->
-    <color name="ic_launcher_background">#487DF4</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
     <!-- Color Light -->
     <color name="colorPrimaryLight">#487DF4</color>
     <color name="colorOnPrimaryLight">#FFFFFF</color>

@@ -1,4 +1,4 @@
-# APP LOGIN
+# LOGIN
 Esta app es un prototipo de login, que cuenta con las funciones básicas: 
 Crear usuario, Editar usuario, Eliminar usuario, Recuperar clave y obtener usuario.
 

@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Login</string>
+    <string name="title_login">SIGN IN</string>
+    <string name="title_register">USER REGISTRATION</string>
+    <string name="title_recovery">PASSWORD CHANGE</string>
+    <string name="title_user">USER MANAGEMENT</string>
+    <string name="name_user">USERNAME</string>
+    <string name="password_user">USER PASSWORD</string>
+    <string name="email_user">USER EMAIL</string>
+    <string name="code_user">CODE TO VALIDATE</string>
+    <string name="check_user">USERNAME OR EMAIL</string>
+    <string name="login">LOGIN</string>
+    <string name="register">REGISTER</string>
+    <string name="update">UPDATE USER</string>
+    <string name="delete">DELETE USER</string>
+    <string name="logout">LOGOUT</string>
+    <string name="recovery">RECOVER</string>
+    <string name="see_password">SHOW PASSWORD</string>
+    <string name="code">SEND CODE</string>
+</resources>
