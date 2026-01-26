@@ -17,7 +17,7 @@ interface UserPort {
 
     /**
      * Actualiza la clave de un usuario existente.
-     * @return Result<UserEntity> que contiene el usuario si se encuentra, o un error.
+     * @return Result<Unit> que indica éxito o un error.
      */
     suspend fun changePasswordUser(email: String, password: String): Result<Unit>
 

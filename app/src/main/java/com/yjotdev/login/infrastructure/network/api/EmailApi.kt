@@ -10,6 +10,6 @@ import com.yjotdev.login.domain.entity.EmailEntity
  * ESTA interfaz pertenece a la capa de Infraestructura y define los endpoints HTTP.
  */
 interface EmailApi {
-    @POST("users/email")
+    @POST("oauth/email")
     suspend fun sendEmail(@Body email: EmailEntity): Response<Unit>
 }

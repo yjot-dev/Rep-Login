@@ -15,7 +15,7 @@ import com.yjotdev.login.infrastructure.network.core.NullOnEmptyConverterFactory
 class Api @Inject constructor(
     @ApplicationContext context: Context
 ) {
-    private val url = "https://192.168.1.20:443/api/"
+    private val url = "https://api-login-production-f93c.up.railway.app/api/"
     private val httpsClient = if (BuildConfig.DEBUG) { Client.getUnsafeClient(context) }
     else { Client.getSafeClient() }
 
