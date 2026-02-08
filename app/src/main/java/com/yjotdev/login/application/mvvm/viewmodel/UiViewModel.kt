@@ -14,6 +14,8 @@ import com.yjotdev.login.application.mvvm.model.UiModel
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.entity.EmailEntity
 import com.yjotdev.login.domain.entity.UserEntity
+import com.yjotdev.login.domain.entity.LoginEntity
+import com.yjotdev.login.domain.entity.RecoveryEntity
 import com.yjotdev.login.domain.usecase.email.EmailUseCase
 import com.yjotdev.login.domain.usecase.user.ChangePasswordUserUseCase
 import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
@@ -70,11 +72,14 @@ class UiViewModel @Inject constructor(
     /**
      * Busca al usuario en la base de datos
      **/
-    fun findUser(name: String, email: String, password: String){
+    fun findUser(nameOrEmail: String, password: String){
+        val login = LoginEntity(
+            name = nameOrEmail,
+            password = password
+        )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = findUserUseCase(name, email,  password)
-            when (result) {
+            when (val result = findUserUseCase(login)) {
                 is Result.Success -> {
                     _uiState.update {
                         it.copy(
@@ -109,8 +114,7 @@ class UiViewModel @Inject constructor(
         )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = insertUserUseCase(user)
-            when (result) {
+            when (val result = insertUserUseCase(user)) {
                 is Result.Success -> {
                     _uiState.update {
                         it.copy(
@@ -144,8 +148,7 @@ class UiViewModel @Inject constructor(
         )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = updateUserUseCase(id, user)
-            when (result) {
+            when (val result = updateUserUseCase(id, user)) {
                 is Result.Success -> {
                     _uiState.update {
                         it.copy(
@@ -174,8 +177,7 @@ class UiViewModel @Inject constructor(
         val id = uiState.value.user?.id ?: 0
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = deleteUserUseCase(id)
-            when (result) {
+            when (val result = deleteUserUseCase(id)) {
                 is Result.Success -> {
                     _uiState.update {
                         it.copy(
@@ -210,8 +212,7 @@ class UiViewModel @Inject constructor(
         )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = emailUseCase(email)
-            when (result) {
+            when (val result = emailUseCase(email)) {
                 is Result.Success -> {
                     _uiState.update {
                         it.copy(
@@ -246,10 +247,13 @@ class UiViewModel @Inject constructor(
     }
 
     private fun changePasswordUser(email: String, password: String){
+        val recovery = RecoveryEntity(
+            email = email,
+            password = password
+        )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = changePasswordUserUseCase(email, password)
-            when (result) {
+            when (val result = changePasswordUserUseCase(recovery)) {
                 is Result.Success -> {
                     _uiState.update {
                         it.copy(

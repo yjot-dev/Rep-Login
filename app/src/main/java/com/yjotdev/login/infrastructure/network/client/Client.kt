@@ -7,19 +7,25 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.io.InputStream
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
-import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
+import okhttp3.CertificatePinner
+import com.yjotdev.login.BuildConfig
 import com.yjotdev.login.R
 
 object Client {
     private val loggingInterceptor = HttpLoggingInterceptor{ msm ->
         Log.d("OkHttp", msm)
     }.apply { level = HttpLoggingInterceptor.Level.BODY }
+    private val certificatePinner = CertificatePinner.Builder()
+        .add(BuildConfig.API_DOMAIN, BuildConfig.CERT_PIN_LEAF)
+        .add(BuildConfig.API_DOMAIN, BuildConfig.CERT_PIN_INTERMEDIATE)
+        .build()
 
     /** Cliente para app en producción **/
     fun getSafeClient(): OkHttpClient = OkHttpClient.Builder()
+        .certificatePinner(certificatePinner)
         .addInterceptor(HeaderInterceptor())
         .addInterceptor(loggingInterceptor)
         .build()
@@ -30,7 +36,7 @@ object Client {
             // Leer el certificado desde res/raw
             val certificateFactory = CertificateFactory.getInstance("X.509")
             val inputStream: InputStream = context.resources.openRawResource(R.raw.mycert)
-            val certificate = certificateFactory.generateCertificate(inputStream) as X509Certificate
+            val certificate = certificateFactory.generateCertificate(inputStream)
             inputStream.close()
             // Cargar el KeyStore con certificados confiables (si tienes un certificado personalizado, cámbialo aquí)
             val keyStore: KeyStore = KeyStore.getInstance(KeyStore.getDefaultType()).apply {
@@ -38,12 +44,11 @@ object Client {
                 setCertificateEntry("my_certificate", certificate)
             }
             // Inicializar TrustManagerFactory con el KeyStore
-            val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm()).apply {
+            val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm()).apply {
                 init(keyStore)
             }
             // Obtener el TrustManager
-            val trustManagers = trustManagerFactory.trustManagers
-            val trustManager = trustManagers[0] as X509TrustManager
+            val trustManager = tmf.trustManagers[0] as X509TrustManager
             // Crear un SSLContext con el TrustManager
             val sslContext = SSLContext.getInstance("TLS").apply {
                 init(null, arrayOf(trustManager), null)

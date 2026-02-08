@@ -103,10 +103,10 @@ class UiViewModelTest {
     fun findUserSuccessUpdatesState() = runTest {
         // GIVEN
         val fakeUser = UserEntity(id = 1, name = "Test", email = "t@t.com", password = "123")
-        coEvery { findUserUseCase(any(), any(), any()) } returns Result.Success(fakeUser)
+        coEvery { findUserUseCase(any()) } returns Result.Success(fakeUser)
 
         // WHEN
-        viewModel.findUser("Test", "t@t.com", "123")
+        viewModel.findUser("Test", "123")
         testDispatcher.scheduler.advanceUntilIdle() // Esperar a que la corrutina termine
 
         // THEN
@@ -121,10 +121,10 @@ class UiViewModelTest {
     fun findUserErrorUpdatesErrorMessage() = runTest {
         // GIVEN
         val errorMessage = "Usuario no encontrado"
-        coEvery { findUserUseCase(any(), any(), any()) } returns Result.Error(Exception(errorMessage))
+        coEvery { findUserUseCase(any()) } returns Result.Error(Exception(errorMessage))
 
         // WHEN
-        viewModel.findUser("Test", "t@t.com", "123")
+        viewModel.findUser("Test", "123")
         testDispatcher.scheduler.advanceUntilIdle()
 
         // THEN
@@ -153,8 +153,8 @@ class UiViewModelTest {
     fun updateUserUsesCurrentUserId() = runTest {
         // GIVEN: Simulamos que ya buscamos un usuario y lo tenemos en el estado
         val existingUser = UserEntity(id = 55, name = "Old", email = "old@t.com", password = "old")
-        coEvery { findUserUseCase(any(), any(), any()) } returns Result.Success(existingUser)
-        viewModel.findUser("x", "x", "x")
+        coEvery { findUserUseCase(any()) } returns Result.Success(existingUser)
+        viewModel.findUser("x", "x")
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Mockeamos el update
@@ -173,8 +173,8 @@ class UiViewModelTest {
     fun deleteUserSuccessSetsWasDeleted() = runTest {
         // GIVEN: Simulamos usuario en estado
         val existingUser = UserEntity(id = 10, name = "Del", email = "d@d.com", password = "d")
-        coEvery { findUserUseCase(any(), any(), any()) } returns Result.Success(existingUser)
-        viewModel.findUser("x", "x", "x")
+        coEvery { findUserUseCase(any()) } returns Result.Success(existingUser)
+        viewModel.findUser("x", "x")
         testDispatcher.scheduler.advanceUntilIdle()
 
         coEvery { deleteUserUseCase(10) } returns Result.Success(Unit)
@@ -215,7 +215,7 @@ class UiViewModelTest {
         val code = 5678
         viewModel.setRandomCode(code)
 
-        coEvery { changePasswordUserUseCase(any(), any()) } returns Result.Success(Unit)
+        coEvery { changePasswordUserUseCase(any()) } returns Result.Success(Unit)
 
         // WHEN: Llamamos con el mismo código (en string)
         viewModel.recoveryPassword("5678", "mail@t.com", "newPass")
@@ -238,7 +238,7 @@ class UiViewModelTest {
         assertEquals("Codigo incorrecto", viewModel.uiState.value.error)
 
         // Verificamos que NO se llamó al caso de uso de cambiar contraseña
-        coVerify(exactly = 0) { changePasswordUserUseCase(any(), any()) }
+        coVerify(exactly = 0) { changePasswordUserUseCase(any()) }
     }
 
     @Test

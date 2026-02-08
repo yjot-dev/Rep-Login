@@ -53,7 +53,7 @@ class LoginFragment : Fragment() {
 
             if (nameOrEmail.isNotEmpty() && password.isNotEmpty()) {
                 // Notifica al ViewModel los nuevos datos e inicia una acción
-                viewModel.findUser(nameOrEmail, nameOrEmail, password)
+                viewModel.findUser(nameOrEmail, password)
                 viewModel.setPassword(password)
             } else {
                 Toast.makeText(context, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()

@@ -1,6 +1,8 @@
 package com.yjotdev.login.domain.port
 
 import com.yjotdev.login.domain.entity.UserEntity
+import com.yjotdev.login.domain.entity.LoginEntity
+import com.yjotdev.login.domain.entity.RecoveryEntity
 import com.yjotdev.login.domain.core.Result
 
 /**
@@ -13,13 +15,13 @@ interface UserPort {
      * Busca un usuario basado en sus credenciales.
      * @return Result<UserEntity> que contiene el usuario si se encuentra, o un error.
      */
-    suspend fun findUser(name: String, email: String, password: String): Result<UserEntity>
+    suspend fun findUser(login: LoginEntity): Result<UserEntity>
 
     /**
      * Actualiza la clave de un usuario existente.
      * @return Result<Unit> que indica éxito o un error.
      */
-    suspend fun changePasswordUser(email: String, password: String): Result<Unit>
+    suspend fun changePasswordUser(recovery: RecoveryEntity): Result<Unit>
 
     /**
      * Inserta un nuevo usuario en la fuente de datos.

@@ -7,18 +7,22 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.PATCH
+import retrofit2.http.Headers
 import com.yjotdev.login.domain.entity.UserEntity
+import com.yjotdev.login.domain.entity.LoginEntity
+import com.yjotdev.login.domain.entity.RecoveryEntity
 
 /**
  * Interfaz de Retrofit para las operaciones de la API de usuarios.
  * ESTA interfaz pertenece a la capa de Infraestructura y define los endpoints HTTP.
  */
 interface UserApi {
+    @Headers("Content-Type: application/json")
     @POST("users/login")
-    suspend fun findUser(@Body user: UserEntity): Response<UserEntity>
+    suspend fun findUser(@Body login: LoginEntity): Response<UserEntity>
 
     @PATCH("users")
-    suspend fun changePasswordUser(@Body user: UserEntity): Response<Unit>
+    suspend fun changePasswordUser(@Body recovery: RecoveryEntity): Response<Unit>
 
     @POST("users")
     suspend fun insertUser(@Body user: UserEntity): Response<Unit>

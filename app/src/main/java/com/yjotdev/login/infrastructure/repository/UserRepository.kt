@@ -3,6 +3,8 @@ package com.yjotdev.login.infrastructure.repository
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.yjotdev.login.domain.entity.UserEntity
+import com.yjotdev.login.domain.entity.LoginEntity
+import com.yjotdev.login.domain.entity.RecoveryEntity
 import com.yjotdev.login.domain.port.UserPort
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.infrastructure.network.client.Api
@@ -18,14 +20,12 @@ import com.yjotdev.login.infrastructure.network.core.safeApiCallForUnit
 class UserRepository @Inject constructor(
     private val api: Api
 ) : UserPort {
-    override suspend fun findUser(name: String, email: String, password: String): Result<UserEntity> {
-        val user = UserEntity(0, name, email, password)
-        return safeApiCallForBody { api.getUserRetrofit().findUser(user) }
+    override suspend fun findUser(login: LoginEntity): Result<UserEntity> {
+        return safeApiCallForBody { api.getUserRetrofit().findUser(login) }
     }
 
-    override suspend fun changePasswordUser(email: String, password: String): Result<Unit> {
-        val user = UserEntity(0, "", email, password)
-        return safeApiCallForUnit { api.getUserRetrofit().changePasswordUser(user) }
+    override suspend fun changePasswordUser(recovery: RecoveryEntity): Result<Unit> {
+        return safeApiCallForUnit { api.getUserRetrofit().changePasswordUser(recovery) }
     }
 
     override suspend fun insertUser(user: UserEntity): Result<Unit> {

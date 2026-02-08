@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requirePermission(): Boolean{
+    private fun requirePermission() {
         if (PackageManager.PERMISSION_GRANTED ==
             ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)){
             Toast.makeText(this, "PERMISO DE INTERNET YA OTORGADO", Toast.LENGTH_SHORT).show()
@@ -77,13 +77,6 @@ class MainActivity : AppCompatActivity() {
         }else{
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_NETWORK_STATE)
         }
-        if (PackageManager.PERMISSION_GRANTED ==
-            ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)){
-            Toast.makeText(this, "PERMISO DE ENVIAR SMS YA OTORGADO", Toast.LENGTH_SHORT).show()
-        }else{
-            requestPermissionLauncher.launch(Manifest.permission.SEND_SMS)
-        }
-        return true
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -99,8 +92,8 @@ class MainActivity : AppCompatActivity() {
     companion object{
         private val PERMISSIONS_REQUIRED = arrayOf(
             Manifest.permission.INTERNET,
-            Manifest.permission.ACCESS_NETWORK_STATE,
-            Manifest.permission.SEND_SMS)
+            Manifest.permission.ACCESS_NETWORK_STATE
+        )
         //Verifica si todos los permisos necesarios estan permitidos en esta app
         fun hasPermissions(context: Context) = PERMISSIONS_REQUIRED.all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED

@@ -15,23 +15,24 @@ import com.yjotdev.login.infrastructure.network.core.NullOnEmptyConverterFactory
 class Api @Inject constructor(
     @ApplicationContext context: Context
 ) {
-    private val url = "https://api-login-production-f93c.up.railway.app/api/"
+    private val url = if (BuildConfig.DEBUG) { "https://192.168.1.20:3000/api/" }
+                      else { "https://api-login-production-f93c.up.railway.app/api/" }
     private val httpsClient = if (BuildConfig.DEBUG) { Client.getUnsafeClient(context) }
-    else { Client.getSafeClient() }
+                              else { Client.getSafeClient() }
 
     fun getUserRetrofit(): UserApi = Retrofit.Builder()
         .baseUrl(url)
         .client(httpsClient)
-        .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(NullOnEmptyConverterFactory())
         .build()
         .create(UserApi::class.java)
 
     fun getEmailRetrofit(): EmailApi = Retrofit.Builder()
         .baseUrl(url)
         .client(httpsClient)
-        .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(NullOnEmptyConverterFactory())
         .build()
         .create(EmailApi::class.java)
 }
