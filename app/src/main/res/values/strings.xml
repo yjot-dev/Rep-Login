@@ -17,4 +17,19 @@
     <string name="recovery">RECUPERAR</string>
     <string name="see_password">VER CLAVE</string>
     <string name="code">ENVIAR CODIGO</string>
+    <string name="toast_login_success">LOGIN EXITOSO</string>
+    <string name="toast_login_error">LOGIN FALLIDO</string>
+    <string name="toast_insert_success">REGISTRO EXITOSO</string>
+    <string name="toast_insert_error">REGISTRO FALLIDO</string>
+    <string name="toast_update_success">ACTUALIZACIÓN EXITOSA</string>
+    <string name="toast_update_error">ACTUALIZACIÓN FALLIDA</string>
+    <string name="toast_delete_success">ELIMINACIÓN EXITOSA</string>
+    <string name="toast_delete_error">ELIMINACIÓN FALLIDA</string>
+    <string name="toast_emailsend_success">ENVIO DE EMAIL EXITOSO</string>
+    <string name="toast_emailsend_error">ENVIO DE EMAIL FALLIDO</string>
+    <string name="toast_code_different">CÓDIGO DIFERENTE</string>
+    <string name="toast_permission_granted">PERMISO REQUERIDO OTORGADO</string>
+    <string name="toast_permission_denied">PERMISO REQUERIDO DENEGADO</string>
+    <string name="toast_permission_1">PERMISO DE INTERNET YA OTORGADO</string>
+    <string name="toast_permission_2">PERMISO DE ESTADO DE RED YA OTORGADO</string>
 </resources>

@@ -17,4 +17,19 @@
     <string name="recovery">RECOVER</string>
     <string name="see_password">SHOW PASSWORD</string>
     <string name="code">SEND CODE</string>
+    <string name="toast_login_success">LOGIN SUCCESS</string>
+    <string name="toast_login_error">LOGIN FAILED</string>
+    <string name="toast_insert_success">REGISTER SUCCESS</string>
+    <string name="toast_insert_error">REGISTER FAILED</string>
+    <string name="toast_update_success">UPDATE SUCCESS</string>
+    <string name="toast_update_error">UPDATE FAILED</string>
+    <string name="toast_delete_success">DELETE SUCCESS</string>
+    <string name="toast_delete_error">DELETE FAILED</string>
+    <string name="toast_emailsend_success">EMAIL SEND SUCCESS</string>
+    <string name="toast_emailsend_error">EMAIL SEND FAILED</string>
+    <string name="toast_code_different">CODE DIFFERENT</string>
+    <string name="toast_permission_granted">PERMISSION REQUIRED GRANTED</string>
+    <string name="toast_permission_denied">PERMISSION REQUIRED DENIED</string>
+    <string name="toast_permission_1">INTERNET PERMISSION ALREADY GRANTED</string>
+    <string name="toast_permission_2">NETWORK STATE PERMISSION ALREADY GRANTED</string>
 </resources>

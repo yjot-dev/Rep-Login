@@ -16,17 +16,6 @@ android {
         versionCode = 3
         versionName = "2.1"
         testInstrumentationRunner = "com.yjotdev.login.yjotdev.login.CustomTestRunner"
-        // Variables globales en gradle
-        val apiDomain = project.findProperty("APP_API_DOMAIN") as? String
-            ?: error("La propiedad 'APP_API_DOMAIN' no se encontró en gradle.properties")
-        val certPinIntermediate = project.findProperty("APP_CERT_PIN_INTERMEDIATE") as? String
-            ?: error("La propiedad 'APP_CERT_PIN_INTERMEDIATE' no se encontró en gradle.properties")
-        val certPinLeaf = project.findProperty("APP_CERT_PIN_LEAF") as? String
-            ?: error("La propiedad 'APP_CERT_PIN_LEAF' no se encontró en gradle.properties")
-        // Variables en BuildConfig
-        buildConfigField("String", "API_DOMAIN", "\"$apiDomain\"")
-        buildConfigField("String", "CERT_PIN_INTERMEDIATE", "\"$certPinIntermediate\"")
-        buildConfigField("String", "CERT_PIN_LEAF", "\"$certPinLeaf\"")
     }
     signingConfigs {
         create("release") {
@@ -102,6 +91,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.contrib)

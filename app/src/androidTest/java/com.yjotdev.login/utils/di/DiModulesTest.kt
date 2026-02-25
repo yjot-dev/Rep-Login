@@ -8,8 +8,10 @@ import javax.inject.Singleton
 import com.yjotdev.login.infrastructure.di.DiModules
 import com.yjotdev.login.domain.port.UserPort
 import com.yjotdev.login.domain.port.EmailPort
+import com.yjotdev.login.domain.port.StringPort
 import com.yjotdev.login.utils.repository.FakeUserRepository
 import com.yjotdev.login.utils.repository.FakeEmailRepository
+import com.yjotdev.login.utils.repository.FakeStringRepository
 
 @Module
 @TestInstallIn(
@@ -29,4 +31,10 @@ abstract class DiModulesTest {
     abstract fun bindEmailRepository(
         impl: FakeEmailRepository
     ): EmailPort
+
+    @Binds
+    @Singleton
+    abstract fun bindFakeStringRepository(
+        impl: FakeStringRepository
+    ): StringPort
 }

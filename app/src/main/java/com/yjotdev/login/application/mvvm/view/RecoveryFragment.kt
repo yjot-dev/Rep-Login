@@ -6,15 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.yjotdev.login.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
-import kotlinx.coroutines.launch
 import com.yjotdev.login.databinding.FragmentRecoveryBinding
 import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
 
@@ -35,7 +29,6 @@ class RecoveryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
-        observeViewModelState()
     }
 
     private fun setupClickListeners() {
@@ -68,32 +61,6 @@ class RecoveryFragment : Fragment() {
                 viewModel.recoveryPassword(code, email, password)
             }else{
                 Toast.makeText(context, "Campos vacios o codigo incorrecto", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun observeViewModelState() {
-        val loadingOverlay = requireActivity().findViewById<View>(R.id.loadingOverlay)
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    loadingOverlay.isVisible = uiState.isLoading
-
-                    uiState.error?.let { errorMessage ->
-                        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
-                        viewModel.clearFlags() // Informa al ViewModel que el error ya fue mostrado
-                    }
-
-                    if(uiState.wasUpdated){
-                        Toast.makeText(context, "Clave actualizada", Toast.LENGTH_SHORT).show()
-                        viewModel.clearFlags()
-                    }
-
-                    if(uiState.wasEmailed){
-                        Toast.makeText(context, "Correo electronico enviado", Toast.LENGTH_SHORT).show()
-                        viewModel.clearFlags()
-                    }
-                }
             }
         }
     }

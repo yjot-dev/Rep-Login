@@ -20,6 +20,7 @@ class Api @Inject constructor(
     private val httpsClient = if (BuildConfig.DEBUG) { Client.getUnsafeClient(context) }
                               else { Client.getSafeClient() }
 
+    /** API Tabla Usuario **/
     fun getUserRetrofit(): UserApi = Retrofit.Builder()
         .baseUrl(url)
         .client(httpsClient)
@@ -28,6 +29,7 @@ class Api @Inject constructor(
         .build()
         .create(UserApi::class.java)
 
+    /** API Gmail **/
     fun getEmailRetrofit(): EmailApi = Retrofit.Builder()
         .baseUrl(url)
         .client(httpsClient)

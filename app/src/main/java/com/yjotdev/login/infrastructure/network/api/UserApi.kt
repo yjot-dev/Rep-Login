@@ -7,7 +7,6 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.PATCH
-import retrofit2.http.Headers
 import com.yjotdev.login.domain.entity.UserEntity
 import com.yjotdev.login.domain.entity.LoginEntity
 import com.yjotdev.login.domain.entity.RecoveryEntity
@@ -17,7 +16,6 @@ import com.yjotdev.login.domain.entity.RecoveryEntity
  * ESTA interfaz pertenece a la capa de Infraestructura y define los endpoints HTTP.
  */
 interface UserApi {
-    @Headers("Content-Type: application/json")
     @POST("users/login")
     suspend fun findUser(@Body login: LoginEntity): Response<UserEntity>
 
