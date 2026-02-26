@@ -1,11 +1,11 @@
 package com.yjotdev.login
 
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.graphics.Color
 import android.os.Build
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.SystemBarStyle
 import androidx.core.view.WindowCompat
 import androidx.activity.enableEdgeToEdge
@@ -13,10 +13,8 @@ import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.application.navigation.hasPermissions
 import com.yjotdev.login.application.navigation.observeViewModelState
 import com.yjotdev.login.application.navigation.setupAppNavigation
-import com.yjotdev.login.application.navigation.setupAppPermissions
 import com.yjotdev.login.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
@@ -36,13 +34,6 @@ class MainActivity : AppCompatActivity() {
         setupAppNavigation()
         // Observacion de estados del ViewModel
         observeViewModelState()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!hasPermissions()) {
-            setupAppPermissions()
-        }
     }
 
     private fun viewEdgeToEdge(){

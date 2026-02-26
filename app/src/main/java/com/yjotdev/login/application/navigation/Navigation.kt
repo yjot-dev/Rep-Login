@@ -1,13 +1,9 @@
 package com.yjotdev.login.application.navigation
 
-import android.Manifest
-import android.content.pm.PackageManager
+import kotlinx.coroutines.launch
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import kotlinx.coroutines.launch
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -66,41 +62,5 @@ fun MainActivity.observeViewModelState() {
                 }
             }
         }
-    }
-}
-
-fun MainActivity.setupAppPermissions() {
-    val context = this@setupAppPermissions
-    val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            Toast.makeText(context, context.getString(R.string.toast_permission_granted), Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(context, context.getString(R.string.toast_permission_denied), Toast.LENGTH_LONG).show()
-        }
-    }
-    if (PackageManager.PERMISSION_GRANTED ==
-        ContextCompat.checkSelfPermission(context, Manifest.permission.INTERNET)){
-        Toast.makeText(context, context.getString(R.string.toast_permission_1), Toast.LENGTH_SHORT).show()
-    }else{
-        requestPermissionLauncher.launch(Manifest.permission.INTERNET)
-    }
-    if (PackageManager.PERMISSION_GRANTED ==
-        ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE)){
-        Toast.makeText(context, context.getString(R.string.toast_permission_2), Toast.LENGTH_SHORT).show()
-    }else{
-        requestPermissionLauncher.launch(Manifest.permission.ACCESS_NETWORK_STATE)
-    }
-}
-
-fun MainActivity.hasPermissions(): Boolean {
-    val context = this@hasPermissions
-    val permissions = arrayOf(
-        Manifest.permission.INTERNET,
-        Manifest.permission.ACCESS_NETWORK_STATE
-    )
-    return permissions.all {
-        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
     }
 }
