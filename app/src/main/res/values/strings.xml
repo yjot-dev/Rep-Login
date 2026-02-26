@@ -28,8 +28,4 @@
     <string name="toast_emailsend_success">ENVIO DE EMAIL EXITOSO</string>
     <string name="toast_emailsend_error">ENVIO DE EMAIL FALLIDO</string>
     <string name="toast_code_different">CÓDIGO DIFERENTE</string>
-    <string name="toast_permission_granted">PERMISO REQUERIDO OTORGADO</string>
-    <string name="toast_permission_denied">PERMISO REQUERIDO DENEGADO</string>
-    <string name="toast_permission_1">PERMISO DE INTERNET YA OTORGADO</string>
-    <string name="toast_permission_2">PERMISO DE ESTADO DE RED YA OTORGADO</string>
 </resources>

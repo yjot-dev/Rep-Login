@@ -28,8 +28,4 @@
     <string name="toast_emailsend_success">EMAIL SEND SUCCESS</string>
     <string name="toast_emailsend_error">EMAIL SEND FAILED</string>
     <string name="toast_code_different">CODE DIFFERENT</string>
-    <string name="toast_permission_granted">PERMISSION REQUIRED GRANTED</string>
-    <string name="toast_permission_denied">PERMISSION REQUIRED DENIED</string>
-    <string name="toast_permission_1">INTERNET PERMISSION ALREADY GRANTED</string>
-    <string name="toast_permission_2">NETWORK STATE PERMISSION ALREADY GRANTED</string>
 </resources>
