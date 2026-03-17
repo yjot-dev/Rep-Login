@@ -10,12 +10,12 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.yjotdev.login.yjotdev.login"
+        applicationId = "com.yjotdev.login"
         minSdk = 24
         targetSdk = 35
         versionCode = 4
         versionName = "1.4"
-        testInstrumentationRunner = "com.yjotdev.login.yjotdev.login.CustomTestRunner"
+        testInstrumentationRunner = "com.yjotdev.login.CustomTestRunner"
     }
     signingConfigs {
         create("release") {
