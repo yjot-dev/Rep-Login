@@ -13,8 +13,8 @@ android {
         applicationId = "com.yjotdev.login.yjotdev.login"
         minSdk = 24
         targetSdk = 35
-        versionCode = 3
-        versionName = "2.1"
+        versionCode = 4
+        versionName = "1.4"
         testInstrumentationRunner = "com.yjotdev.login.yjotdev.login.CustomTestRunner"
     }
     signingConfigs {
