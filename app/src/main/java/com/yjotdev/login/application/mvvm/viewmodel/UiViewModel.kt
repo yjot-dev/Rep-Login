@@ -2,7 +2,6 @@ package com.yjotdev.login.application.mvvm.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yjotdev.login.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +26,7 @@ import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
 import com.yjotdev.login.domain.usecase.user.FindUserUseCase
 import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
 import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
+import com.yjotdev.login.R
 
 @HiltViewModel
 class UiViewModel @Inject constructor(
@@ -208,13 +208,13 @@ class UiViewModel @Inject constructor(
     /**
      * Envia un email al usuario
      */
-    fun sendEmail(to: String){
+    fun sendEmail(to: String, subject: String){
         val randomCode = Random.nextInt(9999 - 1000) + 1000
         setRandomCode(randomCode)
         val email = EmailEntity(
             to = to,
-            subject = "Cambiar clave",
-            text = "Su codigo de verificacion es: $randomCode"
+            subject = subject,
+            text = getString(R.string.email_message, randomCode.toString())
         )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
@@ -240,20 +240,7 @@ class UiViewModel @Inject constructor(
     /**
      * Actualiza la clave del usuario en la base de datos
      **/
-    fun recoveryPassword(code: String, email: String, password: String){
-        val currentState = _uiState.value
-        if(code == currentState.randomCode.toString()){
-            changePasswordUser(email, password)
-        }else {
-            viewModelScope.launch {
-                _eventChannel.send(UiEvent.ShowToast(
-                    getString(R.string.toast_code_different)
-                ))
-            }
-        }
-    }
-
-    private fun changePasswordUser(email: String, password: String){
+    fun changePasswordUser(email: String, password: String){
         val recovery = RecoveryEntity(
             email = email,
             password = password

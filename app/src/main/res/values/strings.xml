@@ -25,7 +25,14 @@
     <string name="toast_update_error">ACTUALIZACIÓN FALLIDA</string>
     <string name="toast_delete_success">ELIMINACIÓN EXITOSA</string>
     <string name="toast_delete_error">ELIMINACIÓN FALLIDA</string>
-    <string name="toast_emailsend_success">ENVIO DE EMAIL EXITOSO</string>
-    <string name="toast_emailsend_error">ENVIO DE EMAIL FALLIDO</string>
+    <string name="toast_emailsend_success">ENVIO DE CORREO EXITOSO</string>
+    <string name="toast_emailsend_error">ENVIO DE CORREO FALLIDO</string>
     <string name="toast_code_different">CÓDIGO DIFERENTE</string>
+    <string name="toast_empty_fields">CAMPOS VACIOS</string>
+    <string name="toast_invalid_data">DATOS INVALIDOS</string>
+    <string name="email_subject1">CAMBIAR CLAVE</string>
+    <string name="email_subject2">VERIFICAR CORREO</string>
+    <string name="email_message">SU CÓDIGO ES: %1s</string>
+    <string name="alert_dialog_validate">Validar</string>
+    <string name="alert_dialog_cancel">Cancelar</string>
 </resources>

@@ -11,6 +11,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
 import com.yjotdev.login.databinding.FragmentRecoveryBinding
 import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
+import com.yjotdev.login.R
+import com.yjotdev.login.application.utils.Helper
 
 @AndroidEntryPoint
 class RecoveryFragment : Fragment() {
@@ -43,11 +45,20 @@ class RecoveryFragment : Fragment() {
         binding.btnCode.setOnClickListener{
             val email = binding.inputEmail.text.toString()
 
-            if(email.isNotEmpty()){
-                // Notifica al ViewModel los nuevos datos e inicia una acción
-                viewModel.sendEmail(email)
-            }else{
-                Toast.makeText(context, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+            context?.let { context ->
+                if(email.isNotEmpty()){
+                    if (Helper.isValidEmail(email)) {
+                        // Notifica al ViewModel los nuevos datos e inicia una acción
+                        val subject = context.getString(R.string.email_subject1)
+                        viewModel.sendEmail(email, subject)
+                    } else {
+                        val text = context.getString(R.string.toast_invalid_data)
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    val text = context.getString(R.string.toast_empty_fields)
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -55,12 +66,28 @@ class RecoveryFragment : Fragment() {
             val code = binding.inputCode.text.toString()
             val email = binding.inputEmail.text.toString()
             val password = binding.inputPassword.text.toString()
+            val state = viewModel.uiState.value
 
-            if(code.isNotEmpty() && password.isNotEmpty()){
-                // Notifica al ViewModel los nuevos datos e inicia una acción
-                viewModel.recoveryPassword(code, email, password)
-            }else{
-                Toast.makeText(context, "Campos vacios o codigo incorrecto", Toast.LENGTH_SHORT).show()
+            context?.let { context ->
+                if(code.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()){
+                    if (Helper.isValidNumber(code)
+                        && Helper.isValidEmail(email)
+                        && Helper.isValidPassword(password)){
+                        if (code == state.randomCode.toString()) {
+                            // Notifica al ViewModel los nuevos datos e inicia una acción
+                            viewModel.changePasswordUser(email, password)
+                        } else {
+                            val text = context.getString(R.string.toast_code_different)
+                            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        val text = context.getString(R.string.toast_invalid_data)
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    val text = context.getString(R.string.toast_empty_fields)
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

@@ -330,9 +330,7 @@ class UiViewModelTest {
     fun whenRecoveryPasswordIsCalledWithCorrectCodeThenChangePasswordIsCalled() = runTest {
         // Given
         val recoveryEntity = RecoveryEntity(email = "test@test.com", password = "newPassword")
-        val code = 1234
         val successMessage = "Password updated"
-        viewModel.setRandomCode(code)
         coEvery { changePasswordUserUseCase(recoveryEntity) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
@@ -344,7 +342,7 @@ class UiViewModelTest {
         }
 
         // When
-        viewModel.recoveryPassword(code.toString(), recoveryEntity.email, recoveryEntity.password)
+        viewModel.changePasswordUser(recoveryEntity.email, recoveryEntity.password)
         advanceUntilIdle()
 
         job.cancel()
@@ -356,7 +354,6 @@ class UiViewModelTest {
     fun whenRecoveryPasswordIsCalledWithIncorrectCodeThenToastEventIsSent() = runTest {
         // Given
         val toastMessage = "Codes do not match"
-        viewModel.setRandomCode(1234)
         every { getStringUseCase(R.string.toast_code_different) } returns toastMessage
 
         // Then
@@ -367,7 +364,7 @@ class UiViewModelTest {
         }
 
         // When
-        viewModel.recoveryPassword("9999", "test@test.com", "newPassword")
+        viewModel.changePasswordUser("test@test.com", "newPassword")
         advanceUntilIdle()
 
         job.cancel()
@@ -391,7 +388,7 @@ class UiViewModelTest {
         }
 
         // When
-        viewModel.sendEmail(email)
+        viewModel.sendEmail(email, "Envio de email")
         advanceUntilIdle()
 
         job.cancel()
@@ -417,7 +414,7 @@ class UiViewModelTest {
         }
 
         // When
-        viewModel.sendEmail(email)
+        viewModel.sendEmail(email, "Envio de email")
         advanceUntilIdle()
 
         job.cancel()

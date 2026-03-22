@@ -10,6 +10,8 @@ import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.databinding.FragmentLoginBinding
+import com.yjotdev.login.application.utils.Helper
+import com.yjotdev.login.R
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -43,11 +45,20 @@ class LoginFragment : Fragment() {
             val nameOrEmail = binding.inputName.text.toString()
             val password = binding.inputPassword.text.toString()
 
-            if (nameOrEmail.isNotEmpty() && password.isNotEmpty()) {
-                // Notifica al ViewModel los nuevos datos e inicia una acción
-                viewModel.loginUser(nameOrEmail, password)
-            } else {
-                Toast.makeText(context, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+            context?.let { context ->
+                if (nameOrEmail.isNotEmpty() && password.isNotEmpty()) {
+                    if (Helper.isValidUserOrEmail(nameOrEmail)
+                        && Helper.isValidPassword(password)){
+                        // Notifica al ViewModel los nuevos datos e inicia una acción
+                        viewModel.loginUser(nameOrEmail, password)
+                    } else {
+                        val text = context.getString(R.string.toast_invalid_data)
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    val text = context.getString(R.string.toast_empty_fields)
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

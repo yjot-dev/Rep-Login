@@ -15,6 +15,8 @@ import kotlin.getValue
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.databinding.FragmentUserBinding
+import com.yjotdev.login.R
+import com.yjotdev.login.application.utils.Helper
 
 @AndroidEntryPoint
 class UserFragment : Fragment() {
@@ -50,11 +52,21 @@ class UserFragment : Fragment() {
             val email = binding.inputEmail.text.toString()
             val password = binding.inputPassword.text.toString()
 
-            if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-                // Notifica al ViewModel los nuevos datos e inicia una acción
-                viewModel.updateUser(name, email, password)
-            } else {
-                Toast.makeText(context, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+            context?.let { context ->
+                if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+                    if (Helper.isValidUser(name)
+                        && Helper.isValidEmail(email)
+                        && Helper.isValidPassword(password)){
+                        // Notifica al ViewModel los nuevos datos e inicia una acción
+                        viewModel.updateUser(name, email, password)
+                    } else {
+                        val text = context.getString(R.string.toast_invalid_data)
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    val text = context.getString(R.string.toast_empty_fields)
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
