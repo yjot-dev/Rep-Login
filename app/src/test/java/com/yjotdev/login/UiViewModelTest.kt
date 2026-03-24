@@ -353,23 +353,27 @@ class UiViewModelTest {
     @Test
     fun whenRecoveryPasswordIsCalledWithIncorrectCodeThenToastEventIsSent() = runTest {
         // Given
-        val toastMessage = "Codes do not match"
-        every { getStringUseCase(R.string.toast_code_different) } returns toastMessage
+        val recoveryEntity = RecoveryEntity(email = "test@test.com", password = "newPassword")
+        val exception = Exception("Update failed")
+        val errorMessage = "Password didn't update"
+        coEvery { changePasswordUserUseCase(recoveryEntity) } returns Result.Error(exception)
+        every { getStringUseCase(R.string.toast_update_error) } returns errorMessage
 
         // Then
         val job = launch {
             viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
+                assertEquals(UiEvent.ShowToast(errorMessage), awaitItem())
+                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
             }
         }
 
         // When
-        viewModel.changePasswordUser("test@test.com", "newPassword")
+        viewModel.changePasswordUser(recoveryEntity.email, recoveryEntity.password)
         advanceUntilIdle()
 
         job.cancel()
 
-        coVerify(exactly = 0) { changePasswordUserUseCase(any()) }
+        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryEntity) }
     }
 
     @Test

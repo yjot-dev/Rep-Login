@@ -32,7 +32,7 @@
     <string name="toast_invalid_data">INVALID DATA</string>
     <string name="email_subject1">CHANGE PASSWORD</string>
     <string name="email_subject2">VERIFY EMAIL</string>
-    <string name="email_message">YOUR CODE IS: %1s</string>
+    <string name="email_message">YOUR CODE IS: %1$d</string>
     <string name="alert_dialog_validate">Validate</string>
     <string name="alert_dialog_cancel">Cancel</string>
 </resources>

@@ -214,7 +214,7 @@ class UiViewModel @Inject constructor(
         val email = EmailEntity(
             to = to,
             subject = subject,
-            text = getString(R.string.email_message, randomCode.toString())
+            text = getString(R.string.email_message, randomCode)
         )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
