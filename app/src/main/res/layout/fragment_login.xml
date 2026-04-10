@@ -1,63 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:padding="@dimen/short1_dp"
     tools:context=".application.mvvm.view.LoginFragment">
 
-    <TextView
-        style="@style/MyTitleActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_login" />
-
-    <EditText
-        style="@style/MyEditText"
-        android:id="@+id/inputName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="username"
-        android:hint="@string/check_user"
-        android:inputType="text"/>
-
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/short2_dp"
-        android:layout_marginBottom="@dimen/short2_dp"
-        android:layout_gravity="center">
-        <EditText
-            android:id="@+id/inputPassword"
+        android:orientation="vertical">
+
+        <!-- Título -->
+        <TextView
+            style="@style/MyTitleActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autofillHints="password"
-            android:hint="@string/password_user"
-            android:inputType="textPassword"
-            android:textSize="20sp"
-            android:textAlignment="textStart"
-            android:textStyle="normal"
-            android:textColorHint="?attr/colorOnSecondary"
-            android:layout_gravity="start"
-            android:ems="10"
-            android:maxLength="28"/>
-        <ImageButton
-            android:id="@+id/btnSeePassword"
-            style="@style/MyImageButton"
-            android:layout_width="@dimen/short3_dp"
-            android:layout_height="@dimen/short3_dp"
-            android:layout_gravity="end"
-            android:contentDescription="@string/see_password"
-            android:src="@android:drawable/ic_menu_view"/>
+            android:text="@string/title_login" />
+
+        <!-- Sección del inicio de sesión -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/short1_dp"
+            app:cardElevation="@dimen/short1_dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            android:layout_margin="@dimen/short1_dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="@dimen/short1_dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:layout_marginBottom="@dimen/short1_dp"
+                    app:hintEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/MyEditText"
+                        android:id="@+id/inputName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="username"
+                        android:hint="@string/check_user"
+                        android:inputType="text"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:layout_marginBottom="@dimen/short1_dp"
+                    android:layout_gravity="center">
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            style="@style/MyEditText"
+                            android:id="@+id/inputPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="password"
+                            android:hint="@string/password_user"
+                            android:inputType="textPassword"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        style="@style/MyImageButton"
+                        android:id="@+id/btnSeePassword"
+                        android:layout_width="@dimen/short2_dp"
+                        android:layout_height="@dimen/short2_dp"
+                        android:contentDescription="@string/see_password"
+                        android:src="@drawable/show_password"/>
+                </LinearLayout>
+
+                <!-- Botón de iniciar sesión -->
+                <Button
+                    style="@style/MyButton"
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/short3_dp"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:text="@string/login"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
-
-    <Button
-        style="@style/MyButton"
-        android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login"/>
-
-</LinearLayout>
+</ScrollView>

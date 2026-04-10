@@ -8,25 +8,31 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <!-- Contenedor de navegación -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentNav"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/short1_dp"
-        android:layout_weight="1" />
-
+    <!-- Menú inferior antes del login -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomMenu"
+        android:id="@+id/bottomMenu1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_menu" />
+        app:menu="@menu/bottom_menu1" />
 
+    <!-- Menú inferior despues del login -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomMenu2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_menu2" />
+
+    <!-- Overlay de carga -->
     <include
         android:id="@+id/loadingOverlay"
         layout="@layout/loading_overlay" />

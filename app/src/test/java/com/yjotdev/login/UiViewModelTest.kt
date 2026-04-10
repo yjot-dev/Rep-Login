@@ -86,7 +86,7 @@ class UiViewModelTest {
         // Then
         val job1 = launch {
             viewModel.eventChannel.test {
-                assertEquals(UiEvent.Navigate(R.id.action_login_to_user), awaitItem())
+                assertEquals(UiEvent.Navigate(R.id.action_login_to_dashboard), awaitItem())
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }

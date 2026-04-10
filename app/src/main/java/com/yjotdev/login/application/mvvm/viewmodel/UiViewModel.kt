@@ -95,7 +95,7 @@ class UiViewModel @Inject constructor(
                         )
                     }
                     _eventChannel.send(UiEvent.Navigate(
-                        R.id.action_login_to_user
+                        R.id.action_login_to_dashboard
                     ))
                     _eventChannel.send(UiEvent.ShowToast(
                         getString(R.string.toast_login_success)

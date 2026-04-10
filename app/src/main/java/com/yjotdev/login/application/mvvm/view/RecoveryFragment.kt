@@ -18,13 +18,14 @@ import com.yjotdev.login.application.utils.Helper
 class RecoveryFragment : Fragment() {
 
     private val viewModel: UiViewModel by activityViewModels()
-    private lateinit var binding: FragmentRecoveryBinding
+    private var _binding: FragmentRecoveryBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRecoveryBinding.inflate(layoutInflater)
+        _binding = FragmentRecoveryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -33,11 +34,18 @@ class RecoveryFragment : Fragment() {
         setupClickListeners()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setupClickListeners() {
         binding.btnSeePassword.setOnClickListener {
             if(binding.inputPassword.inputType == 129){
+                binding.btnSeePassword.setImageResource(R.drawable.hide_password)
                 binding.inputPassword.inputType = 145
             }else{
+                binding.btnSeePassword.setImageResource(R.drawable.show_password)
                 binding.inputPassword.inputType = 129
             }
         }

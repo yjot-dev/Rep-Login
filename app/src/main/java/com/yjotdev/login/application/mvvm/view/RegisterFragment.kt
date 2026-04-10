@@ -21,13 +21,14 @@ import com.yjotdev.login.R
 class RegisterFragment : Fragment() {
 
     private val viewModel: UiViewModel by activityViewModels()
-    private lateinit var binding: FragmentRegisterBinding
+    private var _binding: FragmentRegisterBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRegisterBinding.inflate(layoutInflater)
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -36,29 +37,44 @@ class RegisterFragment : Fragment() {
         setupClickListeners()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setupClickListeners() {
+        val name = binding.inputName.text.toString()
+        val email = binding.inputEmail.text.toString()
+        val password = binding.inputPassword.text.toString()
+        binding.btnRegister.isEnabled = false
+
         binding.btnSeePassword.setOnClickListener {
             if(binding.inputPassword.inputType == 129){
+                binding.btnSeePassword.setImageResource(R.drawable.hide_password)
                 binding.inputPassword.inputType = 145
             }else{
+                binding.btnSeePassword.setImageResource(R.drawable.show_password)
                 binding.inputPassword.inputType = 129
             }
         }
 
-        binding.btnRegister.setOnClickListener{
-            val name = binding.inputName.text.toString()
-            val email = binding.inputEmail.text.toString()
-            val password = binding.inputPassword.text.toString()
+        binding.btnSendCode.setOnClickListener {
+            context?.let { context ->
+                // Envia un código al email del usuario
+                val subject = context.getString(R.string.email_subject2)
+                viewModel.sendEmail(email, subject)
+                showAlertDialog()
+            }
+        }
 
+        binding.btnRegister.setOnClickListener{
             context?.let { context ->
                 if(name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()){
                     if (Helper.isValidUser(name)
                         && Helper.isValidEmail(email)
                         && Helper.isValidPassword(password)){
-                        // Notifica al ViewModel los nuevos datos e inicia una acción
-                        val subject = context.getString(R.string.email_subject2)
-                        viewModel.sendEmail(email, subject)
-                        showAlertDialog(name, email, password)
+                        // Inicia una acción
+                        viewModel.insertUser(name, email, password)
                     } else {
                         val text = context.getString(R.string.toast_invalid_data)
                         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
@@ -71,7 +87,7 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun showAlertDialog(name: String, email: String, password: String) {
+    private fun showAlertDialog() {
         val state = viewModel.uiState.value
         context?.let { context ->
             // Crear un EditText para ingresar solo números
@@ -87,8 +103,8 @@ class RegisterFragment : Fragment() {
                     val code = input.text.toString()
                     if (code.isNotEmpty()) {
                         if (code == state.randomCode.toString()) {
-                            // Notifica al ViewModel los nuevos datos e inicia una acción
-                            viewModel.insertUser(name, email, password)
+                            // Inicia una acción
+                            binding.btnRegister.isEnabled = true
                             dialog.dismiss()
                         } else {
                             val text = context.getString(R.string.toast_code_different)

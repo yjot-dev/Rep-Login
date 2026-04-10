@@ -17,18 +17,21 @@ fun MainActivity.setupAppNavigation() {
     // Inicializa el NavController
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentNav) as NavHostFragment
     val navController = navHostFragment.navController
-    // Vincula NavController con el BottomMenu
-    binding.bottomMenu.setupWithNavController(navController)
+    // Vincula NavController con el BottomMenu y TopMenu
+    binding.bottomMenu1.setupWithNavController(navController)
+    binding.bottomMenu2.setupWithNavController(navController)
     // Logica del BottomMenu
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.id) {
             R.id.loginFragment,
             R.id.registerFragment,
             R.id.recoveryFragment -> {
-                binding.bottomMenu.visibility = View.VISIBLE
+                binding.bottomMenu1.visibility = View.VISIBLE
+                binding.bottomMenu2.visibility = View.GONE
             }
             else -> {
-                binding.bottomMenu.visibility = View.GONE
+                binding.bottomMenu1.visibility = View.GONE
+                binding.bottomMenu2.visibility = View.VISIBLE
             }
         }
     }
@@ -50,7 +53,7 @@ fun MainActivity.observeViewModelState() {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.eventChannel.collect { event ->
                 when (event) {
-                    // Login -> User (Revisar UiViewModel.kt lineas 87 - 89)
+                    // Login -> Dashboard (Revisar UiViewModel.kt lineas 87 - 89)
                     // User -> Login (Revisar UiViewModel.kt lineas 72 - 78)
                     is UiEvent.Navigate -> navController.navigate(event.resId)
                     // Muestra un mensaje de exito o error en el Toast

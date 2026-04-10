@@ -1,87 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:padding="@dimen/short1_dp"
     tools:context=".application.mvvm.view.UserFragment">
 
-    <TextView
-        style="@style/MyTitleActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_user" />
-
-    <EditText
-        android:id="@+id/inputName"
-        style="@style/MyEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="username"
-        android:hint="@string/name_user"
-        android:inputType="text" />
-
-    <EditText
-        android:id="@+id/inputEmail"
-        style="@style/MyEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints="emailAddress"
-        android:hint="@string/email_user"
-        android:inputType="textEmailAddress" />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/short2_dp"
-        android:layout_marginBottom="@dimen/short2_dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/inputPassword"
+        <!-- Título 1 -->
+        <TextView
+            style="@style/MyTitleActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:autofillHints="password"
-            android:ems="10"
-            android:hint="@string/password_user"
-            android:inputType="textPassword"
-            android:maxLength="28"
-            android:textAlignment="textStart"
-            android:textColorHint="?attr/colorOnSecondary"
-            android:textSize="20sp"
-            android:textStyle="normal" />
+            android:text="@string/title1_user" />
 
-        <ImageButton
-            android:id="@+id/btnSeePassword"
-            style="@style/MyImageButton"
-            android:layout_width="@dimen/short3_dp"
-            android:layout_height="@dimen/short3_dp"
-            android:layout_gravity="end"
-            android:contentDescription="@string/see_password"
-            android:src="@android:drawable/ic_menu_view" />
+        <!-- Sección de datos personales -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/short1_dp"
+            app:cardElevation="@dimen/short1_dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            android:layout_margin="@dimen/short1_dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/short1_dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:layout_marginBottom="@dimen/short1_dp"
+                    app:hintEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/MyEditText"
+                        android:id="@+id/inputName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="username"
+                        android:hint="@string/name_user"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:layout_marginBottom="@dimen/short1_dp"
+                    app:hintEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/MyEditText"
+                        android:id="@+id/inputEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="username"
+                        android:hint="@string/email_user"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:layout_marginBottom="@dimen/short1_dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            style="@style/MyEditText"
+                            android:id="@+id/inputPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="password"
+                            android:hint="@string/password_user"
+                            android:inputType="textPassword" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        style="@style/MyImageButton"
+                        android:id="@+id/btnSeePassword"
+                        android:layout_width="@dimen/short2_dp"
+                        android:layout_height="@dimen/short2_dp"
+                        android:contentDescription="@string/see_password"
+                        android:src="@drawable/show_password" />
+                </LinearLayout>
+
+                <!-- Botón de enviar código -->
+                <Button
+                    style="@style/MyButton"
+                    android:id="@+id/btnSendCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/short3_dp"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:text="@string/code"/>
+
+                <!-- Botón actualizar usuario -->
+                <Button
+                    style="@style/MyButton"
+                    android:id="@+id/btnUpdate"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/short3_dp"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:text="@string/update" />
+
+                <!-- Botón eliminar usuario -->
+                <Button
+                    style="@style/MyButton"
+                    android:id="@+id/btnDelete"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/short3_dp"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:text="@string/delete" />
+
+                <!-- Botón de cerrar sesión -->
+                <Button
+                    style="@style/MyButton"
+                    android:id="@+id/btnLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/short3_dp"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:text="@string/logout" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Título 2 -->
+        <TextView
+            style="@style/MyTitleActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title2_user" />
+
+        <!-- Sección de configuración de notificaciones -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/short1_dp"
+            app:cardElevation="@dimen/short1_dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            android:layout_marginTop="@dimen/short1_dp"
+            android:layout_marginStart="@dimen/short1_dp"
+            android:layout_marginEnd="@dimen/short1_dp"
+            android:layout_marginBottom="@dimen/short2_dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="@dimen/short1_dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchPaymentNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payments_notifications_user"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchMeetingNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/meetings_notifications_user"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchGeneralNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/general_notifications_user"/>
+
+                <!-- Botón guardar configuración -->
+                <Button
+                    style="@style/MyButton"
+                    android:id="@+id/btnSaveNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/short3_dp"
+                    android:layout_marginHorizontal="@dimen/short1_dp"
+                    android:text="@string/configuration_save_user"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnUpdate"
-        style="@style/MyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/update" />
-
-    <Button
-        android:id="@+id/btnDelete"
-        style="@style/MyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/delete" />
-
-    <Button
-        android:id="@+id/btnLogout"
-        style="@style/MyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logout" />
-
-</LinearLayout>
+</ScrollView>

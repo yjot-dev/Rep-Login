@@ -17,13 +17,14 @@ import com.yjotdev.login.R
 class LoginFragment : Fragment() {
 
     private val viewModel: UiViewModel by activityViewModels()
-    private lateinit var binding: FragmentLoginBinding
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLoginBinding.inflate(layoutInflater)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -32,11 +33,18 @@ class LoginFragment : Fragment() {
         setupClickListeners()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setupClickListeners() {
         binding.btnSeePassword.setOnClickListener {
             if(binding.inputPassword.inputType == 129){
+                binding.btnSeePassword.setImageResource(R.drawable.hide_password)
                 binding.inputPassword.inputType = 145
             }else{
+                binding.btnSeePassword.setImageResource(R.drawable.show_password)
                 binding.inputPassword.inputType = 129
             }
         }
