@@ -1,31 +1,39 @@
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/short1_dp">
+    app:cardCornerRadius="@dimen/short1_dp"
+    app:cardElevation="@dimen/short1_dp"
+    app:cardBackgroundColor="?attr/colorSurface"
+    android:layout_margin="@dimen/short1_dp">
 
-    <TextView
-        style="@style/MyItemAdapter"
-        android:id="@+id/tvAmount"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Monto"/>
+        android:gravity="center">
 
-    <TextView
-        style="@style/MyItemAdapter"
-        android:id="@+id/tvDate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Fecha"/>
+        <TextView
+            style="@style/MyItemAdapter"
+            android:id="@+id/tvAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Monto"/>
 
-    <TextView
-        style="@style/MyItemAdapter"
-        android:id="@+id/tvStatus"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Estado"/>
-</LinearLayout>
+        <TextView
+            style="@style/MyItemAdapter"
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Fecha"/>
+
+        <TextView
+            style="@style/MyItemAdapter"
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Estado"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

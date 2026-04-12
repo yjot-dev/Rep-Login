@@ -22,21 +22,21 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.application.navigation.UiEvent
+import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
+import com.yjotdev.login.presentation.navigation.UiEvent
 import com.yjotdev.login.domain.core.Result
-import com.yjotdev.login.domain.entity.LoginEntity
-import com.yjotdev.login.domain.entity.RecoveryEntity
-import com.yjotdev.login.domain.entity.UserEntity
-import com.yjotdev.login.domain.usecase.email.EmailUseCase
-import com.yjotdev.login.domain.usecase.string.StringUseCase
+import com.yjotdev.login.domain.model.LoginModel
+import com.yjotdev.login.domain.model.RecoveryModel
+import com.yjotdev.login.domain.model.UserModel
+import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
+import com.yjotdev.login.domain.usecase.string.GetStringUseCase
 import com.yjotdev.login.domain.usecase.user.*
 
 @ExperimentalCoroutinesApi
 class UiViewModelTest {
 
     @RelaxedMockK
-    private lateinit var getStringUseCase: StringUseCase
+    private lateinit var getStringUseCase: GetStringUseCase
     @RelaxedMockK
     private lateinit var findUserUseCase: FindUserUseCase
     @RelaxedMockK
@@ -48,7 +48,7 @@ class UiViewModelTest {
     @RelaxedMockK
     private lateinit var changePasswordUserUseCase: ChangePasswordUserUseCase
     @RelaxedMockK
-    private lateinit var emailUseCase: EmailUseCase
+    private lateinit var sendEmailUseCase: SendEmailUseCase
 
     private lateinit var viewModel: UiViewModel
     private val testDispatcher = StandardTestDispatcher()
@@ -64,7 +64,7 @@ class UiViewModelTest {
             updateUserUseCase,
             deleteUserUseCase,
             changePasswordUserUseCase,
-            emailUseCase
+            sendEmailUseCase
         )
     }
 
@@ -77,10 +77,10 @@ class UiViewModelTest {
     @Test
     fun whenLoginUserIsSuccessfulThenUiStateIsUpdatedAndEventsAreSent() = runTest {
         // Given
-        val fakeUser = UserEntity(id = 1, name = "testUser", email = "test@test.com", password = "password")
-        val loginEntity = LoginEntity(name = "testUser", password = "password")
+        val fakeUser = UserModel(id = 1, name = "testUser", email = "test@test.com", password = "password")
+        val loginModel = LoginModel(name = "testUser", password = "password")
         val successMessage = "Login successful"
-        coEvery { findUserUseCase(loginEntity) } returns Result.Success(fakeUser)
+        coEvery { findUserUseCase(loginModel) } returns Result.Success(fakeUser)
         every { getStringUseCase(R.string.toast_login_success) } returns successMessage
 
         // Then
@@ -102,23 +102,23 @@ class UiViewModelTest {
         }
 
         // When
-        viewModel.loginUser(loginEntity.name, loginEntity.password)
+        viewModel.loginUser(loginModel.name, loginModel.password)
         advanceUntilIdle()
 
         job1.cancel()
         job2.cancel()
 
-        coVerify(exactly = 1) { findUserUseCase(loginEntity) }
+        coVerify(exactly = 1) { findUserUseCase(loginModel) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_login_success) }
     }
 
     @Test
     fun whenLoginUserFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val loginEntity = LoginEntity("testUser", "wrongPassword")
+        val loginModel = LoginModel("testUser", "wrongPassword")
         val exception = Exception("Invalid credentials")
         val toastMessage = "Login failed"
-        coEvery { findUserUseCase(loginEntity) } returns Result.Error(exception)
+        coEvery { findUserUseCase(loginModel) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_login_error) } returns toastMessage
 
         // Then
@@ -140,20 +140,20 @@ class UiViewModelTest {
         }
 
         // When
-        viewModel.loginUser(loginEntity.name, loginEntity.password)
+        viewModel.loginUser(loginModel.name, loginModel.password)
         advanceUntilIdle()
 
         job1.cancel()
         job2.cancel()
 
-        coVerify(exactly = 1) { findUserUseCase(loginEntity) }
+        coVerify(exactly = 1) { findUserUseCase(loginModel) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_login_error) }
     }
 
     @Test
     fun whenInsertUserIsSuccessfulThenShowToastEventIsSent() = runTest {
         // Given
-        val userToInsert = UserEntity(name = "newUser", email = "new@test.com", password = "newPass")
+        val userToInsert = UserModel(name = "newUser", email = "new@test.com", password = "newPass")
         val successMessage = "User created"
         coEvery { insertUserUseCase(userToInsert) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_insert_success) } returns successMessage
@@ -187,7 +187,7 @@ class UiViewModelTest {
     @Test
     fun whenInsertUserFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val userToInsert = UserEntity(name = "existingUser", email = "existing@test.com", password = "pass")
+        val userToInsert = UserModel(name = "existingUser", email = "existing@test.com", password = "pass")
         val exception = Exception("User already exists")
         val toastMessage = "Insert failed"
         coEvery { insertUserUseCase(userToInsert) } returns Result.Error(exception)
@@ -223,8 +223,8 @@ class UiViewModelTest {
     @Test
     fun whenUpdateUserIsSuccessfulThenToastEventIsSent() = runTest {
         // Given
-        val initialUser = UserEntity(id = 1, name = "oldName", email = "old@test.com", password = "oldPassword")
-        val updatedUser = UserEntity(name = "newName", email = "new@test.com", password = "newPassword")
+        val initialUser = UserModel(id = 1, name = "oldName", email = "old@test.com", password = "oldPassword")
+        val updatedUser = UserModel(name = "newName", email = "new@test.com", password = "newPassword")
         val successMessage = "User updated"
         viewModel.setUser(initialUser)
         coEvery { updateUserUseCase(initialUser.id, updatedUser) } returns Result.Success(Unit)
@@ -249,8 +249,8 @@ class UiViewModelTest {
     @Test
     fun whenUpdateUserFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val initialUser = UserEntity(id = 1, name = "oldName", email = "old@test.com", password = "oldPassword")
-        val updatedUser = UserEntity(name = "newName", email = "new@test.com", password = "newPassword")
+        val initialUser = UserModel(id = 1, name = "oldName", email = "old@test.com", password = "oldPassword")
+        val updatedUser = UserModel(name = "newName", email = "new@test.com", password = "newPassword")
         val exception = Exception("Update failed")
         val toastMessage = "Update error"
         viewModel.setUser(initialUser)
@@ -277,7 +277,7 @@ class UiViewModelTest {
     @Test
     fun whenDeleteUserIsSuccessfulThenToastEventIsSent() = runTest {
         // Given
-        val initialUser = UserEntity(id = 1, name = "user", email = "user@test.com", password = "password")
+        val initialUser = UserModel(id = 1, name = "user", email = "user@test.com", password = "password")
         val successMessage = "User deleted"
         viewModel.setUser(initialUser)
         coEvery { deleteUserUseCase(initialUser.id) } returns Result.Success(Unit)
@@ -302,7 +302,7 @@ class UiViewModelTest {
     @Test
     fun whenDeleteUserFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val initialUser = UserEntity(id = 1, name = "user", email = "user@test.com", password = "password")
+        val initialUser = UserModel(id = 1, name = "user", email = "user@test.com", password = "password")
         val exception = Exception("Deletion failed")
         val toastMessage = "Delete error"
         viewModel.setUser(initialUser)
@@ -329,9 +329,9 @@ class UiViewModelTest {
     @Test
     fun whenRecoveryPasswordIsCalledWithCorrectCodeThenChangePasswordIsCalled() = runTest {
         // Given
-        val recoveryEntity = RecoveryEntity(email = "test@test.com", password = "newPassword")
+        val recoveryModel = RecoveryModel(email = "test@test.com", password = "newPassword")
         val successMessage = "Password updated"
-        coEvery { changePasswordUserUseCase(recoveryEntity) } returns Result.Success(Unit)
+        coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
         // Then
@@ -342,21 +342,21 @@ class UiViewModelTest {
         }
 
         // When
-        viewModel.changePasswordUser(recoveryEntity.email, recoveryEntity.password)
+        viewModel.changePasswordUser(recoveryModel.email, recoveryModel.password)
         advanceUntilIdle()
 
         job.cancel()
 
-        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryEntity) }
+        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
     }
 
     @Test
     fun whenRecoveryPasswordIsCalledWithIncorrectCodeThenToastEventIsSent() = runTest {
         // Given
-        val recoveryEntity = RecoveryEntity(email = "test@test.com", password = "newPassword")
+        val recoveryModel = RecoveryModel(email = "test@test.com", password = "newPassword")
         val exception = Exception("Update failed")
         val errorMessage = "Password didn't update"
-        coEvery { changePasswordUserUseCase(recoveryEntity) } returns Result.Error(exception)
+        coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_update_error) } returns errorMessage
 
         // Then
@@ -368,12 +368,12 @@ class UiViewModelTest {
         }
 
         // When
-        viewModel.changePasswordUser(recoveryEntity.email, recoveryEntity.password)
+        viewModel.changePasswordUser(recoveryModel.email, recoveryModel.password)
         advanceUntilIdle()
 
         job.cancel()
 
-        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryEntity) }
+        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
     }
 
     @Test
@@ -381,7 +381,7 @@ class UiViewModelTest {
         // Given
         val email = "test@test.com"
         val successMessage = "Email sent"
-        coEvery { emailUseCase(any()) } returns Result.Success(Unit)
+        coEvery { sendEmailUseCase(any()) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_emailsend_success) } returns successMessage
 
         // Then
@@ -397,7 +397,7 @@ class UiViewModelTest {
 
         job.cancel()
 
-        coVerify(exactly = 1) { emailUseCase(any()) }
+        coVerify(exactly = 1) { sendEmailUseCase(any()) }
     }
 
     @Test
@@ -406,7 +406,7 @@ class UiViewModelTest {
         val email = "test@test.com"
         val exception = Exception("Email service down")
         val toastMessage = "Email send error"
-        coEvery { emailUseCase(any()) } returns Result.Error(exception)
+        coEvery { sendEmailUseCase(any()) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_emailsend_error) } returns toastMessage
 
         // Then
@@ -423,6 +423,6 @@ class UiViewModelTest {
 
         job.cancel()
 
-        coVerify(exactly = 1) { emailUseCase(any()) }
+        coVerify(exactly = 1) { sendEmailUseCase(any()) }
     }
 }

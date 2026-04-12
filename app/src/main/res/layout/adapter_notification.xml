@@ -1,23 +1,32 @@
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/short1_dp">
+    app:cardCornerRadius="@dimen/short1_dp"
+    app:cardElevation="@dimen/short1_dp"
+    app:cardBackgroundColor="?attr/colorSurface"
+    android:layout_margin="@dimen/short1_dp">
 
-    <TextView
-        style="@style/MyItemAdapter"
-        android:id="@+id/tvMessage"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Mensaje de notificación"/>
+        android:gravity="center">
 
-    <TextView
-        style="@style/MyItemAdapter"
-        android:id="@+id/tvDate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Fecha"/>
-</LinearLayout>
+        <TextView
+            style="@style/MyItemAdapter"
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Mensaje de notificación"/>
+
+        <TextView
+            style="@style/MyItemAdapter"
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Fecha"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

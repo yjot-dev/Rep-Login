@@ -1,17 +1,15 @@
 package com.yjotdev.login.domain.usecase.user
 
 import javax.inject.Inject
-import javax.inject.Singleton
 import com.yjotdev.login.domain.core.Result
-import com.yjotdev.login.domain.entity.RecoveryEntity
-import com.yjotdev.login.domain.port.UserPort
+import com.yjotdev.login.domain.model.RecoveryModel
+import com.yjotdev.login.domain.repository.UserRepository
 
-@Singleton
 class ChangePasswordUserUseCase @Inject constructor(
-    private val userPort: UserPort
+    private val userRepository: UserRepository
 ) {
     /** Actualizar clave de usuario mediante caso de uso **/
-    suspend operator fun invoke(recovery: RecoveryEntity): Result<Unit> {
-        return userPort.changePasswordUser(recovery)
+    suspend operator fun invoke(recovery: RecoveryModel): Result<Unit> {
+        return userRepository.changePasswordUser(recovery)
     }
 }

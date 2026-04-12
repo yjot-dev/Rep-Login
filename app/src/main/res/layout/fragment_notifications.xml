@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/short1_dp"
     android:orientation="vertical"
-    tools:context=".application.mvvm.view.NotificationsFragment">
+    tools:context=".presentation.mvvm.ui.fragment.NotificationsFragment">
 
     <!-- Título -->
     <TextView

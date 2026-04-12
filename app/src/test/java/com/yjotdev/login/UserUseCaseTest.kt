@@ -9,10 +9,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import com.yjotdev.login.domain.core.Result
-import com.yjotdev.login.domain.entity.LoginEntity
-import com.yjotdev.login.domain.entity.RecoveryEntity
-import com.yjotdev.login.domain.entity.UserEntity
-import com.yjotdev.login.domain.port.UserPort
+import com.yjotdev.login.domain.model.LoginModel
+import com.yjotdev.login.domain.model.RecoveryModel
+import com.yjotdev.login.domain.model.UserModel
+import com.yjotdev.login.domain.repository.UserRepository
 import com.yjotdev.login.domain.usecase.user.ChangePasswordUserUseCase
 import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
 import com.yjotdev.login.domain.usecase.user.FindUserUseCase
@@ -24,7 +24,7 @@ import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
  */
 class UserUseCaseTest {
 
-    private lateinit var userPort: UserPort
+    private lateinit var userRepository: UserRepository
 
     private lateinit var findUserUseCase: FindUserUseCase
     private lateinit var insertUserUseCase: InsertUserUseCase
@@ -34,100 +34,100 @@ class UserUseCaseTest {
 
     @Before
     fun setUp() {
-        userPort = mockk()
-        findUserUseCase = FindUserUseCase(userPort)
-        insertUserUseCase = InsertUserUseCase(userPort)
-        updateUserUseCase = UpdateUserUseCase(userPort)
-        changePasswordUserUseCase = ChangePasswordUserUseCase(userPort)
-        deleteUserUseCase = DeleteUserUseCase(userPort)
+        userRepository = mockk()
+        findUserUseCase = FindUserUseCase(userRepository)
+        insertUserUseCase = InsertUserUseCase(userRepository)
+        updateUserUseCase = UpdateUserUseCase(userRepository)
+        changePasswordUserUseCase = ChangePasswordUserUseCase(userRepository)
+        deleteUserUseCase = DeleteUserUseCase(userRepository)
     }
 
     @Test
     fun whenFindUserUseCaseIsInvokedSuccessfullyThenItReturnsAUser() = runTest {
         // Given
-        val loginEntity = LoginEntity("testuser", "password")
-        val fakeUser = UserEntity(id = 1, name = "Test User", email = "test@example.com", password = "password")
-        coEvery { userPort.findUser(loginEntity) } returns Result.Success(fakeUser)
+        val loginModel = LoginModel("testuser", "password")
+        val fakeUser = UserModel(id = 1, name = "Test User", email = "test@example.com", password = "password")
+        coEvery { userRepository.findUser(loginModel) } returns Result.Success(fakeUser)
 
         // When
-        val result = findUserUseCase(loginEntity)
+        val result = findUserUseCase(loginModel)
 
         // Then
         assertTrue(result is Result.Success)
         assertEquals(fakeUser, (result as Result.Success).data)
-        coVerify(exactly = 1) { userPort.findUser(loginEntity) }
+        coVerify(exactly = 1) { userRepository.findUser(loginModel) }
     }
 
     @Test
     fun whenFindUserUseCaseFailsThenItReturnsAnError() = runTest {
         // Given
-        val loginEntity = LoginEntity("testuser", "password")
+        val loginModel = LoginModel("testuser", "password")
         val exception = Exception("User not found")
-        coEvery { userPort.findUser(loginEntity) } returns Result.Error(exception)
+        coEvery { userRepository.findUser(loginModel) } returns Result.Error(exception)
 
         // When
-        val result = findUserUseCase(loginEntity)
+        val result = findUserUseCase(loginModel)
 
         // Then
         assertTrue(result is Result.Error)
         assertEquals(exception, (result as Result.Error).exception)
-        coVerify(exactly = 1) { userPort.findUser(loginEntity) }
+        coVerify(exactly = 1) { userRepository.findUser(loginModel) }
     }
 
     @Test
     fun whenInsertUserUseCaseIsInvokedThenPortMethodIsCalled() = runTest {
         // Given
-        val newUser = UserEntity(name = "New User", email = "new@example.com", password = "newpassword")
-        coEvery { userPort.insertUser(newUser) } returns Result.Success(Unit)
+        val newUser = UserModel(name = "New User", email = "new@example.com", password = "newpassword")
+        coEvery { userRepository.insertUser(newUser) } returns Result.Success(Unit)
 
         // When
         val result = insertUserUseCase(newUser)
 
         // Then
         assertTrue(result is Result.Success)
-        coVerify(exactly = 1) { userPort.insertUser(newUser) }
+        coVerify(exactly = 1) { userRepository.insertUser(newUser) }
     }
 
     @Test
     fun whenUpdateUserUseCaseIsInvokedThenPortMethodIsCalled() = runTest {
         // Given
         val userId = 1
-        val userToUpdate = UserEntity(name = "Updated User", email = "updated@example.com", password = "updatedpassword")
-        coEvery { userPort.updateUser(userId, userToUpdate) } returns Result.Success(Unit)
+        val userToUpdate = UserModel(name = "Updated User", email = "updated@example.com", password = "updatedpassword")
+        coEvery { userRepository.updateUser(userId, userToUpdate) } returns Result.Success(Unit)
 
         // When
         val result = updateUserUseCase(userId, userToUpdate)
 
         // Then
         assertTrue(result is Result.Success)
-        coVerify(exactly = 1) { userPort.updateUser(userId, userToUpdate) }
+        coVerify(exactly = 1) { userRepository.updateUser(userId, userToUpdate) }
     }
 
     @Test
     fun whenChangePasswordUserUseCaseIsInvokedThenPortMethodIsCalled() = runTest {
         // Given
-        val recoveryEntity = RecoveryEntity(email = "test@example.com", password = "newpassword")
-        coEvery { userPort.changePasswordUser(recoveryEntity) } returns Result.Success(Unit)
+        val recoveryModel = RecoveryModel(email = "test@example.com", password = "newpassword")
+        coEvery { userRepository.changePasswordUser(recoveryModel) } returns Result.Success(Unit)
 
         // When
-        val result = changePasswordUserUseCase(recoveryEntity)
+        val result = changePasswordUserUseCase(recoveryModel)
 
         // Then
         assertTrue(result is Result.Success)
-        coVerify(exactly = 1) { userPort.changePasswordUser(recoveryEntity) }
+        coVerify(exactly = 1) { userRepository.changePasswordUser(recoveryModel) }
     }
 
     @Test
     fun whenDeleteUserUseCaseIsInvokedThenPortMethodIsCalled() = runTest {
         // Given
         val userId = 1
-        coEvery { userPort.deleteUser(userId) } returns Result.Success(Unit)
+        coEvery { userRepository.deleteUser(userId) } returns Result.Success(Unit)
 
         // When
         val result = deleteUserUseCase(userId)
 
         // Then
         assertTrue(result is Result.Success)
-        coVerify(exactly = 1) { userPort.deleteUser(userId) }
+        coVerify(exactly = 1) { userRepository.deleteUser(userId) }
     }
 }

@@ -18,7 +18,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
+import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)

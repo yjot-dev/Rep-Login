@@ -1,17 +1,15 @@
 package com.yjotdev.login.domain.usecase.user
 
 import javax.inject.Inject
-import javax.inject.Singleton
 import com.yjotdev.login.domain.core.Result
-import com.yjotdev.login.domain.entity.UserEntity
-import com.yjotdev.login.domain.port.UserPort
+import com.yjotdev.login.domain.model.UserModel
+import com.yjotdev.login.domain.repository.UserRepository
 
-@Singleton
 class UpdateUserUseCase @Inject constructor(
-    private val userPort: UserPort
+    private val userRepository: UserRepository
 ) {
     /** Actualizar usuario mediante caso de uso **/
-    suspend operator fun invoke(id: Int, user: UserEntity): Result<Unit> {
-        return userPort.updateUser(id, user)
+    suspend operator fun invoke(id: Int, user: UserModel): Result<Unit> {
+        return userRepository.updateUser(id, user)
     }
 }

@@ -24,13 +24,12 @@
 
     <!-- Items de adapter -->
     <style name="MyItemAdapter" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAlignment">textStart</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">10dp</item>
     </style>
 
     <!-- Inputs: TextInputLayout + TextInputEditText -->

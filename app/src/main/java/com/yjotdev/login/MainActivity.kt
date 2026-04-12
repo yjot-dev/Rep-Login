@@ -12,9 +12,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.yjotdev.login.application.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.application.navigation.observeViewModelState
-import com.yjotdev.login.application.navigation.setupAppNavigation
+import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
+import com.yjotdev.login.presentation.navigation.observeViewModelState
+import com.yjotdev.login.presentation.navigation.setupAppNavigation
 import com.yjotdev.login.databinding.ActivityMainBinding
 
 @AndroidEntryPoint

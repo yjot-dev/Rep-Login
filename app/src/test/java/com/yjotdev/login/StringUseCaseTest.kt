@@ -6,21 +6,21 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import com.yjotdev.login.domain.port.StringPort
-import com.yjotdev.login.domain.usecase.string.StringUseCase
+import com.yjotdev.login.domain.repository.StringRepository
+import com.yjotdev.login.domain.usecase.string.GetStringUseCase
 
 /**
  * Pruebas unitarias para el caso de uso de obtención de Strings.
  */
 class StringUseCaseTest {
 
-    private lateinit var stringPort: StringPort
-    private lateinit var stringUseCase: StringUseCase
+    private lateinit var stringRepository: StringRepository
+    private lateinit var getStringUseCase: GetStringUseCase
 
     @Before
     fun setUp() {
-        stringPort = mockk()
-        stringUseCase = StringUseCase(stringPort)
+        stringRepository = mockk()
+        getStringUseCase = GetStringUseCase(stringRepository)
     }
 
     @Test
@@ -28,14 +28,14 @@ class StringUseCaseTest {
         // Given
         val resourceId = R.string.app_name
         val expectedString = "Login App"
-        every { stringPort.getString(resourceId) } returns expectedString
+        every { stringRepository.getString(resourceId) } returns expectedString
 
         // When
-        val result = stringUseCase(resourceId)
+        val result = getStringUseCase(resourceId)
 
         // Then
         assertEquals(expectedString, result)
-        verify(exactly = 1) { stringPort.getString(resourceId) }
+        verify(exactly = 1) { stringRepository.getString(resourceId) }
     }
 
     @Test
@@ -44,13 +44,13 @@ class StringUseCaseTest {
         val resourceId = R.string.toast_login_success
         val arg = "TestUser"
         val expectedString = "Welcome, TestUser!"
-        every { stringPort.getString(resourceId, any()) } returns expectedString
+        every { stringRepository.getString(resourceId, any()) } returns expectedString
 
         // When
-        val result = stringUseCase(resourceId, arg)
+        val result = getStringUseCase(resourceId, arg)
 
         // Then
         assertEquals(expectedString, result)
-        verify(exactly = 1) { stringPort.getString(resourceId, any()) }
+        verify(exactly = 1) { stringRepository.getString(resourceId, any()) }
     }
 }
