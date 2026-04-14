@@ -23,9 +23,6 @@
     <string name="premium_plan_payments">PLAN PREMIUM - $10/MES</string>
     <string name="enterprise_plan_payments">PLAN ENTERPRISE - $20/MES</string>
     <string name="confirm_payment_payments">CONFIRMAR PAGO</string>
-    <string name="plan1_payments">PLAN BÁSICO</string>
-    <string name="plan2_payments">PLAN PREMIUM</string>
-    <string name="plan3_payments">PLAN ENTERPRISE</string>
     <string name="title_payments_history">HISTORIAL DE PAGOS</string>
     <string name="title_notifications">CENTRO DE NOTIFICACIONES</string>
     <string name="login">INGRESAR</string>
@@ -51,10 +48,13 @@
     <string name="toast_delete_error">ELIMINACIÓN FALLIDA</string>
     <string name="toast_emailsend_success">ENVIO DE CORREO EXITOSO</string>
     <string name="toast_emailsend_error">ENVIO DE CORREO FALLIDO</string>
+    <string name="toast_create_order_success">ORDEN CREADA EXITOSAMENTE</string>
+    <string name="toast_create_order_error">ERROR CREANDO ORDEN</string>
+    <string name="toast_capture_order_success">PAGO EXITOSO</string>
+    <string name="toast_capture_order_error">PAGO FALLIDO</string>
     <string name="toast_code_different">CÓDIGO DIFERENTE</string>
     <string name="toast_empty_fields">CAMPOS VACIOS</string>
     <string name="toast_invalid_data">DATOS INVALIDOS</string>
-    <string name="toast_payment_valid">PROCESANDO PAGO PARA %1$s</string>
     <string name="toast_payment_invalid">SELECCIONA UN PLAN ANTES DE CONTINUAR</string>
     <string name="email_subject1">CAMBIAR CLAVE</string>
     <string name="email_subject2">VERIFICAR CORREO</string>

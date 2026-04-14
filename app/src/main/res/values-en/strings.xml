@@ -23,9 +23,6 @@
     <string name="premium_plan_payments">PREMIUM PLAN - $10/mes</string>
     <string name="enterprise_plan_payments">ENTERPRISE PLAN - $20/mes</string>
     <string name="confirm_payment_payments">CONFIRM PAYMENT</string>
-    <string name="plan1_payments">BASIC PLAN</string>
-    <string name="plan2_payments">PREMIUM PLAN</string>
-    <string name="plan3_payments">ENTERPRISE PLAN</string>
     <string name="title_payments_history">PAYMENTS HISTORY</string>
     <string name="title_notifications">NOTIFICATIONS CENTER</string>
     <string name="login">LOGIN</string>
@@ -51,10 +48,13 @@
     <string name="toast_delete_error">DELETE FAILED</string>
     <string name="toast_emailsend_success">EMAIL SEND SUCCESS</string>
     <string name="toast_emailsend_error">EMAIL SEND FAILED</string>
+    <string name="toast_create_order_success">CREATE ORDER SUCCESS</string>
+    <string name="toast_create_order_error">CREATE ORDER FAILED</string>
+    <string name="toast_capture_order_success">PAYMENT SUCCESS</string>
+    <string name="toast_capture_order_error">PAYMENT FAILED</string>
     <string name="toast_code_different">CODE DIFFERENT</string>
     <string name="toast_empty_fields">EMPTY FIELDS</string>
     <string name="toast_invalid_data">INVALID DATA</string>
-    <string name="toast_payment_valid">PROCESSING PAYMENT FOR %1$s</string>
     <string name="toast_payment_invalid">SELECT A PLAN BEFORE CONTINUING</string>
     <string name="email_subject1">CHANGE PASSWORD</string>
     <string name="email_subject2">VERIFY EMAIL</string>

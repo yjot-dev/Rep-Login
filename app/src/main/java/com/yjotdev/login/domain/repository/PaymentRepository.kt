@@ -1,6 +1,10 @@
 package com.yjotdev.login.domain.repository
 
 import com.yjotdev.login.domain.core.Result
+import com.yjotdev.login.domain.model.CaptureOrderRequestModel
+import com.yjotdev.login.domain.model.CaptureOrderResultModel
+import com.yjotdev.login.domain.model.CreateOrderRequestModel
+import com.yjotdev.login.domain.model.CreateOrderResultModel
 import com.yjotdev.login.domain.model.PaymentModel
 
 /**
@@ -11,7 +15,19 @@ import com.yjotdev.login.domain.model.PaymentModel
 interface PaymentRepository {
     /**
      * Busca los pagos del usuario
-     * @return Result<PaymentModel> que contiene el usuario si se encuentra, o un error.
+     * @return Result<PaymentModel> que contiene el pago si se encuentra, o un error.
      */
     suspend fun selectPayments(): Result<PaymentModel>
+
+    /**
+     * Crea la orden de pago mediante el tipo de plan seleccionado
+     * @return Result<Unit> que indica éxito o un error.
+     * **/
+    suspend fun createOrder(plan: CreateOrderRequestModel): Result<CreateOrderResultModel>
+
+    /**
+     * Captura la orden de pago mediante el id de la orden
+     * @return Result<Unit> que indica éxito o un error.
+     * **/
+    suspend fun captureOrder(orderId: CaptureOrderRequestModel): Result<CaptureOrderResultModel>
 }

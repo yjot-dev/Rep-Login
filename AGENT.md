@@ -33,7 +33,12 @@
                 - `UiViewModel.kt`
             - `state`: Contiene los modelos de datos de la UI.
                 - `UiState.kt`
-        - `navigation`: Contiene los grafos y rutas de navegación.
+        - `navigation`: Contiene los grafos, canales de eventos y rutas de navegación.
+            - `Navigation.kt`
+            - `UiEvent.kt`
+            - **(Condicional) Si el paradigma es `UI_COMPOSE`:**
+                - `Routes.kt`
+                - `Permission.kt`
         - **(Condicional) Si el paradigma es `UI_COMPOSE`:**
             - `components`: Contiene los composables reutilizables en varias UI.
             - `theme`: Contiene el tema de la aplicación.
@@ -41,8 +46,9 @@
             - Se omiten los directorios `components` y `theme`.
             - Las vistas (layouts XML) residen en el directorio `res/layout`.
             - Los estilos y temas residen en el directorio `res/values`.
-        - `utils`: Contiene los helpers de UI.
-            - `Helper.kt`
+        - **(Opcional) Si se requiere metodos auxiliares:**
+            - `utils`: Contiene los helpers de UI.
+                - `Helper.kt`
 
 ### A.1.3 Perfil de Estructura: Arquitectura Hexagonal
 - **Uso:** Para aplicaciones completas que requieren una separación estricta de responsabilidades, con capas de dominio, datos (infraestructura) y aplicación bien definidas. Ideal para proyectos con APIs, bases de datos, etc.
@@ -64,7 +70,12 @@
                 - `UiViewModel.kt`
             - `state`: Contiene los modelos de datos de la UI.
                 - `UiState.kt`
-        - `navigation`: Contiene los grafos y rutas de navegación.
+        - `navigation`: Contiene los grafos, canales de eventos y rutas de navegación.
+            - `Navigation.kt`
+            - `UiEvent.kt`
+            - **(Condicional) Si el paradigma es `UI_COMPOSE`:**
+                - `Routes.kt`
+                - `Permission.kt`
         - **(Condicional) Si el paradigma es `UI_COMPOSE`:**
             - `components`: Contiene los composables reutilizables en varias UI.
             - `theme`: Contiene el tema de la aplicación.
@@ -72,8 +83,9 @@
             - Se omiten los directorios `components` y `theme`.
             - Las vistas (layouts XML) residen en el directorio `res/layout`.
             - Los estilos y temas residen en el directorio `res/values`.
-        - `utils`: Contiene los helpers de UI.
-            - `Helper.kt`
+        - **(Opcional) Si se requiere metodos auxiliares:**
+            - `utils`: Contiene los helpers de UI.
+                - `Helper.kt`
     - `domain` (Capa de lógica de negocio pura)
         - `core`: Contiene los resultados y excepciones base.
             - `Result.kt`
@@ -83,8 +95,9 @@
             - `NombreDeTablaRepository.kt`
         - `usecase`: Contiene los casos de uso/Interactores (una clase por acción).
             - `NombreDeTablaUseCase.kt`
-        - `utils`: Contiene los helpers de Domain.
-            - `Helper.kt`
+        - **(Opcional) Si se requiere metodos auxiliares:**
+            - `utils`: Contiene los helpers de Domain.
+                - `Helper.kt`
     - `data` (Capa de datos e implementación)
         - `di`: Contiene la configuración de la inyección de dependencias.
             - `DiModules.kt`

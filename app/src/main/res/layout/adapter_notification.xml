@@ -20,6 +20,9 @@
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="4"
+            android:maxWidth="120dp"
+            tools:textSize="16sp"
             tools:text="Mensaje de notificación"/>
 
         <TextView
@@ -27,6 +30,7 @@
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Fecha"/>
+            tools:textSize="16sp"
+            tools:text="03-02-2026"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

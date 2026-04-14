@@ -29,6 +29,8 @@ import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
 import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
+import com.yjotdev.login.domain.usecase.payment.CaptureOrderUseCase
+import com.yjotdev.login.domain.usecase.payment.CreateOrderUseCase
 import com.yjotdev.login.domain.usecase.string.GetStringUseCase
 import com.yjotdev.login.domain.usecase.user.*
 
@@ -49,6 +51,10 @@ class UiViewModelTest {
     private lateinit var changePasswordUserUseCase: ChangePasswordUserUseCase
     @RelaxedMockK
     private lateinit var sendEmailUseCase: SendEmailUseCase
+    @RelaxedMockK
+    private lateinit var createOrderUseCase: CreateOrderUseCase
+    @RelaxedMockK
+    private lateinit var captureOrderUseCase: CaptureOrderUseCase
 
     private lateinit var viewModel: UiViewModel
     private val testDispatcher = StandardTestDispatcher()
@@ -64,7 +70,9 @@ class UiViewModelTest {
             updateUserUseCase,
             deleteUserUseCase,
             changePasswordUserUseCase,
-            sendEmailUseCase
+            sendEmailUseCase,
+            createOrderUseCase,
+            captureOrderUseCase
         )
     }
 
