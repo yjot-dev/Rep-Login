@@ -1,10 +1,10 @@
 package com.yjotdev.login.data.di
 
+import dagger.hilt.components.SingletonComponent
 import dagger.Module
 import dagger.Binds
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import retrofit2.Retrofit
 import com.yjotdev.login.data.repository.UserRepositoryImpl
@@ -15,8 +15,10 @@ import com.yjotdev.login.data.remote.service.EmailService
 import com.yjotdev.login.data.remote.service.NotificationService
 import com.yjotdev.login.data.remote.service.PaymentService
 import com.yjotdev.login.data.remote.service.UserService
+import com.yjotdev.login.data.repository.ConfigRepositoryImpl
 import com.yjotdev.login.data.repository.NotificationRepositoryImpl
 import com.yjotdev.login.data.repository.PaymentRepositoryImpl
+import com.yjotdev.login.domain.repository.ConfigRepository
 import com.yjotdev.login.domain.repository.UserRepository
 import com.yjotdev.login.domain.repository.EmailRepository
 import com.yjotdev.login.domain.repository.NotificationRepository
@@ -58,6 +60,12 @@ abstract class DiModules {
     abstract fun bindStringRepository(
         impl: StringRepositoryImpl
     ): StringRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindConfigRepository(
+        impl: ConfigRepositoryImpl
+    ): ConfigRepository
 
     // --- PROVIDERS (Instancias externas) ---
     companion object {

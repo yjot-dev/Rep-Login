@@ -19,6 +19,9 @@ mockk = "1.13.8"
 coroutines-test = "1.7.3"
 hilt = "2.51.1"
 turbine = "1.0.0"
+browser = "1.8.0"
+firebaseVersion = "33.0.0"
+gms = "4.4.2"
 
 [libraries]
 # IU
@@ -30,10 +33,15 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navVersion" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navVersion" }
+# Browser
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
 # Retrofit
 squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 squareup-retrofit2-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 google-code-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+# Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseVersion" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 # OkHTTP3
 squareup-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
 # Hilt
@@ -54,3 +62,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "gms" }

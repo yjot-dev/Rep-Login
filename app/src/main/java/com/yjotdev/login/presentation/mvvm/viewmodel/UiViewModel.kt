@@ -20,7 +20,8 @@ import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
 import com.yjotdev.login.domain.model.CreateOrderRequestModel
-import com.yjotdev.login.domain.model.CaptureOrderRequestModel
+import com.yjotdev.login.domain.usecase.notification.SelectNotificationsUseCase
+import com.yjotdev.login.domain.usecase.payment.SelectPaymentsUseCase
 import com.yjotdev.login.domain.usecase.payment.CreateOrderUseCase
 import com.yjotdev.login.domain.usecase.payment.CaptureOrderUseCase
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
@@ -30,6 +31,9 @@ import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
 import com.yjotdev.login.domain.usecase.user.FindUserUseCase
 import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
 import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
+import com.yjotdev.login.domain.model.SendNotificationRequestModel
+import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
+import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 import com.yjotdev.login.R
 
 @HiltViewModel
@@ -42,7 +46,11 @@ class UiViewModel @Inject constructor(
     private val changePasswordUserUseCase: ChangePasswordUserUseCase,
     private val sendEmailUseCase: SendEmailUseCase,
     private val createOrderUseCase: CreateOrderUseCase,
-    private val captureOrderUseCase: CaptureOrderUseCase
+    private val captureOrderUseCase: CaptureOrderUseCase,
+    private val selectPaymentsUseCase: SelectPaymentsUseCase,
+    private val selectNotificationsUseCase: SelectNotificationsUseCase,
+    private val sendNotificationUseCase: SendNotificationUseCase,
+    private val getConfigUseCase: GetConfigUseCase
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -57,26 +65,27 @@ class UiViewModel @Inject constructor(
     /**
      * Limpia el estado del ViewModel
      */
-    fun cleanState(){
+    fun cleanState() {
         _uiState.value = UiState()
     }
     /**
      * Cambia estado del codigo aleatorio para el usuario
      **/
-    fun setRandomCode(randomCode: Int){
+    fun setRandomCode(randomCode: Int) {
         _uiState.update { it.copy(randomCode = randomCode) }
     }
     /**
      * Cambia estado del usuario
      **/
-    fun setUser(user: UserModel){
+    fun setUser(user: UserModel) {
         _uiState.update { it.copy(user = user) }
     }
     /**
      * Cierra la sesion del usuario
      **/
-    fun logoutUser(){
+    fun logoutUser() {
         viewModelScope.launch {
+            cleanState()
             _eventChannel.send(UiEvent.Navigate(
                 R.id.action_user_to_login
             ))
@@ -85,125 +94,121 @@ class UiViewModel @Inject constructor(
     /**
      * Busca al usuario en la base de datos
      **/
-    fun loginUser(nameOrEmail: String, password: String){
+    fun loginUser(nameOrEmail: String, password: String) {
         val login = LoginModel(nameOrEmail, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                when (val result = findUserUseCase(login)) {
-                    is Result.Success -> {
-                        _uiState.update { it.copy(user = result.data.copy(password = password)) }
-                        _eventChannel.send(UiEvent.Navigate(
-                            R.id.action_login_to_dashboard
-                        ))
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_login_success)
-                        ))
-                    }
-                    is Result.Error -> {
-                        _uiState.update { it.copy(user = null) }
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_login_error)
-                        ))
-                        _eventChannel.send(UiEvent.ShowLog(
-                            result.exception.message!!
-                        ))
-                    }
+            when (val result = findUserUseCase(login)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(
+                        user = result.data.copy(password = password),
+                        isLoading = false
+                    )}
+                    _eventChannel.send(UiEvent.Navigate(
+                        R.id.action_login_to_dashboard
+                    ))
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_login_success)
+                    ))
                 }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                is Result.Error -> {
+                    _uiState.update { it.copy(
+                        user = null,
+                        isLoading = false
+                    )}
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_login_error)
+                    ))
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
         }
     }
     /**
      * Inserta al usuario en la base de datos
      */
-    fun insertUser(name: String, email: String, password: String){
+    fun insertUser(name: String, email: String, password: String) {
         val user = UserModel(0, name, email, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                when (val result = insertUserUseCase(user)) {
-                    is Result.Success -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_insert_success)
-                        ))
-                    }
-                    is Result.Error -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_insert_error)
-                        ))
-                        _eventChannel.send(UiEvent.ShowLog(
-                            result.exception.message!!
-                        ))
-                    }
+            when (val result = insertUserUseCase(user)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_insert_success)
+                    ))
                 }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                is Result.Error -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_insert_error)
+                    ))
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
         }
     }
     /**
      * Actualiza al usuario en la base de datos
      */
-    fun updateUser(name: String, email: String, password: String){
+    fun updateUser(name: String, email: String, password: String) {
         val id = uiState.value.user?.id ?: 0
         val user = UserModel(id, name, email, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                when (val result = updateUserUseCase(id, user)) {
-                    is Result.Success -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_update_success)
-                        ))
-                    }
-                    is Result.Error -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_update_error)
-                        ))
-                        _eventChannel.send(UiEvent.ShowLog(
-                            result.exception.message!!
-                        ))
-                    }
+            when (val result = updateUserUseCase(id, user)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_update_success)
+                    ))
                 }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                is Result.Error -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_update_error)
+                    ))
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
         }
     }
     /**
      * Elimina al usuario en la base de datos
      */
-    fun deleteUser(){
+    fun deleteUser() {
         val id = uiState.value.user?.id ?: 0
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                when (val result = deleteUserUseCase(id)) {
-                    is Result.Success -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_delete_success)
-                        ))
-                    }
-                    is Result.Error -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_delete_error)
-                        ))
-                        _eventChannel.send(UiEvent.ShowLog(
-                            result.exception.message!!
-                        ))
-                    }
+            when (val result = deleteUserUseCase(id)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_delete_success)
+                    ))
                 }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                is Result.Error -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_delete_error)
+                    ))
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
         }
     }
     /**
      * Envia un email al usuario
      */
-    fun sendEmail(to: String, subject: String){
+    fun sendEmail(to: String, subject: String) {
         val randomCode = Random.nextInt(9999 - 1000) + 1000
         setRandomCode(randomCode)
         val email = EmailModel(
@@ -213,98 +218,182 @@ class UiViewModel @Inject constructor(
         )
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                when (val result = sendEmailUseCase(email)) {
-                    is Result.Success -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_emailsend_success)
-                        ))
-                    }
-                    is Result.Error -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_emailsend_error)
-                        ))
-                        _eventChannel.send(UiEvent.ShowLog(
-                            result.exception.message!!
-                        ))
-                    }
+            when (val result = sendEmailUseCase(email)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_emailsend_success)
+                    ))
                 }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                is Result.Error -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_emailsend_error)
+                    ))
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
         }
     }
     /**
      * Actualiza la clave del usuario en la base de datos
      **/
-    fun changePasswordUser(email: String, password: String){
+    fun changePasswordUser(email: String, password: String) {
         val recovery = RecoveryModel(email, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                when (val result = changePasswordUserUseCase(recovery)) {
-                    is Result.Success -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_update_success)
-                        ))
-                    }
-                    is Result.Error -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_update_error)
-                        ))
-                        _eventChannel.send(UiEvent.ShowLog(
-                            result.exception.message!!
-                        ))
-                    }
+            when (val result = changePasswordUserUseCase(recovery)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_update_success)
+                    ))
                 }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                is Result.Error -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_update_error)
+                    ))
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
         }
     }
-
-    fun createOrder(selectedPlan: String) {
-        val plan = CreateOrderRequestModel(selectedPlan)
+    /**
+     * Crea una orden de pago del usuario mediante la API
+     **/
+    fun createOrder(plan: String, onIntent: (String) -> Unit) {
+        val userId = uiState.value.user?.id ?: 0
+        val body = CreateOrderRequestModel(plan, userId)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            try {
-                when (val result = createOrderUseCase(plan)) {
-                    is Result.Success -> {
-                        captureOrder(result.data.id)
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_create_order_success)
-                        ))
-                    }
-                    is Result.Error -> {
-                        _eventChannel.send(UiEvent.ShowToast(
-                            getStringUseCase(R.string.toast_create_order_error)
-                        ))
-                        _eventChannel.send(UiEvent.ShowLog(
-                            result.exception.message!!
-                        ))
-                    }
+            when (val result = createOrderUseCase(body)) {
+                is Result.Success -> {
+                    onIntent(result.data.getValue("approveUrl"))
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_create_order_success)
+                    ))
                 }
-            } finally {
-                _uiState.update { it.copy(isLoading = false) }
+                is Result.Error -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_create_order_error)
+                    ))
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
         }
     }
-
-    private suspend fun captureOrder(id: String) {
-        val orderId = CaptureOrderRequestModel(id)
-        when (val result = captureOrderUseCase(orderId)) {
-            is Result.Success -> {
-                _eventChannel.send(UiEvent.ShowToast(
-                    getStringUseCase(R.string.toast_capture_order_success)
-                ))
+    /**
+     * Captura una orden de pago del usuario mediante la API
+     **/
+    fun captureOrder(id: String) {
+        val orderId = mapOf("orderId" to id)
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            when (val result = captureOrderUseCase(orderId)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_capture_order_success)
+                    ))
+                }
+                is Result.Error -> {
+                    _uiState.update { it.copy(isLoading = false) }
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_capture_order_error)
+                    ))
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
-            is Result.Error -> {
-                _eventChannel.send(UiEvent.ShowToast(
-                    getStringUseCase(R.string.toast_capture_order_error)
-                ))
-                _eventChannel.send(UiEvent.ShowLog(
-                    result.exception.message!!
-                ))
+        }
+    }
+    /**
+     * Selecciona todos los pagos del usuario en la base de datos
+     **/
+    fun selectPayments(maxRows: Int? = null) {
+        val userId = uiState.value.user?.id ?: 0
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            when (val result = selectPaymentsUseCase(userId, maxRows)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(
+                        payments = result.data,
+                        isLoading = false
+                    )}
+                }
+                is Result.Error -> {
+                    _uiState.update { it.copy(
+                        payments = emptyList(),
+                        isLoading = false
+                    )}
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
+            }
+        }
+    }
+    /**
+     * Selecciona todos las notificaciones del usuario en la base de datos
+     **/
+    fun selectNotifications(maxRows: Int? = null) {
+        val userId = uiState.value.user?.id ?: 0
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            when (val result = selectNotificationsUseCase(userId, maxRows)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(
+                        notifications = result.data,
+                        isLoading = false
+                    )}
+                }
+                is Result.Error -> {
+                    _uiState.update { it.copy(
+                        notifications = emptyList(),
+                        isLoading = false
+                    )}
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
+            }
+        }
+    }
+    /**
+     * Envia una notificacion del usuario mediante la API
+     **/
+    fun sendNotification() {
+        val body = SendNotificationRequestModel(
+            userId = uiState.value.user?.id ?: 0,
+            token = getConfigUseCase()["token"] ?: "",
+            title = getStringUseCase(R.string.send_notification_title),
+            body = getStringUseCase(
+                R.string.send_notification_body,
+                uiState.value.user?.name ?: ""
+            )
+        )
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            when (val result = sendNotificationUseCase(body)) {
+                is Result.Success -> {
+                    _uiState.update { it.copy(isLoading = false)}
+                }
+                is Result.Error -> {
+                    _uiState.update { it.copy(isLoading = false)}
+                    _eventChannel.send(UiEvent.ShowLog(
+                        result.exception.message!!
+                    ))
+                }
             }
         }
     }

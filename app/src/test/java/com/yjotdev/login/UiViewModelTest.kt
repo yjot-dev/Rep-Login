@@ -28,9 +28,13 @@ import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
 import com.yjotdev.login.domain.model.UserModel
+import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
+import com.yjotdev.login.domain.usecase.notification.SelectNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 import com.yjotdev.login.domain.usecase.payment.CaptureOrderUseCase
 import com.yjotdev.login.domain.usecase.payment.CreateOrderUseCase
+import com.yjotdev.login.domain.usecase.payment.SelectPaymentsUseCase
 import com.yjotdev.login.domain.usecase.string.GetStringUseCase
 import com.yjotdev.login.domain.usecase.user.*
 
@@ -55,6 +59,14 @@ class UiViewModelTest {
     private lateinit var createOrderUseCase: CreateOrderUseCase
     @RelaxedMockK
     private lateinit var captureOrderUseCase: CaptureOrderUseCase
+    @RelaxedMockK
+    private lateinit var selectPaymentsUseCase: SelectPaymentsUseCase
+    @RelaxedMockK
+    private lateinit var selectNotificationsUseCase: SelectNotificationsUseCase
+    @RelaxedMockK
+    private lateinit var sendNotificationUseCase: SendNotificationUseCase
+    @RelaxedMockK
+    private lateinit var getConfigUseCase: GetConfigUseCase
 
     private lateinit var viewModel: UiViewModel
     private val testDispatcher = StandardTestDispatcher()
@@ -72,7 +84,11 @@ class UiViewModelTest {
             changePasswordUserUseCase,
             sendEmailUseCase,
             createOrderUseCase,
-            captureOrderUseCase
+            captureOrderUseCase,
+            selectPaymentsUseCase,
+            selectNotificationsUseCase,
+            sendNotificationUseCase,
+            getConfigUseCase
         )
     }
 
@@ -232,16 +248,24 @@ class UiViewModelTest {
     fun whenUpdateUserIsSuccessfulThenToastEventIsSent() = runTest {
         // Given
         val initialUser = UserModel(id = 1, name = "oldName", email = "old@test.com", password = "oldPassword")
-        val updatedUser = UserModel(name = "newName", email = "new@test.com", password = "newPassword")
+        val updatedUser = UserModel(id = 1, name = "newName", email = "new@test.com", password = "newPassword")
         val successMessage = "User updated"
         viewModel.setUser(initialUser)
         coEvery { updateUserUseCase(initialUser.id, updatedUser) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
         // Then
-        val job = launch {
+        val job1 = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
+            }
+        }
+        val job2 = launch {
+            viewModel.uiState.test {
+                val loadingState = awaitItem()
+                assertTrue(loadingState.isLoading)
+                val successState = awaitItem()
+                assertFalse(successState.isLoading)
             }
         }
 
@@ -249,16 +273,18 @@ class UiViewModelTest {
         viewModel.updateUser(updatedUser.name, updatedUser.email, updatedUser.password)
         advanceUntilIdle()
 
-        job.cancel()
+        job1.cancel()
+        job2.cancel()
 
         coVerify(exactly = 1) { updateUserUseCase(initialUser.id, updatedUser) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_success) }
     }
 
     @Test
     fun whenUpdateUserFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
         val initialUser = UserModel(id = 1, name = "oldName", email = "old@test.com", password = "oldPassword")
-        val updatedUser = UserModel(name = "newName", email = "new@test.com", password = "newPassword")
+        val updatedUser = UserModel(id = 1, name = "newName", email = "new@test.com", password = "newPassword")
         val exception = Exception("Update failed")
         val toastMessage = "Update error"
         viewModel.setUser(initialUser)
@@ -266,10 +292,18 @@ class UiViewModelTest {
         every { getStringUseCase(R.string.toast_update_error) } returns toastMessage
 
         // Then
-        val job = launch {
+        val job1 = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
                 assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
+            }
+        }
+        val job2 = launch {
+            viewModel.uiState.test {
+                val loadingState = awaitItem()
+                assertTrue(loadingState.isLoading)
+                val errorState = awaitItem()
+                assertFalse(errorState.isLoading)
             }
         }
 
@@ -277,9 +311,11 @@ class UiViewModelTest {
         viewModel.updateUser(updatedUser.name, updatedUser.email, updatedUser.password)
         advanceUntilIdle()
 
-        job.cancel()
+        job1.cancel()
+        job2.cancel()
 
         coVerify(exactly = 1) { updateUserUseCase(initialUser.id, updatedUser) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_error) }
     }
 
     @Test

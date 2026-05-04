@@ -1,21 +1,29 @@
 package com.yjotdev.login.presentation.mvvm.ui.fragment
 
-import androidx.core.net.toUri
-import androidx.fragment.app.Fragment
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import dagger.hilt.android.AndroidEntryPoint
-import com.yjotdev.login.domain.model.PaymentModel
+import kotlin.getValue
 import com.yjotdev.login.databinding.FragmentDashboardBinding
 import com.yjotdev.login.presentation.mvvm.ui.adapter.PaymentAdapter
+import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
+import com.yjotdev.login.R
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
 
+    private val viewModel: UiViewModel by activityViewModels()
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: PaymentAdapter
@@ -31,7 +39,8 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
-        loadAdapter()
+        setupRecyclerView()
+        observeViewModelState()
     }
 
     override fun onDestroyView() {
@@ -59,19 +68,28 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    private fun loadAdapter() {
+    private fun setupRecyclerView() {
         // Inicializar RecyclerView
         adapter = PaymentAdapter()
         binding.rvPayments.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPayments.adapter = adapter
 
-        // TODO: Consumir API de backend (Node.js + Stripe + MySQL) para obtener los 3 primeros registros del historial real
-        // Por ahora, datos mock para UI
-        val mockPayments = listOf(
-            PaymentModel(id = 1, amount = "$5.00", date = "2026-04-01", status = "Completado", 1),
-            PaymentModel(id = 2, amount = "$10.00", date = "2026-03-28", status = "Completado", 1),
-            PaymentModel(id = 3, amount = "$20.00", date = "2026-03-15", status = "Fallido", 1)
-        )
-        adapter.submitList(mockPayments)
+        // Iniciar corrutina para observar cambios en la lista de pagos
+        viewModel.selectPayments(maxRows = 3)
+    }
+
+    private fun observeViewModelState(){
+        val overlay = requireActivity().findViewById<View>(R.id.loadingOverlay)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    if (uiState.payments.isNotEmpty()) {
+                        //Guarda resultados en el adapter
+                        adapter.submitList(uiState.payments)
+                    }
+                    overlay.visibility = if (uiState.isLoading) {View.VISIBLE} else {View.GONE}
+                }
+            }
+        }
     }
 }

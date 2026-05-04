@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import kotlin.getValue
@@ -49,7 +51,11 @@ class PaymentsFragment : Fragment() {
 
             context?.let { context ->
                 if (selectedPlan != null) {
-                    viewModel.createOrder(selectedPlan)
+                    // Realizar la creacion de la orden
+                    viewModel.createOrder(selectedPlan) { approveUrl ->
+                        val customTabsIntent = CustomTabsIntent.Builder().build()
+                        customTabsIntent.launchUrl(requireContext(), approveUrl.toUri())
+                    }
                 } else {
                     Toast.makeText(context,
                         getString(R.string.toast_payment_invalid),

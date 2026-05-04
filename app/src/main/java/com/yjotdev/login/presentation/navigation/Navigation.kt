@@ -20,6 +20,25 @@ fun MainActivity.setupAppNavigation() {
     // Vincula NavController con el BottomMenu y TopMenu
     binding.bottomMenu1.setupWithNavController(navController)
     binding.bottomMenu2.setupWithNavController(navController)
+    // Evita que bottomMenu1 restaure estados antiguos después del logout
+    binding.bottomMenu1.setOnItemSelectedListener { item ->
+        when(item.itemId) {
+            R.id.loginFragment -> {
+                navController.navigate(R.id.loginFragment) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                    restoreState = false
+                }
+                true
+            }
+            else -> {
+                navController.navigate(item.itemId)
+                true
+            }
+        }
+    }
     // Logica del BottomMenu
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.id) {
@@ -53,8 +72,8 @@ fun MainActivity.observeViewModelState() {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.eventChannel.collect { event ->
                 when (event) {
-                    // Login -> Dashboard (Revisar UiViewModel.kt lineas 87 - 89)
-                    // User -> Login (Revisar UiViewModel.kt lineas 72 - 78)
+                    // Login -> Dashboard (Revisar UiViewModel.kt lineas 88 - 117)
+                    // User -> Login (Revisar UiViewModel.kt lineas 78 - 84)
                     is UiEvent.Navigate -> navController.navigate(event.resId)
                     // Muestra un mensaje de exito o error en el Toast
                     is UiEvent.ShowToast -> Toast.makeText(

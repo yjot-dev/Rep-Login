@@ -9,7 +9,7 @@ class SelectNotificationsUseCase @Inject constructor(
     private val notificationRepository: NotificationRepository
 ) {
     /** Obtener notificaciones mediante caso de uso **/
-    suspend operator fun invoke(): Result<NotificationModel> {
-        return notificationRepository.selectNotifications()
+    suspend operator fun invoke(userId: Int, maxRows: Int? = null): Result<List<NotificationModel>> {
+        return notificationRepository.selectNotifications(userId, maxRows)
     }
 }

@@ -36,6 +36,8 @@
     <string name="payments">PAGOS</string>
     <string name="payments_history">HISTORIAL DE PAGOS</string>
     <string name="notifications">NOTIFICACIONES</string>
+    <string name="send_notification_title">AVISO DE PAGO</string>
+    <string name="send_notification_body">%1$S HA HECHO UN PAGO</string>
     <string name="see_password">VER CLAVE</string>
     <string name="code">ENVIAR CÓDIGO</string>
     <string name="toast_login_success">LOGIN EXITOSO</string>

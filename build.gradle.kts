@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.google.services) apply false
 }
 // Carga el archivo custom.properties
 val customProperties = Properties()

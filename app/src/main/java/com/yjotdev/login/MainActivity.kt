@@ -1,6 +1,8 @@
 package com.yjotdev.login
 
-import dagger.hilt.android.AndroidEntryPoint
+import android.Manifest
+import android.app.ComponentCaller
+import android.content.Intent
 import android.os.Bundle
 import android.graphics.Color
 import android.os.Build
@@ -10,8 +12,10 @@ import androidx.activity.SystemBarStyle
 import androidx.core.view.WindowCompat
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.presentation.navigation.observeViewModelState
 import com.yjotdev.login.presentation.navigation.setupAppNavigation
@@ -30,10 +34,27 @@ class MainActivity : AppCompatActivity() {
         // Configura la IU de la actividad
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Permisos de la app
+        permissions()
         // Navagacion entre fragmentos
         setupAppNavigation()
         // Observacion de estados del ViewModel
         observeViewModelState()
+    }
+
+    override fun onNewIntent(intent: Intent, caller: ComponentCaller) {
+        super.onNewIntent(intent, caller)
+        intent.data?.let { uri ->
+            if (uri.scheme == "com.yjotdev.login" && uri.host == "paypal" && uri.path == "/return") {
+                val orderId = uri.getQueryParameter("token")
+                if (!orderId.isNullOrEmpty()) {
+                    // Realizar la captura de la orden
+                    viewModel.captureOrder(orderId)
+                    // Avisar al backend que envie una notificacion
+                    viewModel.sendNotification()
+                }
+            }
+        }
     }
 
     private fun viewEdgeToEdge(){
@@ -54,6 +75,16 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.attributes.layoutInDisplayCutoutMode =
                 WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
+    }
+
+    private fun permissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                101
+            )
         }
     }
 }

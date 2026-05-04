@@ -10,7 +10,7 @@ fun NotificationDto.toDomain() = NotificationModel(
     id = this.id,
     message = this.message,
     date = this.date,
-    idf = this.idf
+    userId = this.userId
 )
 
 /**
@@ -20,5 +20,5 @@ fun NotificationModel.toDto() = NotificationDto(
     id = this.id,
     message = this.message,
     date = this.date,
-    idf = this.idf
+    userId = this.userId
 )

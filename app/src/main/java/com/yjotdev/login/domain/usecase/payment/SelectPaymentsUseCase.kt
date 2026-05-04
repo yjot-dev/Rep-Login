@@ -8,8 +8,8 @@ import com.yjotdev.login.domain.repository.PaymentRepository
 class SelectPaymentsUseCase @Inject constructor(
     private val paymentRepository: PaymentRepository
 ) {
-    /** Obtener pagos mediante caso de uso **/
-    suspend operator fun invoke(): Result<PaymentModel> {
-        return paymentRepository.selectPayments()
+    /** Selecciona todos los pagos del usuario mediante caso de uso **/
+    suspend operator fun invoke(userId: Int, maxRows: Int? = null): Result<List<PaymentModel>> {
+        return paymentRepository.selectPayments(userId, maxRows)
     }
 }

@@ -2,6 +2,7 @@ package com.yjotdev.login.domain.repository
 
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.NotificationModel
+import com.yjotdev.login.domain.model.SendNotificationRequestModel
 
 /**
  * Define el contrato para las operaciones del repositorio de notificaciones.
@@ -13,5 +14,11 @@ interface NotificationRepository {
      * Busca las notificaciones del usuario
      * @return Result<NotificationModel> que contiene el usuario si se encuentra, o un error.
      */
-    suspend fun selectNotifications(): Result<NotificationModel>
+    suspend fun selectNotifications(userId: Int, maxRows: Int? = null): Result<List<NotificationModel>>
+
+    /**
+     * Envia la notificacion al usuario
+     * @return Result<Unit> que indica éxito o un error.
+     */
+    suspend fun sendNotification(body: SendNotificationRequestModel): Result<Unit>
 }

@@ -5,15 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import dagger.hilt.android.AndroidEntryPoint
-import com.yjotdev.login.domain.model.NotificationModel
+import kotlin.getValue
 import com.yjotdev.login.databinding.FragmentNotificationsBinding
 import com.yjotdev.login.presentation.mvvm.ui.adapter.NotificationAdapter
+import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
+import com.yjotdev.login.R
 
 @AndroidEntryPoint
 class NotificationsFragment : Fragment() {
 
+    private val viewModel: UiViewModel by activityViewModels()
     private var _binding: FragmentNotificationsBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: NotificationAdapter
@@ -28,7 +36,8 @@ class NotificationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadAdapter()
+        setupRecyclerView()
+        observeViewModelState()
     }
 
     override fun onDestroyView() {
@@ -36,18 +45,28 @@ class NotificationsFragment : Fragment() {
         _binding = null
     }
 
-    private fun loadAdapter() {
+    private fun setupRecyclerView() {
+        // Inicializar RecyclerView
         adapter = NotificationAdapter()
         binding.rvNotifications.layoutManager = LinearLayoutManager(requireContext())
         binding.rvNotifications.adapter = adapter
 
-        // TODO: Consumir API de backend (Node.js + MySQL + Stripe) para obtener notificaciones reales
-        // Datos mock para probar la UI
-        val mockNotifications = listOf(
-            NotificationModel(id = 1, message = "Pago de $5.00 completado", date = "2026-04-01", 1),
-            NotificationModel(id = 2, message = "Nueva reunión disponible en Zoom", date = "2026-04-02", 1),
-            NotificationModel(id = 3, message = "Suscripción Premium renovada", date = "2026-04-03", 1)
-        )
-        adapter.submitList(mockNotifications)
+        // Iniciar corrutina para observar cambios en la lista de pagos
+        viewModel.selectNotifications()
+    }
+
+    private fun observeViewModelState() {
+        val overlay = requireActivity().findViewById<View>(R.id.loadingOverlay)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    if (uiState.notifications.isNotEmpty()) {
+                        //Guarda resultados en el adapter
+                        adapter.submitList(uiState.notifications)
+                    }
+                    overlay.visibility = if (uiState.isLoading) {View.VISIBLE} else {View.GONE}
+                }
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -78,10 +79,15 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    //Browser
+    implementation(libs.androidx.browser)
     //Retrofit
     implementation(libs.squareup.retrofit2)
     implementation(libs.squareup.retrofit2.gson)
     implementation(libs.google.code.gson)
+    //Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
     //Logging Interceptor
     implementation(libs.squareup.okhttp3.logging.interceptor)
     //Hilt
