@@ -42,6 +42,7 @@ google-code-gson = { group = "com.google.code.gson", name = "gson", version.ref 
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseVersion" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 # OkHTTP3
 squareup-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
 # Hilt

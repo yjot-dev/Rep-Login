@@ -17,14 +17,14 @@ class ConfigRepositoryImpl @Inject constructor(
 ) : ConfigRepository {
     private val sp = context.getSharedPreferences("MyConfig", Context.MODE_PRIVATE)
 
-    override fun saveConfig(user: MutableMap<String, String>) {
+    override fun saveConfig(settings: MutableMap<String, String>) {
         sp.edit().apply {
-            putString("token", user["token"])
+            putString("token", settings["token"])
             apply()
         }
     }
 
     override fun getConfig() = mutableMapOf(
-        "token" to sp.getString("token", ""),
+        "token" to sp.getString("token", "")
     )
 }

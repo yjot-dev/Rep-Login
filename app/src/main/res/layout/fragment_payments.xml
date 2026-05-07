@@ -18,7 +18,7 @@
             style="@style/MyTitleActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_payments"/>
+            android:text="@string/fragment_payments_lb_title"/>
 
         <!-- Selección de plan -->
         <com.google.android.material.card.MaterialCardView
@@ -45,21 +45,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="@string/basic_plan_payments"/>
+                        android:text="@string/fragment_payments_rb_basic"/>
 
                     <RadioButton
                         android:id="@+id/rbPremium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="@string/premium_plan_payments"/>
+                        android:text="@string/fragment_payments_rb_premium"/>
 
                     <RadioButton
                         android:id="@+id/rbEnterprise"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="@string/enterprise_plan_payments"/>
+                        android:text="@string/fragment_payments_rb_enterprise"/>
                 </RadioGroup>
 
                 <!-- Botón de confirmación de pago -->
@@ -69,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/short3_dp"
                     android:layout_marginHorizontal="@dimen/short1_dp"
-                    android:text="@string/confirm_payment_payments"/>
+                    android:text="@string/fragment_payments_btn_confirm"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

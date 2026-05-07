@@ -99,20 +99,6 @@ class UserFragment : Fragment() {
         binding.btnLogout.setOnClickListener {
             viewModel.logoutUser()
         }
-
-        binding.btnSaveNotifications.setOnClickListener {
-            val paymentEnabled = binding.switchPaymentNotifications.isChecked
-            val meetingEnabled = binding.switchMeetingNotifications.isChecked
-            val generalEnabled = binding.switchGeneralNotifications.isChecked
-
-            // TODO: Guardar configuración en backend (Node.js + MySQL)
-            // Ejemplo: enviar POST /user/notifications con los valores seleccionados
-            Toast.makeText(
-                requireContext(),
-                "Configuración guardada:\nPagos=$paymentEnabled, Reuniones=$meetingEnabled, Generales=$generalEnabled",
-                Toast.LENGTH_LONG
-            ).show()
-        }
     }
 
     private fun observeViewModelState() {
@@ -140,11 +126,11 @@ class UserFragment : Fragment() {
             // Crear un EditText para ingresar solo números
             val input = EditText(requireContext()).apply {
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = context.getString(R.string.code_user)
+                hint = context.getString(R.string.input_code)
             }
             // Construir el AlertDialog
             AlertDialog.Builder(requireContext())
-                .setTitle(context.getString(R.string.code))
+                .setTitle(context.getString(R.string.fragment_register_btn_code))
                 .setView(input)
                 .setPositiveButton(context.getString(R.string.alert_dialog_validate)) { dialog, _ ->
                     val code = input.text.toString()

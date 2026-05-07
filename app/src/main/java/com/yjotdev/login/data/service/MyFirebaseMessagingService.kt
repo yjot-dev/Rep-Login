@@ -1,8 +1,11 @@
 package com.yjotdev.login.data.service
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -28,7 +31,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         val notificationManager = NotificationManagerCompat.from(this)
-        notificationManager.notify(1001, notificationBuilder.build())
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationManager.notify(1001, notificationBuilder.build())
+        }
     }
 
     override fun onNewToken(token: String) {

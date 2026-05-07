@@ -1,11 +1,14 @@
 package com.yjotdev.login.presentation.mvvm.ui.fragment
 
 import android.os.Bundle
+import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -40,6 +43,10 @@ class RecoveryFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        val email = binding.inputEmail.text.toString()
+        val password = binding.inputPassword.text.toString()
+        binding.btnRecovery.isEnabled = false
+
         binding.btnSeePassword.setOnClickListener {
             if(binding.inputPassword.inputType == 129){
                 binding.btnSeePassword.setImageResource(R.drawable.hide_password)
@@ -50,15 +57,14 @@ class RecoveryFragment : Fragment() {
             }
         }
 
-        binding.btnCode.setOnClickListener{
-            val email = binding.inputEmail.text.toString()
-
+        binding.btnSendCode.setOnClickListener {
             context?.let { context ->
                 if(email.isNotEmpty()){
                     if (Helper.isValidEmail(email)) {
-                        // Notifica al ViewModel los nuevos datos e inicia una acción
+                        // Envia un código al email del usuario
                         val subject = context.getString(R.string.email_subject1)
                         viewModel.sendEmail(email, subject)
+                        showAlertDialog()
                     } else {
                         val text = context.getString(R.string.toast_invalid_data)
                         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
@@ -70,24 +76,13 @@ class RecoveryFragment : Fragment() {
             }
         }
 
-        binding.btnRecovery.setOnClickListener{_ ->
-            val code = binding.inputCode.text.toString()
-            val email = binding.inputEmail.text.toString()
-            val password = binding.inputPassword.text.toString()
-            val state = viewModel.uiState.value
-
+        binding.btnRecovery.setOnClickListener {
             context?.let { context ->
-                if(code.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()){
-                    if (Helper.isValidNumber(code)
-                        && Helper.isValidEmail(email)
+                if(email.isNotEmpty() && password.isNotEmpty()){
+                    if (Helper.isValidEmail(email)
                         && Helper.isValidPassword(password)){
-                        if (code == state.randomCode.toString()) {
-                            // Notifica al ViewModel los nuevos datos e inicia una acción
-                            viewModel.changePasswordUser(email, password)
-                        } else {
-                            val text = context.getString(R.string.toast_code_different)
-                            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-                        }
+                        // Inicia una acción
+                        viewModel.changePasswordUser(email, password)
                     } else {
                         val text = context.getString(R.string.toast_invalid_data)
                         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
@@ -97,6 +92,42 @@ class RecoveryFragment : Fragment() {
                     Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private fun showAlertDialog() {
+        val state = viewModel.uiState.value
+        context?.let { context ->
+            // Crear un EditText para ingresar solo números
+            val input = EditText(requireContext()).apply {
+                inputType = InputType.TYPE_CLASS_NUMBER
+                hint = context.getString(R.string.input_code)
+            }
+            // Construir el AlertDialog
+            AlertDialog.Builder(requireContext())
+                .setTitle(context.getString(R.string.fragment_recovery_btn_code))
+                .setView(input)
+                .setPositiveButton(context.getString(R.string.alert_dialog_validate)) { dialog, _ ->
+                    val code = input.text.toString()
+                    if (code.isNotEmpty()) {
+                        if (code == state.randomCode.toString()) {
+                            // Inicia una acción
+                            binding.btnRecovery.isEnabled = true
+                            dialog.dismiss()
+                        } else {
+                            val text = context.getString(R.string.toast_code_different)
+                            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        val text = context.getString(R.string.toast_empty_fields)
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .setNegativeButton(context.getString(R.string.alert_dialog_cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
         }
     }
 }

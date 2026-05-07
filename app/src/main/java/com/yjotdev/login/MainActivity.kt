@@ -3,6 +3,7 @@ package com.yjotdev.login
 import android.Manifest
 import android.app.ComponentCaller
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.graphics.Color
 import android.os.Build
@@ -13,6 +14,7 @@ import androidx.core.view.WindowCompat
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,11 +82,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun permissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                101
-            )
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    1001
+                )
+            }
         }
     }
 }

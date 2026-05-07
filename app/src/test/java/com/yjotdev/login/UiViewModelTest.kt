@@ -40,7 +40,6 @@ import com.yjotdev.login.domain.usecase.user.*
 
 @ExperimentalCoroutinesApi
 class UiViewModelTest {
-
     @RelaxedMockK
     private lateinit var getStringUseCase: GetStringUseCase
     @RelaxedMockK

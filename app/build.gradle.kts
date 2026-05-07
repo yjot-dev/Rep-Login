@@ -88,6 +88,7 @@ dependencies {
     //Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.auth.ktx)
     //Logging Interceptor
     implementation(libs.squareup.okhttp3.logging.interceptor)
     //Hilt

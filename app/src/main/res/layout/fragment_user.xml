@@ -13,12 +13,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Título 1 -->
+        <!-- Título -->
         <TextView
             style="@style/MyTitleActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title1_user" />
+            android:text="@string/fragment_user_lb_title" />
 
         <!-- Sección de datos personales -->
         <com.google.android.material.card.MaterialCardView
@@ -50,7 +50,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="username"
-                        android:hint="@string/name_user"
+                        android:hint="@string/input_name"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,7 +69,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="username"
-                        android:hint="@string/email_user"
+                        android:hint="@string/input_email"
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +93,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="password"
-                            android:hint="@string/password_user"
+                            android:hint="@string/input_password"
                             android:inputType="textPassword" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,7 +102,7 @@
                         android:id="@+id/btnSeePassword"
                         android:layout_width="@dimen/short2_dp"
                         android:layout_height="@dimen/short2_dp"
-                        android:contentDescription="@string/see_password"
+                        android:contentDescription="@string/cd_see_password"
                         android:src="@drawable/show_password" />
                 </LinearLayout>
 
@@ -113,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/short3_dp"
                     android:layout_marginHorizontal="@dimen/short1_dp"
-                    android:text="@string/code"/>
+                    android:text="@string/fragment_user_btn_code"/>
 
                 <!-- Botón actualizar usuario -->
                 <Button
@@ -122,7 +122,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/short3_dp"
                     android:layout_marginHorizontal="@dimen/short1_dp"
-                    android:text="@string/update" />
+                    android:text="@string/fragment_user_btn_update" />
 
                 <!-- Botón eliminar usuario -->
                 <Button
@@ -131,7 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/short3_dp"
                     android:layout_marginHorizontal="@dimen/short1_dp"
-                    android:text="@string/delete" />
+                    android:text="@string/fragment_user_btn_delete" />
 
                 <!-- Botón de cerrar sesión -->
                 <Button
@@ -140,61 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/short3_dp"
                     android:layout_marginHorizontal="@dimen/short1_dp"
-                    android:text="@string/logout" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Título 2 -->
-        <TextView
-            style="@style/MyTitleActivity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/title2_user" />
-
-        <!-- Sección de configuración de notificaciones -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/short1_dp"
-            app:cardElevation="@dimen/short1_dp"
-            app:cardBackgroundColor="?attr/colorSurface"
-            android:layout_marginTop="@dimen/short1_dp"
-            android:layout_marginStart="@dimen/short1_dp"
-            android:layout_marginEnd="@dimen/short1_dp"
-            android:layout_marginBottom="@dimen/short2_dp">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:padding="@dimen/short1_dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchPaymentNotifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/payments_notifications_user"/>
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchMeetingNotifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/meetings_notifications_user"/>
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchGeneralNotifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/general_notifications_user"/>
-
-                <!-- Botón guardar configuración -->
-                <Button
-                    style="@style/MyButton"
-                    android:id="@+id/btnSaveNotifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/short3_dp"
-                    android:layout_marginHorizontal="@dimen/short1_dp"
-                    android:text="@string/configuration_save_user"/>
+                    android:text="@string/fragment_user_btn_logout" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

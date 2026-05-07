@@ -18,7 +18,7 @@
             style="@style/MyTitleActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_dashboard"/>
+            android:text="@string/fragment_dashboard_lb_title"/>
 
         <!-- Sección de accesos rápidos -->
         <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/open_zoom_dashboard"
+                android:text="@string/fragment_dashboard_btn_zoom"
                 app:icon="@drawable/zoom"/>
 
             <Space
@@ -48,7 +48,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/open_meet_dashboard"
+                android:text="@string/fragment_dashboard_btn_meet"
                 app:icon="@drawable/meet"/>
 
         </LinearLayout>
@@ -72,7 +72,7 @@
                     style="@style/MyTextActivity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/recent_payments_dashboard"/>
+                    android:text="@string/fragment_dashboard_lb_recent"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPayments"

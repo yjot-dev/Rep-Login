@@ -3,26 +3,26 @@
 
     <item
         android:id="@+id/dashboardFragment"
-        android:title="@string/dashboard"
+        android:title="@string/fragment_dashboard_lb_title"
         android:icon="@drawable/dashboard_70" />
 
     <item
         android:id="@+id/userFragment"
-        android:title="@string/user"
+        android:title="@string/fragment_user_lb_title"
         android:icon="@drawable/user_70" />
 
     <item
         android:id="@+id/paymentsFragment"
-        android:title="@string/payments"
+        android:title="@string/fragment_payments_lb_title"
         android:icon="@drawable/payments_70" />
 
     <item
         android:id="@+id/paymentsHistoryFragment"
-        android:title="@string/payments_history"
+        android:title="@string/fragment_payments_history_lb_title"
         android:icon="@drawable/payments_history_70" />
 
     <item
         android:id="@+id/notificationsFragment"
-        android:title="@string/notifications"
+        android:title="@string/fragment_notifications_lb_title"
         android:icon="@drawable/notifications_70" />
 </menu>

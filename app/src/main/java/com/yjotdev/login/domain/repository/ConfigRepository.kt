@@ -4,7 +4,7 @@ interface ConfigRepository {
     /**
      * Guardar configuracion de usuario
      */
-    fun saveConfig(user: MutableMap<String, String>)
+    fun saveConfig(settings: MutableMap<String, String>)
     /**
      * Obtener configuracion de usuario
      */

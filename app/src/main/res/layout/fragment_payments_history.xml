@@ -14,7 +14,7 @@
         style="@style/MyTitleActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_payments_history"/>
+        android:text="@string/fragment_payments_history_lb_title"/>
 
     <!-- Sección de transacciones -->
     <com.google.android.material.card.MaterialCardView

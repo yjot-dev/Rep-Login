@@ -14,7 +14,7 @@
         style="@style/MyTitleActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_notifications"/>
+        android:text="@string/fragment_notifications_lb_title"/>
 
     <!-- Lista de notificaciones -->
     <com.google.android.material.card.MaterialCardView

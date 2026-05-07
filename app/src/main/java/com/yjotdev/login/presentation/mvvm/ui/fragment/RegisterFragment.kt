@@ -60,14 +60,24 @@ class RegisterFragment : Fragment() {
 
         binding.btnSendCode.setOnClickListener {
             context?.let { context ->
-                // Envia un código al email del usuario
-                val subject = context.getString(R.string.email_subject2)
-                viewModel.sendEmail(email, subject)
-                showAlertDialog()
+                if(email.isNotEmpty()){
+                    if (Helper.isValidEmail(email)) {
+                        // Envia un código al email del usuario
+                        val subject = context.getString(R.string.email_subject2)
+                        viewModel.sendEmail(email, subject)
+                        showAlertDialog()
+                    } else {
+                        val text = context.getString(R.string.toast_invalid_data)
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    val text = context.getString(R.string.toast_empty_fields)
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
-        binding.btnRegister.setOnClickListener{
+        binding.btnRegister.setOnClickListener {
             context?.let { context ->
                 if(name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()){
                     if (Helper.isValidUser(name)
@@ -93,11 +103,11 @@ class RegisterFragment : Fragment() {
             // Crear un EditText para ingresar solo números
             val input = EditText(requireContext()).apply {
                 inputType = InputType.TYPE_CLASS_NUMBER
-                hint = context.getString(R.string.code_user)
+                hint = context.getString(R.string.input_code)
             }
             // Construir el AlertDialog
             AlertDialog.Builder(requireContext())
-                .setTitle(context.getString(R.string.code))
+                .setTitle(context.getString(R.string.fragment_register_btn_code))
                 .setView(input)
                 .setPositiveButton(context.getString(R.string.alert_dialog_validate)) { dialog, _ ->
                     val code = input.text.toString()

@@ -20,6 +20,7 @@ import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
 import com.yjotdev.login.domain.model.CreateOrderRequestModel
+import com.yjotdev.login.domain.model.SendNotificationRequestModel
 import com.yjotdev.login.domain.usecase.notification.SelectNotificationsUseCase
 import com.yjotdev.login.domain.usecase.payment.SelectPaymentsUseCase
 import com.yjotdev.login.domain.usecase.payment.CreateOrderUseCase
@@ -31,7 +32,6 @@ import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
 import com.yjotdev.login.domain.usecase.user.FindUserUseCase
 import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
 import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
-import com.yjotdev.login.domain.model.SendNotificationRequestModel
 import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 import com.yjotdev.login.R

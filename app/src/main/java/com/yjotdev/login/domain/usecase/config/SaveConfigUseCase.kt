@@ -7,7 +7,7 @@ class SaveConfigUseCase @Inject constructor(
     private val configRepository: ConfigRepository
 ) {
     /** Guarda id de usuario **/
-    operator fun invoke(user: MutableMap<String, String>) {
-        configRepository.saveConfig(user)
+    operator fun invoke(settings: MutableMap<String, String>) {
+        configRepository.saveConfig(settings)
     }
 }

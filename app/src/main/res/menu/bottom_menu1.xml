@@ -4,16 +4,16 @@
 
     <item
         android:id="@+id/loginFragment"
-        android:title="@string/login"
+        android:title="@string/fragment_login_btn_login"
         android:icon="@drawable/login_70" />
 
     <item
         android:id="@+id/registerFragment"
-        android:title="@string/register"
+        android:title="@string/fragment_register_btn_register"
         android:icon="@drawable/register_70" />
 
     <item
         android:id="@+id/recoveryFragment"
-        android:title="@string/recovery"
+        android:title="@string/fragment_recovery_btn_recovery"
         android:icon="@drawable/recovery_70" />
 </menu>
