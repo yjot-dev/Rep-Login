@@ -8,10 +8,7 @@ class HeaderInterceptor: Interceptor {
         val request = chain.request().newBuilder()
             .addHeader("Accept","application/json")
             .addHeader("Content-Type","application/json")
-        // Si hay token disponible, añadirlo
-        TokenProvider.firebaseToken?.let { token ->
-            request.addHeader("Authorization", "Bearer $token")
-        }
-        return chain.proceed(request.build())
+            .build()
+        return chain.proceed(request)
     }
 }

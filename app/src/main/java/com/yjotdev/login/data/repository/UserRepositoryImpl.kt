@@ -1,9 +1,7 @@
 package com.yjotdev.login.data.repository
 
-import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.tasks.await
 import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
@@ -13,7 +11,6 @@ import com.yjotdev.login.data.remote.core.safeApiCallForBody
 import com.yjotdev.login.data.remote.core.safeApiCallForUnit
 import com.yjotdev.login.data.remote.mapper.toDomain
 import com.yjotdev.login.data.remote.mapper.toDto
-import com.yjotdev.login.data.remote.network.TokenProvider
 import com.yjotdev.login.data.remote.service.UserService
 import com.yjotdev.login.domain.core.mapSuccess
 
@@ -30,16 +27,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun findUser(login: LoginModel): Result<UserModel> {
         return safeApiCallForBody { userService.findUser(login.toDto()) }
-            .mapSuccess { result ->
-                val auth = FirebaseAuth.getInstance()
-                val credential = auth.signInWithEmailAndPassword(result.email, result.password).await()
-                val firebaseUser = credential.user ?: throw Exception("Firebase login failed")
-                // Obtener token y guardarlo en TokenProvider
-                val token = firebaseUser.getIdToken(false).await().token
-                TokenProvider.firebaseToken = token
-                // Resultado
-                result.toDomain()
-            }
+            .mapSuccess { result -> result.toDomain() }
     }
 
     override suspend fun changePasswordUser(recovery: RecoveryModel): Result<Unit> {

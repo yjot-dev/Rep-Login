@@ -2,7 +2,6 @@ package com.yjotdev.login.data.service
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -19,7 +18,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     lateinit var saveConfigUseCase: SaveConfigUseCase
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.d("FCM", "Mensaje recibido: ${remoteMessage.notification?.body}")
         // Construye y muestra la notificación
         val title = remoteMessage.notification?.title ?: "Aviso"
         val body = remoteMessage.notification?.body ?: "Tienes una nueva notificación"
@@ -41,7 +39,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        Log.d("FCM", "Nuevo token: $token")
         // Guarda token en local
         saveConfigUseCase(mutableMapOf("token" to token))
     }

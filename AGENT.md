@@ -119,9 +119,8 @@
             - `remote`: Contiene las clases relacionadas con la comunicación de red.
                 - `service`: Contiene los endpoints de la API.
                     - `NombreDeTablaService.kt`
-                - `network`: Contiene la configuración de red, cliente HTTP e interceptores.
+                - `network`: Contiene la configuración de red con cliente HTTP e interceptores.
                     - `RetrofitBuilder.kt`
-                    - `OkHttpClient.kt`
                     - `HeaderInterceptor.kt`
                 - `dto`: Contiene los modelos de datos que coinciden exactamente con la respuesta JSON de la API.
                     - `NombreDeTablaDto.kt`

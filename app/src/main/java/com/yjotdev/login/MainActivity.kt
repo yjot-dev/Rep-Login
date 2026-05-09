@@ -1,13 +1,14 @@
 package com.yjotdev.login
 
 import android.Manifest
-import android.app.ComponentCaller
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.SystemBarStyle
 import androidx.core.view.WindowCompat
@@ -42,21 +43,14 @@ class MainActivity : AppCompatActivity() {
         setupAppNavigation()
         // Observacion de estados del ViewModel
         observeViewModelState()
+        // Procesa el intent inicial
+        intent.data?.let { uri -> handlePaypalIntent(uri) }
     }
 
-    override fun onNewIntent(intent: Intent, caller: ComponentCaller) {
-        super.onNewIntent(intent, caller)
-        intent.data?.let { uri ->
-            if (uri.scheme == "com.yjotdev.login" && uri.host == "paypal" && uri.path == "/return") {
-                val orderId = uri.getQueryParameter("token")
-                if (!orderId.isNullOrEmpty()) {
-                    // Realizar la captura de la orden
-                    viewModel.captureOrder(orderId)
-                    // Avisar al backend que envie una notificacion
-                    viewModel.sendNotification()
-                }
-            }
-        }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // Procesa el intent inicial
+        intent.data?.let { uri -> handlePaypalIntent(uri) }
     }
 
     private fun viewEdgeToEdge(){
@@ -92,6 +86,24 @@ class MainActivity : AppCompatActivity() {
                     arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                     1001
                 )
+            }
+        }
+    }
+
+    private fun handlePaypalIntent(uri: Uri) {
+        if (uri.scheme == "com.yjotdev.login" && uri.host == "paypal") {
+            when (uri.path) {
+                "/return" -> {
+                    val orderId = uri.getQueryParameter("token")
+                    if (!orderId.isNullOrEmpty()) {
+                        viewModel.captureOrder(orderId)
+                        viewModel.sendNotification()
+                    }
+                }
+                "/cancel" -> {
+                    val text = this.getString(R.string.toast_capture_order_error)
+                    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

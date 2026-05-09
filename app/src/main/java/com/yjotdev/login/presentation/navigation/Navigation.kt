@@ -17,14 +17,14 @@ fun MainActivity.setupAppNavigation() {
     // Inicializa el NavController
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentNav) as NavHostFragment
     val navController = navHostFragment.navController
-    // Vincula NavController con el BottomMenu y TopMenu
+    // Vincula NavController con los BottomMenu
     binding.bottomMenu1.setupWithNavController(navController)
     binding.bottomMenu2.setupWithNavController(navController)
-    // Evita que bottomMenu1 restaure estados antiguos después del logout
-    binding.bottomMenu1.setOnItemSelectedListener { item ->
+    // Evita que bottomMenu2 restaure estados antiguos después del logout
+    binding.bottomMenu2.setOnItemSelectedListener { item ->
         when(item.itemId) {
             R.id.loginFragment -> {
-                navController.navigate(R.id.loginFragment) {
+                navController.navigate(item.itemId) {
                     popUpTo(navController.graph.startDestinationId) {
                         inclusive = true
                     }
@@ -39,7 +39,7 @@ fun MainActivity.setupAppNavigation() {
             }
         }
     }
-    // Logica del BottomMenu
+    // Logica para alternar la visibilidad de los BottomMenu
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.id) {
             R.id.loginFragment,
