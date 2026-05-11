@@ -20,17 +20,19 @@
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="4"
-            android:maxWidth="120dp"
+            android:maxLines="10"
+            android:maxWidth="160dp"
             tools:textSize="16sp"
-            tools:text="Mensaje de notificación"/>
+            tools:text="Pago de TestLogin exitoso: El pago realizado fue de $10."/>
 
         <TextView
             style="@style/MyItemAdapter"
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:maxWidth="100dp"
             tools:textSize="16sp"
-            tools:text="03-02-2026"/>
+            tools:text="03-02-2026 13:27:45"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

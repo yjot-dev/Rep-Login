@@ -8,8 +8,8 @@ import com.yjotdev.login.domain.repository.ConfigRepository
 class FakeConfigRepositoryImpl @Inject constructor() : ConfigRepository {
     private val config = mutableMapOf<String, String?>()
 
-    override fun saveConfig(settings: MutableMap<String, String>) {
-        config["token"] = settings["token"]
+    override fun saveTokenFCM(token: String) {
+        config["token"] = token
     }
 
     override fun getConfig(): MutableMap<String, String?> {

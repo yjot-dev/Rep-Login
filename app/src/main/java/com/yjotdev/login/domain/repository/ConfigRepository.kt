@@ -2,11 +2,11 @@ package com.yjotdev.login.domain.repository
 
 interface ConfigRepository {
     /**
-     * Guardar configuracion de usuario
+     * Guardar token de Firebase Cloud Messaging (FCM)
      */
-    fun saveConfig(settings: MutableMap<String, String>)
+    fun saveTokenFCM(token: String)
     /**
-     * Obtener configuracion de usuario
+     * Obtener todas las configuraciones guardadas
      */
     fun getConfig(): MutableMap<String, String?>
 }

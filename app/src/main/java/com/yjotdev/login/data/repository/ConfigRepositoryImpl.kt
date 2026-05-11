@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.yjotdev.login.domain.repository.ConfigRepository
+import androidx.core.content.edit
 
 /**
  * Implementación del ConfigRepository.
@@ -17,11 +18,8 @@ class ConfigRepositoryImpl @Inject constructor(
 ) : ConfigRepository {
     private val sp = context.getSharedPreferences("MyConfig", Context.MODE_PRIVATE)
 
-    override fun saveConfig(settings: MutableMap<String, String>) {
-        sp.edit().apply {
-            putString("token", settings["token"])
-            apply()
-        }
+    override fun saveTokenFCM(token: String) {
+        sp.edit { putString("token", token) }
     }
 
     override fun getConfig() = mutableMapOf(

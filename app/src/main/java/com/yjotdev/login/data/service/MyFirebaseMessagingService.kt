@@ -9,13 +9,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.yjotdev.login.domain.usecase.config.SaveConfigUseCase
+import com.yjotdev.login.domain.usecase.config.SaveTokenFcmUseCase
 import com.yjotdev.login.R
 
 @AndroidEntryPoint
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     @Inject
-    lateinit var saveConfigUseCase: SaveConfigUseCase
+    lateinit var saveTokenFcmUseCase: SaveTokenFcmUseCase
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Construye y muestra la notificación
@@ -39,7 +39,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        // Guarda token en local
-        saveConfigUseCase(mutableMapOf("token" to token))
+        // Guarda token FCM
+        saveTokenFcmUseCase(token)
     }
 }

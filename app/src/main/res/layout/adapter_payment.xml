@@ -28,8 +28,10 @@
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:maxWidth="100dp"
             tools:textSize="16sp"
-            tools:text="03-02-2026"/>
+            tools:text="03-02-2026 13:27:45"/>
 
         <TextView
             style="@style/MyItemAdapter"

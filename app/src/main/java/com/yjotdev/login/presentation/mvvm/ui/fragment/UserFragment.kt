@@ -106,6 +106,9 @@ class UserFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
                     uiState.user?.let { user ->
+                        if (user.isInvited) {
+                            binding.btnSendCode.isEnabled = false
+                        }
                         if(binding.inputName.text.toString() != user.name &&
                             binding.inputEmail.text.toString() != user.email &&
                             binding.inputPassword.text.toString() != user.password)
