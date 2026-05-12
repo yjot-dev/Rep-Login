@@ -26,6 +26,8 @@ import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.presentation.navigation.UiEvent
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.LoginModel
+import com.yjotdev.login.domain.model.NotificationModel
+import com.yjotdev.login.domain.model.PaymentModel
 import com.yjotdev.login.domain.model.RecoveryModel
 import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
@@ -467,5 +469,185 @@ class UiViewModelTest {
         job.cancel()
 
         coVerify(exactly = 1) { sendEmailUseCase(any()) }
+    }
+
+    // ---------- createOrder ----------
+    @Test
+    fun whenCreateOrderIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
+        val fakeResponse = mapOf("approveUrl" to "https://paypal.com/approve")
+        coEvery { createOrderUseCase(any()) } returns Result.Success(fakeResponse)
+        coEvery { getStringUseCase(R.string.toast_create_order_success) } returns "Order created"
+
+        val job = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowToast("Order created"), awaitItem())
+            }
+        }
+
+        viewModel.createOrder("basic") {}
+        advanceUntilIdle()
+
+        job.cancel()
+        coVerify(exactly = 1) { createOrderUseCase(any()) }
+    }
+
+    @Test
+    fun whenCreateOrderFailsThenUiStateIsUpdatedAndErrorEventsAreSent() = runTest {
+        val exception = Exception("Create order failed")
+        coEvery { createOrderUseCase(any()) } returns Result.Error(exception)
+        coEvery { getStringUseCase(R.string.toast_create_order_error) } returns "Order error"
+
+        val job = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowToast("Order error"), awaitItem())
+                assertEquals(UiEvent.ShowLog("Create order failed"), awaitItem())
+            }
+        }
+
+        viewModel.createOrder("basic") {}
+        advanceUntilIdle()
+
+        job.cancel()
+        coVerify(exactly = 1) { createOrderUseCase(any()) }
+    }
+
+    // ---------- captureOrder ----------
+    @Test
+    fun whenCaptureOrderIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
+        coEvery { captureOrderUseCase(any()) } returns Result.Success(Unit)
+        coEvery { getStringUseCase(R.string.toast_capture_order_success) } returns "Order captured"
+
+        val job = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowToast("Order captured"), awaitItem())
+            }
+        }
+
+        viewModel.captureOrder("123")
+        advanceUntilIdle()
+
+        job.cancel()
+        coVerify(exactly = 1) { captureOrderUseCase(any()) }
+    }
+
+    @Test
+    fun whenCaptureOrderFailsThenUiStateIsUpdatedAndErrorEventsAreSent() = runTest {
+        val exception = Exception("Capture failed")
+        coEvery { captureOrderUseCase(any()) } returns Result.Error(exception)
+        coEvery { getStringUseCase(R.string.toast_capture_order_error) } returns "Capture error"
+
+        val job = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowToast("Capture error"), awaitItem())
+                assertEquals(UiEvent.ShowLog("Capture failed"), awaitItem())
+            }
+        }
+
+        viewModel.captureOrder("123")
+        advanceUntilIdle()
+
+        job.cancel()
+        coVerify(exactly = 1) { captureOrderUseCase(any()) }
+    }
+
+    // ---------- selectPayments ----------
+    @Test
+    fun whenSelectPaymentsIsSuccessfulThenUiStateIsUpdatedWithPayments() = runTest {
+        val fakePayments = listOf(PaymentModel())
+        coEvery { selectPaymentsUseCase(any(), any()) } returns Result.Success(fakePayments)
+
+        viewModel.selectPayments()
+        advanceUntilIdle()
+
+        assertEquals(fakePayments, viewModel.uiState.value.payments)
+        coVerify(exactly = 1) { selectPaymentsUseCase(any(), any()) }
+    }
+
+    @Test
+    fun whenSelectPaymentsFailsThenUiStateIsUpdatedWithEmptyListAndLogEventIsSent() = runTest {
+        val exception = Exception("Payments error")
+        coEvery { selectPaymentsUseCase(any(), any()) } returns Result.Error(exception)
+
+        val job = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowLog("Payments error"), awaitItem())
+            }
+        }
+
+        viewModel.selectPayments()
+        advanceUntilIdle()
+
+        job.cancel()
+        assertTrue(viewModel.uiState.value.payments.isEmpty())
+        coVerify(exactly = 1) { selectPaymentsUseCase(any(), any()) }
+    }
+
+    // ---------- selectNotifications ----------
+    @Test
+    fun whenSelectNotificationsIsSuccessfulThenUiStateIsUpdatedWithNotifications() = runTest {
+        val fakeNotifications = listOf(NotificationModel())
+        coEvery { selectNotificationsUseCase(any(), any()) } returns Result.Success(fakeNotifications)
+
+        viewModel.selectNotifications()
+        advanceUntilIdle()
+
+        assertEquals(fakeNotifications, viewModel.uiState.value.notifications)
+        coVerify(exactly = 1) { selectNotificationsUseCase(any(), any()) }
+    }
+
+    @Test
+    fun whenSelectNotificationsFailsThenUiStateIsUpdatedWithEmptyListAndLogEventIsSent() = runTest {
+        val exception = Exception("Notifications error")
+        coEvery { selectNotificationsUseCase(any(), any()) } returns Result.Error(exception)
+
+        val job = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowLog("Notifications error"), awaitItem())
+            }
+        }
+
+        viewModel.selectNotifications()
+        advanceUntilIdle()
+
+        job.cancel()
+        assertTrue(viewModel.uiState.value.notifications.isEmpty())
+        coVerify(exactly = 1) { selectNotificationsUseCase(any(), any()) }
+    }
+
+    // ---------- sendNotification ----------
+    @Test
+    fun whenSendNotificationIsSuccessfulThenUiStateIsUpdated() = runTest {
+        coEvery { sendNotificationUseCase(any()) } returns Result.Success(Unit)
+        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
+        coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
+        coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
+
+        viewModel.sendNotification()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { sendNotificationUseCase(any()) }
+    }
+
+    @Test
+    fun whenSendNotificationFailsThenUiStateIsUpdatedAndLogEventIsSent() = runTest {
+        val exception = Exception("Notification error")
+        coEvery { sendNotificationUseCase(any()) } returns Result.Error(exception)
+        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
+        coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
+        coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
+
+        val job = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowLog("Notification error"), awaitItem())
+            }
+        }
+
+        viewModel.sendNotification()
+        advanceUntilIdle()
+
+        job.cancel()
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { sendNotificationUseCase(any()) }
     }
 }

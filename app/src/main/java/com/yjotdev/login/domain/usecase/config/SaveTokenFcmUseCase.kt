@@ -6,7 +6,7 @@ import com.yjotdev.login.domain.repository.ConfigRepository
 class SaveTokenFcmUseCase @Inject constructor(
     private val configRepository: ConfigRepository
 ) {
-    /** Guarda token FCM **/
+    /** Guarda token FCM mediante caso de uso **/
     operator fun invoke(token: String) {
         configRepository.saveTokenFCM(token)
     }
