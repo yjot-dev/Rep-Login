@@ -7,5 +7,6 @@ data class UserDto(
     @SerializedName("nombre") val name: String = "",
     @SerializedName("correo") val email: String = "",
     @SerializedName("clave") val password: String = "",
-    @SerializedName("esInvitado") val isInvited: Boolean = false
+    @SerializedName("esInvitado") val isInvited: Boolean = false,
+    @SerializedName("estaEnListaBlanca") val isInWhiteList: Boolean = false
 )

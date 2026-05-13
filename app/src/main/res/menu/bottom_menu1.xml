@@ -3,17 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/loginFragment"
+        android:id="@+id/navigationLogin"
         android:title="@string/fragment_login_btn_login"
         android:icon="@drawable/login_70" />
 
     <item
-        android:id="@+id/registerFragment"
+        android:id="@+id/navigationRegister"
         android:title="@string/fragment_register_btn_register"
         android:icon="@drawable/register_70" />
 
     <item
-        android:id="@+id/recoveryFragment"
+        android:id="@+id/navigationRecovery"
         android:title="@string/fragment_recovery_btn_recovery"
         android:icon="@drawable/recovery_70" />
 </menu>

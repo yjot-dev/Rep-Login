@@ -23,7 +23,7 @@ fun MainActivity.setupAppNavigation() {
     // Evita que bottomMenu2 restaure estados antiguos después del logout
     binding.bottomMenu2.setOnItemSelectedListener { item ->
         when(item.itemId) {
-            R.id.loginFragment -> {
+            R.id.navigationLogin -> {
                 navController.navigate(item.itemId) {
                     popUpTo(navController.graph.startDestinationId) {
                         inclusive = true
@@ -42,9 +42,9 @@ fun MainActivity.setupAppNavigation() {
     // Logica para alternar la visibilidad de los BottomMenu
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.id) {
-            R.id.loginFragment,
-            R.id.registerFragment,
-            R.id.recoveryFragment -> {
+            R.id.navigationLogin,
+            R.id.navigationRegister,
+            R.id.navigationRecovery -> {
                 binding.bottomMenu1.visibility = View.VISIBLE
                 binding.bottomMenu2.visibility = View.GONE
             }

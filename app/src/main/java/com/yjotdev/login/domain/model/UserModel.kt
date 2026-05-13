@@ -5,5 +5,6 @@ data class UserModel(
     val name: String = "",
     val email: String = "",
     val password: String = "",
-    val isInvited: Boolean = false
+    val isInvited: Boolean = false,
+    val isInWhiteList: Boolean = false
 )

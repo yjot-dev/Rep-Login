@@ -50,7 +50,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.btnLogin.setOnClickListener{
-            val nameOrEmail = binding.inputName.text.toString()
+            val nameOrEmail = binding.inputNameOrEmail.text.toString()
             val password = binding.inputPassword.text.toString()
 
             context?.let { context ->

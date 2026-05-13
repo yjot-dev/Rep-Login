@@ -1,12 +1,13 @@
 # LOGIN
-LOGIN es una aplicación móvil robusta y segura que sirve como prototipo funcional para la gestión de autenticación de usuarios. Ofrece una experiencia de usuario clara y directa, cubriendo todas las operaciones esenciales de un ciclo de vida de cuenta de usuario, desde la creación hasta la eliminación.
+LOGIN es una aplicación móvil avanzada para la gestión integral de autenticación y operaciones de usuario, diseñada bajo los más altos estándares de seguridad y experiencia de usuario. La app implementa una arquitectura robusta (MVVM + Clean Architecture) y ofrece una interfaz intuitiva basada en XML, permitiendo a los usuarios acceder, gestionar y proteger su identidad digital de manera eficiente. Además de las funciones clásicas de inicio de sesión, registro y recuperación de clave, LOGIN incorpora nuevas vistas que enriquecen la experiencia: un Dashboard centralizado para acceder rápidamente a videollamadas (Zoom o Meet) y visualizar los últimos pagos, un módulo de Pagos integrado con PayPal, un historial detallado de todas las transacciones, un sistema de notificaciones automáticas por cada pago realizado y una sección de usuario para la gestión de información personal.
 
 # Características principales
 - 🪟 Interfaz clasica con XML
 - 📊 Integración con ViewModel + StateFlow
-- 🎨 Patrón de diseño arquitectónico con MVVM + Hexagonal
-- 🧩 Inyección de dependencias con Hilt
-- 💽 Base de datos remota con MySQL, la API RESTful con Node
+- 🎨 Patrón de diseño arquitectónico con MVVM + Clean Architecture
+- 💉 Inyección de dependencias con Hilt
+- 💽 Base de datos remota con MySQL 
+- 🧩 API RESTful con Node.JS
 - 📱 Compatible con Android 7.0 (API 24) en adelante
 
 # Instalación
@@ -22,18 +23,18 @@ LOGIN es una aplicación móvil robusta y segura que sirve como prototipo funcio
 - Material 3
 
 # Uso
-El flujo de uso de la aplicación está diseñado para ser intuitivo y completo, guiando al usuario a través de los siguientes pasos:
+El flujo de uso de la aplicación está diseñado para ser intuitivo y completo, guiando al usuario a través de las siguientes vistas y funcionalidades principales:
 
-1. Acceso y Gestión de Cuenta: Al iniciar la aplicación, el usuario es recibido por una interfaz limpia con una barra de navegación inferior que presenta tres opciones directas para la gestión de su cuenta:
-   - Iniciar Sesión (Login): Los usuarios existentes pueden acceder a su perfil de forma segura ingresando su nombre de usuario o correo electrónico junto con su contraseña.
-   - Registrarse (Registro): Los nuevos usuarios son dirigidos a una vista dedicada donde pueden crear su cuenta de manera rápida y sencilla, proporcionando un nombre de usuario, un correo electrónico válido y una contraseña.
-   - Recuperar Clave: En caso de olvido, el sistema ofrece una función de recuperación segura. El usuario ingresa su correo electrónico para recibir un código de verificación único. Tras validar dicho código, puede establecer una nueva contraseña y restaurar el acceso a su cuenta sin complicaciones.
-2. Gestión del Perfil de Usuario: Una vez que el usuario ha iniciado sesión correctamente, es dirigido a una vista de "Usuario" personalizada. Esta sección funciona como su panel de control personal y le permite realizar las siguientes acciones:
-   - Actualizar Datos: El usuario tiene control total para modificar su información personal, incluyendo su nombre, correo electrónico y contraseña.
-   - Cerrar Sesión: Permite salir de la sesión actual de forma segura, volviendo a la pantalla de inicio de sesión.
-   - Eliminar Cuenta: Ofrece la opción de eliminar permanentemente su cuenta del sistema si así lo desea.
+- Login: Al abrir la aplicación, el usuario es recibido por una pantalla de inicio de sesión donde puede acceder de forma segura utilizando su nombre de usuario o correo electrónico y contraseña.
+- Registro: Los nuevos usuarios pueden crear una cuenta proporcionando un nombre de usuario, correo electrónico y contraseña, accediendo así a todas las funcionalidades de la app.
+- Recuperación de Clave: Si el usuario olvida su contraseña, puede recuperarla fácilmente mediante un proceso seguro que incluye la verificación por correo electrónico y la creación de una nueva clave.
+- Dashboard: Tras iniciar sesión, el usuario accede a un panel principal que le permite abrir videollamadas (Zoom o Meet) y consultar rápidamente los últimos pagos realizados, centralizando las acciones más frecuentes.
+- Pagos: Desde la sección de pagos, el usuario puede realizar transacciones de manera segura utilizando PayPal, facilitando la gestión financiera dentro de la app.
+- Historial de Pagos: El usuario puede consultar un historial completo de todas las transacciones realizadas, con detalles claros y ordenados para un mejor control y seguimiento.
+- Notificaciones: Por cada pago realizado, el sistema envía notificaciones automáticas, manteniendo al usuario informado en tiempo real sobre sus movimientos.
+- Usuario: En la vista de usuario, se puede consultar y actualizar la información personal, cambiar la contraseña, cerrar sesión o eliminar la cuenta de manera definitiva.
 
-En resumen, LOGIN no es solo una pantalla de inicio de sesión, sino un sistema de autenticación completo que demuestra una arquitectura técnica sólida (MVVM y Hexagonal), proporcionando una experiencia de usuario fluida y segura para registrarse, acceder, gestionar y proteger su identidad digital.
+En conjunto, LOGIN proporciona un ecosistema seguro, moderno y eficiente para la gestión de cuentas, pagos y comunicaciones, adaptado a las necesidades actuales de los usuarios y alineado con las mejores prácticas de desarrollo Android.
 
 # Ver video Demo
 [Ver en Youtube](https://youtu.be/gTadwvq60Yg)

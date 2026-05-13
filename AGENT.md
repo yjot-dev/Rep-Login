@@ -50,7 +50,7 @@
             - `utils`: Contiene los helpers de UI.
                 - `Helper.kt`
 
-### A.1.3 Perfil de Estructura: Arquitectura Hexagonal
+### A.1.3 Perfil de Estructura: Clean Architecture
 - **Uso:** Para aplicaciones completas que requieren una separación estricta de responsabilidades, con capas de dominio, datos (infraestructura) y aplicación bien definidas. Ideal para proyectos con APIs, bases de datos, etc.
 - **Estructura de Directorios:**
     - `presentation` (Capa de Presentación)

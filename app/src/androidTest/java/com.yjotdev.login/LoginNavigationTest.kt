@@ -1,15 +1,12 @@
 package com.yjotdev.login
 
-import androidx.lifecycle.ViewModelProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
-import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -18,7 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -38,123 +34,53 @@ class LoginNavigationTest {
     }
 
     @Test
-    fun testFullUserFlow() {
+    fun testLoginToDashboardAndOthersViews() {
         // --- 1. PANTALLA LOGIN ---
         // Verificamos estar en Login
-        onView(withId(R.id.btnLogin)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvTitleLogin)).check(matches(isDisplayed()))
 
-        // Intentamos ir a registrar un nuevo usuario
-        onView(withId(R.id.registerFragment)).perform(click())
-
-        // Esperamos un momento a que la navegación ocurra
-        Thread.sleep(1000)
-
-        // --- 2. PANTALLA REGISTER ---
-        // Verificamos estar en Register
-        onView(withId(R.id.btnRegister)).check(matches(isDisplayed()))
-
-        // Llenamos datos de registro
-        onView(withId(R.id.inputName))
-            .perform(typeText("Test User"), closeSoftKeyboard())
-        onView(withId(R.id.inputEmail))
-            .perform(typeText("test@example.com"), closeSoftKeyboard())
+        // Ingresamos los datos necesarios
+        onView(withId(R.id.inputNameOrEmail))
+            .perform(typeText("Invitado"), closeSoftKeyboard())
         onView(withId(R.id.inputPassword))
-            .perform(typeText("123456"), closeSoftKeyboard())
+            .perform(typeText("Invitado1000"), closeSoftKeyboard())
 
-        // Clic en registrar
-        onView(withId(R.id.btnRegister)).perform(click())
-
-        // Volver al login desde register
-        onView(withId(R.id.loginFragment)).perform(click())
-
-        // Esperamos un momento a que la navegación ocurra
-        Thread.sleep(1000)
-
-        // --- 3. PANTALLA LOGIN (De vuelta) ---
-        onView(withId(R.id.btnLogin)).check(matches(isDisplayed()))
-
-        // Ingresamos credenciales correctas
-        onView(withId(R.id.inputName))
-            .perform(typeText("Test User"), closeSoftKeyboard())
-        onView(withId(R.id.inputPassword))
-            .perform(typeText("123456"), closeSoftKeyboard())
-
-        // Iniciar sesión
+        // Iniciamos sesion
         onView(withId(R.id.btnLogin)).perform(click())
 
-        // Esperamos un momento a que la navegación ocurra
-        Thread.sleep(1000)
+        // --- 2. PANTALLA DASHBOARD ---
+        // Verificamos estar en Dashboard
+        onView(withId(R.id.tvTitleDashboard)).check(matches(isDisplayed()))
 
-        // --- 4. PANTALLA USER (Perfil) ---
-        // Verificamos estar en UserFragment (por ejemplo viendo el botón de actualizar)
-        onView(withId(R.id.btnUpdate)).check(matches(isDisplayed()))
+        // Navegamos mediante el menu inferior a la vista User
+        onView(withId(R.id.navigationUser)).perform(click())
 
-        // Validamos que los datos se cargaron (el nombre debe coincidir)
-        onView(withId(R.id.inputName)).check(matches(withText("Test User")))
+        // --- 3. PANTALLA USUARIO ---
+        // Verificamos estar en User
+        onView(withId(R.id.tvTitleUser)).check(matches(isDisplayed()))
 
-        // Modificamos el nombre
-        onView(withId(R.id.inputName))
-            .perform(replaceText("Updated User"), closeSoftKeyboard())
+        // Navegamos mediante el menu inferior a la vista Payments
+        onView(withId(R.id.navigationPayments)).perform(click())
 
-        // Actualizamos
-        onView(withId(R.id.btnUpdate)).perform(click())
+        // --- 4. PANTALLA PAGOS ---
+        // Verificamos estar en Payments
+        onView(withId(R.id.tvTitlePayments)).check(matches(isDisplayed()))
 
-        // Verificamos Toast de éxito (Opcional, es difícil capturar Toasts en API 30+,
-        // pero verificamos que seguimos en la pantalla y el texto cambió)
-        onView(withId(R.id.inputName)).check(matches(withText("Updated User")))
+        // Navegamos mediante el menu inferior a la vista PaymentsHistory
+        onView(withId(R.id.navigationPaymentsHistory)).perform(click())
 
-        // --- 5. LOGOUT ---
-        onView(withId(R.id.btnLogout)).perform(click())
+        // --- 5. PANTALLA HISTORIAL DE PAGOS ---
+        // Verificamos estar en PaymentsHistory
+        onView(withId(R.id.tvTitlePaymentsHistory)).check(matches(isDisplayed()))
 
-        // Esperamos un momento a que la navegación ocurra
-        Thread.sleep(1000)
+        // Navegamos mediante el menu inferior a la vista Notifications
+        onView(withId(R.id.navigationNotifications)).perform(click())
 
-        // Debemos haber vuelto al Login
-        onView(withId(R.id.btnLogin)).check(matches(isDisplayed()))
+        // --- 6. PANTALLA NOTIFICACIONES ---
+        // Verificamos estar en Notifications
+        onView(withId(R.id.tvTitleNotifications)).check(matches(isDisplayed()))
 
-        // Intentamos ir a recuperar la cuenta del usuario
-        onView(withId(R.id.recoveryFragment)).perform(click())
-
-        // Esperamos un momento a que la navegación ocurra
-        Thread.sleep(1000)
-
-        // --- 6. PANTALLA RECOVERY ---
-        // Verificamos estar en Recovery
-        onView(withId(R.id.btnCode)).check(matches(isDisplayed()))
-
-        // Paso 1: Simular envío de código
-        // Escribimos el correo y solicitamos código
-        onView(withId(R.id.inputEmail))
-            .perform(replaceText("test@example.com"), closeSoftKeyboard())
-
-        // Clic en enviar codigo
-        onView(withId(R.id.btnCode)).perform(click())
-
-        // Paso 2: Simula envío de la nueva clave para recuperar la cuenta
-        // Actualizamos randomCode con el codigo de prueba
-        activityRule.scenario.onActivity { activity ->
-            val viewModel = ViewModelProvider(activity)[UiViewModel::class.java]
-            viewModel.setRandomCode(1001)
-        }
-
-        // Escribimos código, correo y nueva contraseña
-        onView(withId(R.id.inputCode))
-            .perform(replaceText("1001"), closeSoftKeyboard())
-        onView(withId(R.id.inputEmail))
-            .perform(replaceText("test@example.com"), closeSoftKeyboard())
-        onView(withId(R.id.inputPassword))
-            .perform(replaceText("654321"), closeSoftKeyboard())
-
-        // Clic en recuperar cuenta
-        onView(withId(R.id.btnRecovery)).perform(click())
-
-        // Volver al login desde recovery
-        onView(withId(R.id.loginFragment)).perform(click())
-
-        // Esperamos un momento a que la navegación ocurra
-        Thread.sleep(1000)
-
-        // --- 7. PANTALLA LOGIN (De vuelta) ---
-        onView(withId(R.id.btnLogin)).check(matches(isDisplayed()))
+        // Hace click en el recyclerview de Notifications
+        onView(withId(R.id.rvNotifications)).perform(click())
     }
 }

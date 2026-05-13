@@ -4,57 +4,57 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/navigationLogin">
 
     <!-- Sección antes del login -->
     <fragment
-        android:id="@+id/loginFragment"
+        android:id="@+id/navigationLogin"
         android:name="com.yjotdev.login.presentation.mvvm.ui.fragment.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_login_to_dashboard"
-            app:destination="@id/dashboardFragment" />
+            app:destination="@id/navigationDashboard" />
     </fragment>
 
     <fragment
-        android:id="@+id/registerFragment"
+        android:id="@+id/navigationRegister"
         android:name="com.yjotdev.login.presentation.mvvm.ui.fragment.RegisterFragment"
         tools:layout="@layout/fragment_register" />
 
     <fragment
-        android:id="@+id/recoveryFragment"
+        android:id="@+id/navigationRecovery"
         android:name="com.yjotdev.login.presentation.mvvm.ui.fragment.RecoveryFragment"
         tools:layout="@layout/fragment_recovery" />
 
     <!-- Sección después del login -->
     <fragment
-        android:id="@+id/dashboardFragment"
+        android:id="@+id/navigationDashboard"
         android:name="com.yjotdev.login.presentation.mvvm.ui.fragment.DashboardFragment"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/userFragment"
+        android:id="@+id/navigationUser"
         android:name="com.yjotdev.login.presentation.mvvm.ui.fragment.UserFragment"
         tools:layout="@layout/fragment_user">
         <action
             android:id="@+id/action_user_to_login"
-            app:destination="@id/loginFragment"
+            app:destination="@id/navigationLogin"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/paymentsFragment"
+        android:id="@+id/navigationPayments"
         android:name="com.yjotdev.login.presentation.mvvm.ui.fragment.PaymentsFragment"
         tools:layout="@layout/fragment_payments" />
 
     <fragment
-        android:id="@+id/paymentsHistoryFragment"
+        android:id="@+id/navigationPaymentsHistory"
         android:name="com.yjotdev.login.presentation.mvvm.ui.fragment.PaymentsHistoryFragment"
         tools:layout="@layout/fragment_payments_history" />
 
     <fragment
-        android:id="@+id/notificationsFragment"
+        android:id="@+id/navigationNotifications"
         android:name="com.yjotdev.login.presentation.mvvm.ui.fragment.NotificationsFragment"
         tools:layout="@layout/fragment_notifications" />
 

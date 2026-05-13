@@ -2,27 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/dashboardFragment"
+        android:id="@+id/navigationDashboard"
         android:title="@string/fragment_dashboard_lb_title"
         android:icon="@drawable/dashboard_70" />
 
     <item
-        android:id="@+id/userFragment"
+        android:id="@+id/navigationUser"
         android:title="@string/fragment_user_lb_title"
         android:icon="@drawable/user_70" />
 
     <item
-        android:id="@+id/paymentsFragment"
+        android:id="@+id/navigationPayments"
         android:title="@string/fragment_payments_lb_title"
         android:icon="@drawable/payments_70" />
 
     <item
-        android:id="@+id/paymentsHistoryFragment"
+        android:id="@+id/navigationPaymentsHistory"
         android:title="@string/fragment_payments_history_lb_title"
         android:icon="@drawable/payments_history_70" />
 
     <item
-        android:id="@+id/notificationsFragment"
+        android:id="@+id/navigationNotifications"
         android:title="@string/fragment_notifications_lb_title"
         android:icon="@drawable/notifications_70" />
 </menu>

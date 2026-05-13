@@ -11,7 +11,8 @@ fun UserDto.toDomain() = UserModel(
     name = this.name,
     email = this.email,
     password = this.password,
-    isInvited = this.isInvited
+    isInvited = this.isInvited,
+    isInWhiteList = this.isInWhiteList
 )
 
 /**
@@ -22,5 +23,6 @@ fun UserModel.toDto() = UserDto(
     name = this.name,
     email = this.email,
     password = this.password,
-    isInvited = this.isInvited
+    isInvited = this.isInvited,
+    isInWhiteList = this.isInWhiteList
 )
