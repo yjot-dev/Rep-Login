@@ -117,8 +117,8 @@
                     - `NombreDeTablaMapper.kt`
         - **(Condicional) Si se usa una API remota (ej: Retrofit):**
             - `remote`: Contiene las clases relacionadas con la comunicación de red.
-                - `service`: Contiene los endpoints de la API.
-                    - `NombreDeTablaService.kt`
+                - `api`: Contiene los endpoints de la API.
+                    - `NombreDeEndPointApi.kt`
                 - `network`: Contiene la configuración de red con cliente HTTP e interceptores.
                     - `RetrofitBuilder.kt`
                     - `HeaderInterceptor.kt`
@@ -143,6 +143,9 @@
         - **(Opcional) Si la aplicación requiere servicios en segundo plano:**
             - `service`: Contiene implementaciones para un servicio en Android.
                 - `NombreService.kt`
+        - **(Opcional) Si la aplicación requiere trabajadores en segundo plano:**
+            - `worker`: Contiene implementaciones para un trabajador en Android.
+                - `NombreWorker.kt`
 
 ## A.2 Estilo del ViewModel
 - **Requisito:** Todo el codigo de cada `ViewModel` debe seguir un estilo de implementación.
