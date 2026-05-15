@@ -7,7 +7,7 @@ import com.yjotdev.login.domain.model.EmailModel
 import com.yjotdev.login.domain.repository.EmailRepository
 import com.yjotdev.login.data.remote.core.safeApiCallForUnit
 import com.yjotdev.login.data.remote.mapper.toDto
-import com.yjotdev.login.data.remote.service.EmailService
+import com.yjotdev.login.data.remote.api.EmailApi
 
 /**
  * Implementación del EmailRepository.
@@ -17,10 +17,10 @@ import com.yjotdev.login.data.remote.service.EmailService
  */
 @Singleton
 class EmailRepositoryImpl @Inject constructor(
-    private val emailService: EmailService
+    private val emailApi: EmailApi
 ) : EmailRepository {
 
     override suspend fun sendEmail(email: EmailModel): Result<Unit> {
-        return safeApiCallForUnit { emailService.sendEmail(email.toDto()) }
+        return safeApiCallForUnit { emailApi.sendEmail(email.toDto()) }
     }
 }

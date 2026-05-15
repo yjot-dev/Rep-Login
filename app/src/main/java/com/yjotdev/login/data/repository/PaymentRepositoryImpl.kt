@@ -7,7 +7,7 @@ import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.PaymentModel
 import com.yjotdev.login.domain.model.CreateOrderRequestModel
 import com.yjotdev.login.domain.repository.PaymentRepository
-import com.yjotdev.login.data.remote.service.PaymentService
+import com.yjotdev.login.data.remote.api.PaymentApi
 import com.yjotdev.login.data.remote.core.safeApiCallForBody
 import com.yjotdev.login.data.remote.core.safeApiCallForUnit
 import com.yjotdev.login.data.remote.mapper.toDomain
@@ -21,19 +21,19 @@ import com.yjotdev.login.data.remote.mapper.toDto
  */
 @Singleton
 class PaymentRepositoryImpl @Inject constructor(
-    private val paymentService: PaymentService
+    private val paymentApi: PaymentApi
 ) : PaymentRepository {
 
     override suspend fun selectPayments(userId: Int, maxRows: Int?): Result<List<PaymentModel>> {
-        return safeApiCallForBody { paymentService.selectPayments(userId, maxRows) }
+        return safeApiCallForBody { paymentApi.selectPayments(userId, maxRows) }
             .mapSuccess { result -> result.map { it.toDomain() }}
     }
 
     override suspend fun createOrder(body: CreateOrderRequestModel): Result<Map<String,String>> {
-        return safeApiCallForBody { paymentService.createOrder(body.toDto()) }
+        return safeApiCallForBody { paymentApi.createOrder(body.toDto()) }
     }
 
     override suspend fun captureOrder(orderId: Map<String,String>): Result<Unit> {
-        return safeApiCallForUnit { paymentService.captureOrder(orderId) }
+        return safeApiCallForUnit { paymentApi.captureOrder(orderId) }
     }
 }

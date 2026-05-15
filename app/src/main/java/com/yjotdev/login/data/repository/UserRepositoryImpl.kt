@@ -11,7 +11,7 @@ import com.yjotdev.login.data.remote.core.safeApiCallForBody
 import com.yjotdev.login.data.remote.core.safeApiCallForUnit
 import com.yjotdev.login.data.remote.mapper.toDomain
 import com.yjotdev.login.data.remote.mapper.toDto
-import com.yjotdev.login.data.remote.service.UserService
+import com.yjotdev.login.data.remote.api.UserApi
 import com.yjotdev.login.domain.core.mapSuccess
 
 /**
@@ -22,27 +22,27 @@ import com.yjotdev.login.domain.core.mapSuccess
  */
 @Singleton
 class UserRepositoryImpl @Inject constructor(
-    private val userService: UserService
+    private val userApi: UserApi
 ) : UserRepository {
 
     override suspend fun findUser(login: LoginModel): Result<UserModel> {
-        return safeApiCallForBody { userService.findUser(login.toDto()) }
+        return safeApiCallForBody { userApi.findUser(login.toDto()) }
             .mapSuccess { result -> result.toDomain() }
     }
 
     override suspend fun changePasswordUser(recovery: RecoveryModel): Result<Unit> {
-        return safeApiCallForUnit { userService.changePasswordUser(recovery.toDto()) }
+        return safeApiCallForUnit { userApi.changePasswordUser(recovery.toDto()) }
     }
 
     override suspend fun insertUser(user: UserModel): Result<Unit> {
-        return safeApiCallForUnit { userService.insertUser(user.toDto()) }
+        return safeApiCallForUnit { userApi.insertUser(user.toDto()) }
     }
 
     override suspend fun updateUser(id: Int, user: UserModel): Result<Unit> {
-        return safeApiCallForUnit { userService.updateUser(id, user.toDto()) }
+        return safeApiCallForUnit { userApi.updateUser(id, user.toDto()) }
     }
 
     override suspend fun deleteUser(id: Int): Result<Unit> {
-        return safeApiCallForUnit { userService.deleteUser(id) }
+        return safeApiCallForUnit { userApi.deleteUser(id) }
     }
 }

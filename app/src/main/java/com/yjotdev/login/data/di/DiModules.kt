@@ -11,10 +11,10 @@ import com.yjotdev.login.data.repository.UserRepositoryImpl
 import com.yjotdev.login.data.repository.EmailRepositoryImpl
 import com.yjotdev.login.data.repository.StringRepositoryImpl
 import com.yjotdev.login.data.remote.network.RetrofitBuilder
-import com.yjotdev.login.data.remote.service.EmailService
-import com.yjotdev.login.data.remote.service.NotificationService
-import com.yjotdev.login.data.remote.service.PaymentService
-import com.yjotdev.login.data.remote.service.UserService
+import com.yjotdev.login.data.remote.api.EmailApi
+import com.yjotdev.login.data.remote.api.NotificationApi
+import com.yjotdev.login.data.remote.api.PaymentApi
+import com.yjotdev.login.data.remote.api.UserApi
 import com.yjotdev.login.data.repository.ConfigRepositoryImpl
 import com.yjotdev.login.data.repository.NotificationRepositoryImpl
 import com.yjotdev.login.data.repository.PaymentRepositoryImpl
@@ -77,26 +77,26 @@ abstract class DiModules {
 
         @Provides
         @Singleton
-        fun provideUserService(retrofit: Retrofit): UserService {
-            return retrofit.create(UserService::class.java)
+        fun provideUserService(retrofit: Retrofit): UserApi {
+            return retrofit.create(UserApi::class.java)
         }
 
         @Provides
         @Singleton
-        fun provideEmailService(retrofit: Retrofit): EmailService {
-            return retrofit.create(EmailService::class.java)
+        fun provideEmailService(retrofit: Retrofit): EmailApi {
+            return retrofit.create(EmailApi::class.java)
         }
 
         @Provides
         @Singleton
-        fun provideNotificationService(retrofit: Retrofit): NotificationService {
-            return retrofit.create(NotificationService::class.java)
+        fun provideNotificationService(retrofit: Retrofit): NotificationApi {
+            return retrofit.create(NotificationApi::class.java)
         }
 
         @Provides
         @Singleton
-        fun providePaymentService(retrofit: Retrofit): PaymentService {
-            return retrofit.create(PaymentService::class.java)
+        fun providePaymentService(retrofit: Retrofit): PaymentApi {
+            return retrofit.create(PaymentApi::class.java)
         }
     }
 }

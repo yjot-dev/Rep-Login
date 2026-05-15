@@ -12,8 +12,7 @@ import com.yjotdev.login.data.remote.core.NullOnEmptyConverterFactory
 @Singleton
 class RetrofitBuilder @Inject constructor() {
     // Configuración dinámica de URL según el entorno
-    private val baseUrl = if (BuildConfig.DEBUG) { "http://192.168.1.20:3000/api/" }
-                      else { "https://servicio-api-login-386835133500.us-central1.run.app/api/" }
+    private val baseUrl = BuildConfig.API_BASE_URL
 
     // Configuración de log interceptor
     private val loggingInterceptor = HttpLoggingInterceptor{ msm ->

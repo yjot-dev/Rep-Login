@@ -1,4 +1,4 @@
-package com.yjotdev.login.data.remote.service
+package com.yjotdev.login.data.remote.api
 
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,7 +15,7 @@ import com.yjotdev.login.data.remote.dto.RecoveryDto
  * Interfaz de Retrofit para las operaciones de la API de usuarios.
  * ESTA interfaz pertenece a la capa de Infraestructura y define los endpoints HTTP.
  */
-interface UserService {
+interface UserApi {
     @POST("users/login")
     suspend fun findUser(@Body login: LoginDto): Response<UserDto>
 
