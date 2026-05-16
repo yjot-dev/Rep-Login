@@ -77,25 +77,25 @@ abstract class DiModules {
 
         @Provides
         @Singleton
-        fun provideUserService(retrofit: Retrofit): UserApi {
+        fun provideUserApi(retrofit: Retrofit): UserApi {
             return retrofit.create(UserApi::class.java)
         }
 
         @Provides
         @Singleton
-        fun provideEmailService(retrofit: Retrofit): EmailApi {
+        fun provideEmailApi(retrofit: Retrofit): EmailApi {
             return retrofit.create(EmailApi::class.java)
         }
 
         @Provides
         @Singleton
-        fun provideNotificationService(retrofit: Retrofit): NotificationApi {
+        fun provideNotificationApi(retrofit: Retrofit): NotificationApi {
             return retrofit.create(NotificationApi::class.java)
         }
 
         @Provides
         @Singleton
-        fun providePaymentService(retrofit: Retrofit): PaymentApi {
+        fun providePaymentApi(retrofit: Retrofit): PaymentApi {
             return retrofit.create(PaymentApi::class.java)
         }
     }
