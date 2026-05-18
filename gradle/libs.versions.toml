@@ -1,30 +1,38 @@
 [versions]
-agp = "8.6.1"
-kotlin = "2.0.0"
-ksp = "2.0.0-1.0.22"
-coreKtx = "1.13.1"
-lifecycleRuntimeKtx = "2.8.3"
+# Android y Kotlin
+agp = "8.13.2"
+kotlin = "2.1.0"
+# Ksp
+ksp = "2.1.0-1.0.29"
+coreKtx = "1.15.0"
+# Testing
 junit = "4.13.2"
-junitVersion = "1.2.1"
+junitTest = "1.2.1"
 espresso = "3.6.1"
+mockk = "1.13.13"
+coroutines-test = "1.9.0"
+turbine = "1.1.0"
+# Lifecycle & XML
+lifecycleRuntimeKtx = "2.8.7"
 appcompat = "1.7.1"
 material = "1.13.0"
 activity = "1.10.0"
 fragmentKtx = "1.8.9"
+# Navigation
 navVersion = "2.8.5"
+# Network
 retrofit = "2.11.0"
-gson = "2.13.2"
+gson = "2.11.0"
 loggingInterceptor = "4.12.0"
-mockk = "1.13.8"
-coroutines-test = "1.7.3"
-hilt = "2.51.1"
-turbine = "1.0.0"
+# Dependency Injection (Hilt)
+hilt = "2.54"
+# Browser
 browser = "1.8.0"
+# Firebase y Servicios de Google
 firebaseVersion = "33.0.0"
 gms = "4.4.2"
 
 [libraries]
-# IU
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -33,23 +41,23 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navVersion" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navVersion" }
-# Browser
+
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
-# Retrofit
+
 squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 squareup-retrofit2-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 google-code-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
-# Firebase
+
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseVersion" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
-# OkHTTP3
+
 squareup-okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
-# Hilt
+
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-# Test
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitTest" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espresso" }
 dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }

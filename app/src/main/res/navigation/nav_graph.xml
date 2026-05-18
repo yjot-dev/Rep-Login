@@ -13,7 +13,9 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_login_to_dashboard"
-            app:destination="@id/navigationDashboard" />
+            app:destination="@id/navigationDashboard"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

@@ -20,25 +20,6 @@ fun MainActivity.setupAppNavigation() {
     // Vincula NavController con los BottomMenu
     binding.bottomMenu1.setupWithNavController(navController)
     binding.bottomMenu2.setupWithNavController(navController)
-    // Evita que bottomMenu2 restaure estados antiguos después del logout
-    binding.bottomMenu2.setOnItemSelectedListener { item ->
-        when(item.itemId) {
-            R.id.navigationLogin -> {
-                navController.navigate(item.itemId) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                    restoreState = false
-                }
-                true
-            }
-            else -> {
-                navController.navigate(item.itemId)
-                true
-            }
-        }
-    }
     // Logica para alternar la visibilidad de los BottomMenu
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.id) {
