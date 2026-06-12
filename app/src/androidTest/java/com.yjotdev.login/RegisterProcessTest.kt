@@ -59,7 +59,7 @@ class RegisterProcessTest {
         // Enviar codigo al email (fake) y mostrar AlertDialog
         onView(withId(R.id.btnSendCode)).perform(click())
 
-        // Verificamos que el AlertDialog este visible
+        // Verificamos que el AlertDialog esté visible
         onView(withId(R.id.inputCode)).check(matches(isDisplayed()))
 
         // Simula el codigo enviado
@@ -75,7 +75,7 @@ class RegisterProcessTest {
         // Validamos el codigo
         onView(withId(R.id.btnValidate)).perform(click())
 
-        // Verificamos que el AlertDialog este oculto
+        // Verificamos que el AlertDialog esté oculto
         onView(withId(R.id.inputCode)).check(doesNotExist())
 
         // Registrarse

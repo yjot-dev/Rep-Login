@@ -266,9 +266,9 @@ class UiViewModel @Inject constructor(
     /**
      * Crea una orden de pago del usuario mediante la API
      **/
-    fun createOrder(plan: String, onIntent: (String) -> Unit) {
+    fun createOrder(plan: String, countryCode: String, onIntent: (String) -> Unit) {
         val userId = uiState.value.user?.id ?: 0
-        val body = CreateOrderRequestModel(plan, userId)
+        val body = CreateOrderRequestModel(plan, userId, countryCode)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             when (val result = createOrderUseCase(body)) {
@@ -344,7 +344,7 @@ class UiViewModel @Inject constructor(
         }
     }
     /**
-     * Selecciona todos las notificaciones del usuario en la base de datos
+     * Selecciona todas las notificaciones del usuario en la base de datos
      **/
     fun selectNotifications(maxRows: Int? = null) {
         val userId = uiState.value.user?.id ?: 0

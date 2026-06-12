@@ -10,6 +10,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import kotlin.getValue
+import java.util.Locale
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.databinding.FragmentPaymentsBinding
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
@@ -41,18 +42,23 @@ class PaymentsFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        val countryCode = Locale.getDefault().country
+        binding.rbTest.text = moneyFormatByCountry(R.string.fragment_payments_rb_test, countryCode)
+        binding.rbLv1Support.text = moneyFormatByCountry(R.string.fragment_payments_rb_lv1support, countryCode)
+        binding.rbLv2Support.text = moneyFormatByCountry(R.string.fragment_payments_rb_lv2support, countryCode)
+
         binding.btnConfirmPayment.setOnClickListener {
             val selectedPlan = when (binding.rgPlans.checkedRadioButtonId) {
-                R.id.rbBasic -> "basic"
-                R.id.rbPremium -> "premium"
-                R.id.rbEnterprise -> "enterprise"
+                R.id.rbTest -> "test"
+                R.id.rbLv1Support -> "lv1-support"
+                R.id.rbLv2Support -> "lv2-support"
                 else -> null
             }
 
             context?.let { context ->
                 if (selectedPlan != null) {
                     // Realizar la creacion de la orden
-                    viewModel.createOrder(selectedPlan) { approveUrl ->
+                    viewModel.createOrder(selectedPlan, countryCode) { approveUrl ->
                         val customTabsIntent = CustomTabsIntent.Builder().build()
                         customTabsIntent.launchUrl(requireContext(), approveUrl.toUri())
                     }
@@ -62,6 +68,22 @@ class PaymentsFragment : Fragment() {
                         Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private fun moneyFormatByCountry(idString: Int, countryCode: String): String {
+        return when(countryCode) {
+            "EC" -> this.getString(idString, "$")
+            "MX" -> this.getString(idString, "MX$")
+            "ES" -> this.getString(idString, "€")
+            "US" -> this.getString(idString, "$")
+            "AR" -> this.getString(idString, "ARS")
+            "CA" -> this.getString(idString, "CA$")
+            "CO" -> this.getString(idString, "COP")
+            "SV" -> this.getString(idString, "$")
+            "PE" -> this.getString(idString, "S/")
+            "GB" -> this.getString(idString, "£")
+            else -> ""
         }
     }
 }

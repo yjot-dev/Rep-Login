@@ -4,5 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class CreateOrderRequestDto(
     @SerializedName("plan") val plan: String = "",
-    @SerializedName("userId") val userId: Int = 0
+    @SerializedName("userId") val userId: Int = 0,
+    @SerializedName("countryCode") val countryCode: String = ""
 )

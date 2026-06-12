@@ -42,25 +42,25 @@
                     android:layout_height="wrap_content">
 
                     <RadioButton
-                        android:id="@+id/rbBasic"
+                        android:id="@+id/rbTest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="@string/fragment_payments_rb_basic"/>
+                        tools:text="Test - $1"/>
 
                     <RadioButton
-                        android:id="@+id/rbPremium"
+                        android:id="@+id/rbLv1Support"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="@string/fragment_payments_rb_premium"/>
+                        tools:text="Apoyo nivel 1 - $5"/>
 
                     <RadioButton
-                        android:id="@+id/rbEnterprise"
+                        android:id="@+id/rbLv2Support"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
-                        android:text="@string/fragment_payments_rb_enterprise"/>
+                        tools:text="Apoyo nivel 2 - $10"/>
                 </RadioGroup>
 
                 <!-- Botón de confirmación de pago -->

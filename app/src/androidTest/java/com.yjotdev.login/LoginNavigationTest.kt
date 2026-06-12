@@ -45,7 +45,7 @@ class LoginNavigationTest {
         onView(withId(R.id.inputPassword))
             .perform(typeText("Invitado1000"), closeSoftKeyboard())
 
-        // Iniciamos sesion
+        // Iniciamos sesión
         onView(withId(R.id.btnLogin)).perform(click())
 
         // --- 2. PANTALLA DASHBOARD ---

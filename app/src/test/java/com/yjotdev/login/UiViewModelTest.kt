@@ -484,7 +484,7 @@ class UiViewModelTest {
             }
         }
 
-        viewModel.createOrder("basic") {}
+        viewModel.createOrder("test", "EC") {}
         advanceUntilIdle()
 
         job.cancel()
@@ -504,7 +504,7 @@ class UiViewModelTest {
             }
         }
 
-        viewModel.createOrder("basic") {}
+        viewModel.createOrder("test", "EC") {}
         advanceUntilIdle()
 
         job.cancel()

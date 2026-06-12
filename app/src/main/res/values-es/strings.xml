@@ -14,9 +14,9 @@
     <string name="fragment_user_btn_delete">Eliminar usuario</string>
     <string name="fragment_user_btn_logout">Cerrar sesión</string>
     <string name="fragment_payments_lb_title">Planes de pago</string>
-    <string name="fragment_payments_rb_basic">Plan básico - $5/mes</string>
-    <string name="fragment_payments_rb_premium">Plan premium - $10/mes</string>
-    <string name="fragment_payments_rb_enterprise">Plan enterprise - $20/mes</string>
+    <string name="fragment_payments_rb_test">Prueba - %1$s 1</string>
+    <string name="fragment_payments_rb_lv1support">Apoyo nivel 1 - %1$s 5</string>
+    <string name="fragment_payments_rb_lv2support">Apoyo nivel 2 - %1$s 10</string>
     <string name="fragment_payments_btn_confirm">Confirmar pago</string>
     <string name="fragment_payments_history_lb_title">Historial de pagos</string>
     <string name="fragment_notifications_lb_title">Centro de notificaciones</string>
