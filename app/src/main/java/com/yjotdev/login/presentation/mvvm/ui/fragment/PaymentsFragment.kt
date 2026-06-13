@@ -14,6 +14,7 @@ import java.util.Locale
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.databinding.FragmentPaymentsBinding
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
+import com.yjotdev.login.presentation.utils.Helper.moneyFormatByCountry
 import com.yjotdev.login.R
 
 @AndroidEntryPoint
@@ -43,9 +44,10 @@ class PaymentsFragment : Fragment() {
 
     private fun setupClickListeners() {
         val countryCode = Locale.getDefault().country
-        binding.rbTest.text = moneyFormatByCountry(R.string.fragment_payments_rb_test, countryCode)
-        binding.rbLv1Support.text = moneyFormatByCountry(R.string.fragment_payments_rb_lv1support, countryCode)
-        binding.rbLv2Support.text = moneyFormatByCountry(R.string.fragment_payments_rb_lv2support, countryCode)
+        val moneyCode = moneyFormatByCountry(countryCode).second
+        binding.rbTest.text = this.getString(R.string.fragment_payments_rb_test, moneyFormatByCountry(countryCode).first)
+        binding.rbLv1Support.text = this.getString(R.string.fragment_payments_rb_lv1support, moneyFormatByCountry(countryCode).first)
+        binding.rbLv2Support.text = this.getString(R.string.fragment_payments_rb_lv2support, moneyFormatByCountry(countryCode).first)
 
         binding.btnConfirmPayment.setOnClickListener {
             val selectedPlan = when (binding.rgPlans.checkedRadioButtonId) {
@@ -58,7 +60,7 @@ class PaymentsFragment : Fragment() {
             context?.let { context ->
                 if (selectedPlan != null) {
                     // Realizar la creacion de la orden
-                    viewModel.createOrder(selectedPlan, countryCode) { approveUrl ->
+                    viewModel.createOrder(selectedPlan, moneyCode) { approveUrl ->
                         val customTabsIntent = CustomTabsIntent.Builder().build()
                         customTabsIntent.launchUrl(requireContext(), approveUrl.toUri())
                     }
@@ -68,22 +70,6 @@ class PaymentsFragment : Fragment() {
                         Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-    }
-
-    private fun moneyFormatByCountry(idString: Int, countryCode: String): String {
-        return when(countryCode) {
-            "EC" -> this.getString(idString, "$")
-            "MX" -> this.getString(idString, "MX$")
-            "ES" -> this.getString(idString, "€")
-            "US" -> this.getString(idString, "$")
-            "AR" -> this.getString(idString, "ARS")
-            "CA" -> this.getString(idString, "CA$")
-            "CO" -> this.getString(idString, "COP")
-            "SV" -> this.getString(idString, "$")
-            "PE" -> this.getString(idString, "S/")
-            "GB" -> this.getString(idString, "£")
-            else -> ""
         }
     }
 }

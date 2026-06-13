@@ -6,5 +6,5 @@ import com.yjotdev.login.domain.model.CreateOrderRequestModel
 fun CreateOrderRequestModel.toDto() = CreateOrderRequestDto(
     plan = this.plan,
     userId = this.userId,
-    countryCode = this.countryCode
+    moneyCode = this.moneyCode
 )
