@@ -1,8 +1,10 @@
 package com.yjotdev.login.domain.repository
 
 import com.yjotdev.login.domain.core.Result
-import com.yjotdev.login.domain.model.CreateOrderRequestModel
 import com.yjotdev.login.domain.model.PaymentModel
+import com.yjotdev.login.domain.model.CreateOrderRequestModel
+import com.yjotdev.login.domain.model.CreateOrderResultModel
+import com.yjotdev.login.domain.model.CaptureOrderRequestModel
 
 /**
  * Define el contrato para las operaciones del repositorio de pagos.
@@ -19,14 +21,14 @@ interface PaymentRepository {
 
     /**
      * Crea la orden de pago mediante el tipo de plan seleccionado
-     * @return Result<CreateOrderResultModel> que contiene la creacion de la
+     * @return Result<CreateOrderResultModel> que contiene la creación de la
      * orden del usuario si se encuentra, o un error.
      * **/
-    suspend fun createOrder(body: CreateOrderRequestModel): Result<Map<String,String>>
+    suspend fun createOrder(body: CreateOrderRequestModel): Result<CreateOrderResultModel>
 
     /**
-     * Captura la orden de pago mediante el id de la orden
+     * Captura la orden de pago mediante ID de la orden
      * @return Result<Unit> que indica éxito o un error.
      */
-    suspend fun captureOrder(orderId: Map<String,String>): Result<Unit>
+    suspend fun captureOrder(orderId: CaptureOrderRequestModel): Result<Unit>
 }

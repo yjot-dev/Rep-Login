@@ -9,7 +9,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import com.yjotdev.login.domain.core.Result
+import com.yjotdev.login.domain.model.CaptureOrderRequestModel
 import com.yjotdev.login.domain.model.CreateOrderRequestModel
+import com.yjotdev.login.domain.model.CreateOrderResultModel
 import com.yjotdev.login.domain.model.PaymentModel
 import com.yjotdev.login.domain.repository.PaymentRepository
 import com.yjotdev.login.domain.usecase.payment.CaptureOrderUseCase
@@ -38,7 +40,7 @@ class PaymentUseCaseTest {
     fun createOrderUseCaseReturnsSuccessWhenRepositoryIsSuccessful() = runTest {
         // Given
         val request = CreateOrderRequestModel(plan = "premium", userId = 1)
-        val expectedResponse = mapOf("approveUrl" to "https://paypal.com/approve")
+        val expectedResponse = CreateOrderResultModel(approveUrl = "https://paypal.com/approve")
         coEvery { paymentRepository.createOrder(request) } returns Result.Success(expectedResponse)
 
         // When
@@ -53,15 +55,15 @@ class PaymentUseCaseTest {
     @Test
     fun captureOrderUseCaseCallsRepositoryCorrectly() = runTest {
         // Given
-        val orderId = mapOf("orderId" to "ORD-123")
-        coEvery { paymentRepository.captureOrder(orderId) } returns Result.Success(Unit)
+        val captureRequest = CaptureOrderRequestModel(orderId = "ORD-123")
+        coEvery { paymentRepository.captureOrder(captureRequest) } returns Result.Success(Unit)
 
         // When
-        val result = captureOrderUseCase(orderId)
+        val result = captureOrderUseCase(captureRequest)
 
         // Then
         assertTrue(result is Result.Success)
-        coVerify(exactly = 1) { paymentRepository.captureOrder(orderId) }
+        coVerify(exactly = 1) { paymentRepository.captureOrder(captureRequest) }
     }
 
     @Test

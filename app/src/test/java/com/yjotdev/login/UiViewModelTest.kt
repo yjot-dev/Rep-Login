@@ -25,6 +25,7 @@ import org.junit.Test
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.presentation.navigation.UiEvent
 import com.yjotdev.login.domain.core.Result
+import com.yjotdev.login.domain.model.CreateOrderResultModel
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.NotificationModel
 import com.yjotdev.login.domain.model.PaymentModel
@@ -474,7 +475,7 @@ class UiViewModelTest {
     // ---------- createOrder ----------
     @Test
     fun whenCreateOrderIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
-        val fakeResponse = mapOf("approveUrl" to "https://paypal.com/approve")
+        val fakeResponse = CreateOrderResultModel(approveUrl = "https://paypal.com/approve")
         coEvery { createOrderUseCase(any()) } returns Result.Success(fakeResponse)
         coEvery { getStringUseCase(R.string.toast_create_order_success) } returns "Order created"
 

@@ -11,10 +11,18 @@ import com.yjotdev.login.domain.repository.NotificationRepository
 class FakeNotificationRepositoryImpl @Inject constructor() : NotificationRepository {
 
     override suspend fun selectNotifications(userId: Int, maxRows: Int?): Result<List<NotificationModel>> {
-        return Result.Success(listOf(NotificationModel()))
+        return if (userId > 0) {
+            Result.Success(listOf(NotificationModel()))
+        } else {
+            Result.Error(Exception("Failed to fetch notifications"))
+        }
     }
 
     override suspend fun sendNotification(body: SendNotificationRequestModel): Result<Unit> {
-        return Result.Success(Unit)
+        return if (body.userId > 0) {
+            Result.Success(Unit)
+        } else {
+            Result.Error(Exception("Invalid notification body"))
+        }
     }
 }

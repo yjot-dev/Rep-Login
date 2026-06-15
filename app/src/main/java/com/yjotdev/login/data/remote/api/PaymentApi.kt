@@ -7,6 +7,8 @@ import retrofit2.http.Body
 import retrofit2.http.Query
 import com.yjotdev.login.data.remote.dto.PaymentDto
 import com.yjotdev.login.data.remote.dto.CreateOrderRequestDto
+import com.yjotdev.login.data.remote.dto.CreateOrderResponseDto
+import com.yjotdev.login.data.remote.dto.CaptureOrderRequestDto
 
 /**
  * Interfaz de Retrofit para las operaciones de la API de pagos.
@@ -20,8 +22,8 @@ interface PaymentApi {
     ): Response<List<PaymentDto>>
 
     @POST("payments/create-order")
-    suspend fun createOrder(@Body body: CreateOrderRequestDto): Response<Map<String,String>>
+    suspend fun createOrder(@Body body: CreateOrderRequestDto): Response<CreateOrderResponseDto>
 
     @POST("payments/capture-order")
-    suspend fun captureOrder(@Body orderId: Map<String,String>): Response<Unit>
+    suspend fun captureOrder(@Body orderId: CaptureOrderRequestDto): Response<Unit>
 }

@@ -35,6 +35,7 @@ import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
 import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 import com.yjotdev.login.R
+import com.yjotdev.login.domain.model.CaptureOrderRequestModel
 
 @HiltViewModel
 class UiViewModel @Inject constructor(
@@ -273,7 +274,7 @@ class UiViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = createOrderUseCase(body)) {
                 is Result.Success -> {
-                    onIntent(result.data.getValue("approveUrl"))
+                    onIntent(result.data.approveUrl)
                     _uiState.update { it.copy(isLoading = false) }
                     _eventChannel.send(UiEvent.ShowToast(
                         getStringUseCase(R.string.toast_create_order_success)
@@ -295,7 +296,7 @@ class UiViewModel @Inject constructor(
      * Captura una orden de pago del usuario mediante la API
      **/
     fun captureOrder(id: String) {
-        val orderId = mapOf("orderId" to id)
+        val orderId = CaptureOrderRequestModel(id)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             when (val result = captureOrderUseCase(orderId)) {
