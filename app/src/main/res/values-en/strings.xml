@@ -14,10 +14,11 @@
     <string name="fragment_user_btn_delete">Delete user</string>
     <string name="fragment_user_btn_logout">Log out</string>
     <string name="fragment_payments_lb_title">Payment plans</string>
-    <string name="fragment_payments_rb_test">Test - %1$s 1</string>
-    <string name="fragment_payments_rb_lv1support">Level 1 support - %1$s 5</string>
-    <string name="fragment_payments_rb_lv2support">Level 2 support - %1$s 10</string>
+    <string name="fragment_payments_rb_test">Test</string>
+    <string name="fragment_payments_rb_lv1support">Level 1 support</string>
+    <string name="fragment_payments_rb_lv2support">Level 2 support</string>
     <string name="fragment_payments_btn_confirm">Confirm payment</string>
+    <string name="fragment_payments_lb_notice">The currencies ARS, COP and PEN are not available for direct payments in Paypal, so they will be converted to USD for processing.</string>
     <string name="fragment_payments_history_lb_title">Payment history</string>
     <string name="fragment_notifications_lb_title">Notification center</string>
     <string name="fragment_dashboard_lb_title">Quick access</string>

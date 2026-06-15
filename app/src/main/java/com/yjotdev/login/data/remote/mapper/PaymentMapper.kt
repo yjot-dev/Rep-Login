@@ -9,7 +9,7 @@ import com.yjotdev.login.domain.model.PaymentModel
 fun PaymentDto.toDomain() = PaymentModel(
     id = this.id,
     amount = this.amount,
-    money = this.money,
+    moneyCode = this.money,
     date = this.date,
     status = this.status,
     userId = this.userId
@@ -21,7 +21,7 @@ fun PaymentDto.toDomain() = PaymentModel(
 fun PaymentModel.toDto() = PaymentDto(
     id = this.id,
     amount = this.amount,
-    money = this.money,
+    money = this.moneyCode,
     date = this.date,
     status = this.status,
     userId = this.userId

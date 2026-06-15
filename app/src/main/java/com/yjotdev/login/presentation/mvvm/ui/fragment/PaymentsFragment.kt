@@ -14,8 +14,10 @@ import java.util.Locale
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.databinding.FragmentPaymentsBinding
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.presentation.utils.Helper.moneyFormatByCountry
+import com.yjotdev.login.presentation.utils.Helper.moneyCodeByCountry
+import com.yjotdev.login.presentation.utils.Helper.moneyConvertString
 import com.yjotdev.login.R
+import com.yjotdev.login.presentation.navigation.justifyTextAtTheEdges
 
 @AndroidEntryPoint
 class PaymentsFragment : Fragment() {
@@ -44,10 +46,20 @@ class PaymentsFragment : Fragment() {
 
     private fun setupClickListeners() {
         val countryCode = Locale.getDefault().country
-        val moneyCode = moneyFormatByCountry(countryCode).second
-        binding.rbTest.text = this.getString(R.string.fragment_payments_rb_test, moneyFormatByCountry(countryCode).first)
-        binding.rbLv1Support.text = this.getString(R.string.fragment_payments_rb_lv1support, moneyFormatByCountry(countryCode).first)
-        binding.rbLv2Support.text = this.getString(R.string.fragment_payments_rb_lv2support, moneyFormatByCountry(countryCode).first)
+        val moneyCode = moneyCodeByCountry(countryCode).first
+        val paypalMoneyCode = moneyCodeByCountry(countryCode).second
+        binding.rbTest.justifyTextAtTheEdges(
+            this.getString(R.string.fragment_payments_rb_test),
+            moneyConvertString(1.0, moneyCode)
+        )
+        binding.rbLv1Support.justifyTextAtTheEdges(
+            this.getString(R.string.fragment_payments_rb_lv1support),
+            moneyConvertString(5.0, moneyCode)
+        )
+        binding.rbLv2Support.justifyTextAtTheEdges(
+            this.getString(R.string.fragment_payments_rb_lv2support),
+            moneyConvertString(10.0, moneyCode)
+        )
 
         binding.btnConfirmPayment.setOnClickListener {
             val selectedPlan = when (binding.rgPlans.checkedRadioButtonId) {
@@ -60,7 +72,7 @@ class PaymentsFragment : Fragment() {
             context?.let { context ->
                 if (selectedPlan != null) {
                     // Realizar la creacion de la orden
-                    viewModel.createOrder(selectedPlan, moneyCode) { approveUrl ->
+                    viewModel.createOrder(selectedPlan, paypalMoneyCode) { approveUrl ->
                         val customTabsIntent = CustomTabsIntent.Builder().build()
                         customTabsIntent.launchUrl(requireContext(), approveUrl.toUri())
                     }

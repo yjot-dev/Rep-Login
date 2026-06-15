@@ -68,7 +68,7 @@ class PaymentUseCaseTest {
     fun selectPaymentsUseCaseReturnsListOfPayments() = runTest {
         // Given
         val userId = 1
-        val fakePayments = listOf(PaymentModel(id = 100, amount = 50.0f, money = "USD"))
+        val fakePayments = listOf(PaymentModel(id = 100, amount = 50.0f, moneyCode = "USD"))
         coEvery { paymentRepository.selectPayments(userId, any()) } returns Result.Success(fakePayments)
 
         // When

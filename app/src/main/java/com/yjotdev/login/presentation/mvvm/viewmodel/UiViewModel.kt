@@ -266,9 +266,9 @@ class UiViewModel @Inject constructor(
     /**
      * Crea una orden de pago del usuario mediante la API
      **/
-    fun createOrder(plan: String, moneyCode: String, onIntent: (String) -> Unit) {
+    fun createOrder(plan: String, paypalMoneyCode: String, onIntent: (String) -> Unit) {
         val userId = uiState.value.user?.id ?: 0
-        val body = CreateOrderRequestModel(plan, userId, moneyCode)
+        val body = CreateOrderRequestModel(plan, userId, paypalMoneyCode)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             when (val result = createOrderUseCase(body)) {
