@@ -43,7 +43,7 @@ class UserUseCaseTest {
     }
 
     @Test
-    fun whenFindUserUseCaseIsInvokedSuccessfullyThenItReturnsAUser() = runTest {
+    fun findUserUseCaseReturnsSuccessWhenUserIsFound() = runTest {
         // Given
         val loginModel = LoginModel("testuser", "password")
         val fakeUser = UserModel(id = 1, name = "Test User", email = "test@example.com", password = "password")
@@ -59,10 +59,10 @@ class UserUseCaseTest {
     }
 
     @Test
-    fun whenFindUserUseCaseFailsThenItReturnsAnError() = runTest {
+    fun findUserUseCaseReturnsErrorWhenUserNotFound() = runTest {
         // Given
         val loginModel = LoginModel("testuser", "password")
-        val exception = Exception("User not found")
+        val exception = Exception("Error al buscar usuario")
         coEvery { userRepository.findUser(loginModel) } returns Result.Error(exception)
 
         // When
@@ -75,7 +75,7 @@ class UserUseCaseTest {
     }
 
     @Test
-    fun whenInsertUserUseCaseIsInvokedThenPortMethodIsCalled() = runTest {
+    fun insertUserUseCaseReturnsSuccessWhenUserIsInserted() = runTest {
         // Given
         val newUser = UserModel(name = "New User", email = "new@example.com", password = "newpassword")
         coEvery { userRepository.insertUser(newUser) } returns Result.Success(Unit)
@@ -89,7 +89,23 @@ class UserUseCaseTest {
     }
 
     @Test
-    fun whenUpdateUserUseCaseIsInvokedThenPortMethodIsCalled() = runTest {
+    fun insertUserUseCaseReturnsErrorWhenInsertionFails() = runTest {
+        // Given
+        val newUser = UserModel(name = "New User", email = "new@example.com", password = "newpassword")
+        val exception = Exception("Error al insertar usuario")
+        coEvery { userRepository.insertUser(newUser) } returns Result.Error(exception)
+
+        // When
+        val result = insertUserUseCase(newUser)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
+        coVerify(exactly = 1) { userRepository.insertUser(newUser) }
+    }
+
+    @Test
+    fun updateUserUseCaseReturnsSuccessWhenUserIsUpdated() = runTest {
         // Given
         val userId = 1
         val userToUpdate = UserModel(name = "Updated User", email = "updated@example.com", password = "updatedpassword")
@@ -104,7 +120,24 @@ class UserUseCaseTest {
     }
 
     @Test
-    fun whenChangePasswordUserUseCaseIsInvokedThenPortMethodIsCalled() = runTest {
+    fun updateUserUseCaseReturnsErrorWhenUpdateFails() = runTest {
+        // Given
+        val userId = 1
+        val userToUpdate = UserModel(name = "Updated User", email = "updated@example.com", password = "updatedpassword")
+        val exception = Exception("Error al actualizar usuario")
+        coEvery { userRepository.updateUser(userId, userToUpdate) } returns Result.Error(exception)
+
+        // When
+        val result = updateUserUseCase(userId, userToUpdate)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
+        coVerify(exactly = 1) { userRepository.updateUser(userId, userToUpdate) }
+    }
+
+    @Test
+    fun changePasswordUserUseCaseReturnsSuccessWhenPasswordIsChanged() = runTest {
         // Given
         val recoveryModel = RecoveryModel(email = "test@example.com", password = "newpassword")
         coEvery { userRepository.changePasswordUser(recoveryModel) } returns Result.Success(Unit)
@@ -118,7 +151,23 @@ class UserUseCaseTest {
     }
 
     @Test
-    fun whenDeleteUserUseCaseIsInvokedThenPortMethodIsCalled() = runTest {
+    fun changePasswordUserUseCaseReturnsErrorWhenChangeFails() = runTest {
+        // Given
+        val recoveryModel = RecoveryModel(email = "test@example.com", password = "newpassword")
+        val exception = Exception("Error al cambiar contraseña")
+        coEvery { userRepository.changePasswordUser(recoveryModel) } returns Result.Error(exception)
+
+        // When
+        val result = changePasswordUserUseCase(recoveryModel)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
+        coVerify(exactly = 1) { userRepository.changePasswordUser(recoveryModel) }
+    }
+
+    @Test
+    fun deleteUserUseCaseReturnsSuccessWhenUserIsDeleted() = runTest {
         // Given
         val userId = 1
         coEvery { userRepository.deleteUser(userId) } returns Result.Success(Unit)
@@ -128,6 +177,22 @@ class UserUseCaseTest {
 
         // Then
         assertTrue(result is Result.Success)
+        coVerify(exactly = 1) { userRepository.deleteUser(userId) }
+    }
+
+    @Test
+    fun deleteUserUseCaseReturnsErrorWhenDeletionFails() = runTest {
+        // Given
+        val userId = 1
+        val exception = Exception("Error al eliminar usuario")
+        coEvery { userRepository.deleteUser(userId) } returns Result.Error(exception)
+
+        // When
+        val result = deleteUserUseCase(userId)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
         coVerify(exactly = 1) { userRepository.deleteUser(userId) }
     }
 }

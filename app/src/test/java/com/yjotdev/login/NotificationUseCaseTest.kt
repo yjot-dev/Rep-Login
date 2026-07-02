@@ -48,7 +48,23 @@ class NotificationUseCaseTest {
     }
 
     @Test
-    fun sendNotificationUseCaseInvokesRepositoryWithCorrectBody() = runTest {
+    fun selectNotificationsUseCaseReturnsErrorWhenSelectionFails() = runTest {
+        // Given
+        val userId = 1
+        val exception = Exception("Error al obtener notificaciones")
+        coEvery { notificationRepository.selectNotifications(userId, any()) } returns Result.Error(exception)
+
+        // When
+        val result = selectNotificationsUseCase(userId, 5)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
+        coVerify(exactly = 1) { notificationRepository.selectNotifications(userId, 5) }
+    }
+
+    @Test
+    fun sendNotificationUseCaseReturnsSuccessWhenNotificationIsSent() = runTest {
         // Given
         val request = SendNotificationRequestModel(token = "fcm_token", title = "Aviso FCM", body = "Notificacion FCM enviada")
         coEvery { notificationRepository.sendNotification(request) } returns Result.Success(Unit)
@@ -58,6 +74,22 @@ class NotificationUseCaseTest {
 
         // Then
         assertTrue(result is Result.Success)
+        coVerify(exactly = 1) { notificationRepository.sendNotification(request) }
+    }
+
+    @Test
+    fun sendNotificationUseCaseReturnsErrorWhenSendingFails() = runTest {
+        // Given
+        val request = SendNotificationRequestModel(token = "fcm_token", title = "Aviso FCM", body = "Notificacion FCM enviada")
+        val exception = Exception("Error al enviar notificación")
+        coEvery { notificationRepository.sendNotification(request) } returns Result.Error(exception)
+
+        // When
+        val result = sendNotificationUseCase(request)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
         coVerify(exactly = 1) { notificationRepository.sendNotification(request) }
     }
 }

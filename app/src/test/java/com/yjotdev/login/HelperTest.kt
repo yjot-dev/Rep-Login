@@ -13,7 +13,7 @@ class HelperTest {
 
     // Pruebas para isValidUser
     @Test
-    fun `isValidUser - Given a valid username - When validated - Then returns true`() {
+    fun isValidUserGivenValidUsernameWhenValidatedThenReturnsTrue() {
         // Given
         val input = "JohnDoe"
 
@@ -25,7 +25,7 @@ class HelperTest {
     }
 
     @Test
-    fun `isValidUser - Given a username too short - When validated - Then returns false`() {
+    fun isValidUserGivenUsernameTooShortWhenValidatedThenReturnsFalse() {
         // Given
         val input = "Jo"
 
@@ -37,7 +37,7 @@ class HelperTest {
     }
 
     @Test
-    fun `isValidUser - Given a username with numbers - When validated - Then returns false`() {
+    fun isValidUserGivenUsernameWithNumbersWhenValidatedThenReturnsFalse() {
         // Given
         val input = "User123"
 
@@ -50,7 +50,7 @@ class HelperTest {
 
     // Pruebas para isValidEmail
     @Test
-    fun `isValidEmail - Given a valid email - When validated - Then returns true`() {
+    fun isValidEmailGivenValidEmailWhenValidatedThenReturnsTrue() {
         // Given
         val input = "test@example.com"
 
@@ -62,7 +62,7 @@ class HelperTest {
     }
 
     @Test
-    fun `isValidEmail - Given an email without at symbol - When validated - Then returns false`() {
+    fun isValidEmailGivenEmailWithoutAtSymbolWhenValidatedThenReturnsFalse() {
         // Given
         val input = "invalidemail.com"
 
@@ -75,7 +75,7 @@ class HelperTest {
 
     // Pruebas para isValidUserOrEmail
     @Test
-    fun `isValidUserOrEmail - Given a valid username - When validated - Then returns true`() {
+    fun isValidUserOrEmailGivenValidUsernameWhenValidatedThenReturnsTrue() {
         // Given
         val input = "JaneDoe"
 
@@ -87,7 +87,7 @@ class HelperTest {
     }
 
     @Test
-    fun `isValidUserOrEmail - Given a valid email - When validated - Then returns true`() {
+    fun isValidUserOrEmailGivenValidEmailWhenValidatedThenReturnsTrue() {
         // Given
         val input = "jane@example.com"
 
@@ -100,7 +100,7 @@ class HelperTest {
 
     // Pruebas para isValidPassword
     @Test
-    fun `isValidPassword - Given a valid password - When validated - Then returns true`() {
+    fun isValidPasswordGivenValidPasswordWhenValidatedThenReturnsTrue() {
         // Given
         val input = "Pass1234@"
 
@@ -112,7 +112,7 @@ class HelperTest {
     }
 
     @Test
-    fun `isValidPassword - Given a password too short - When validated - Then returns false`() {
+    fun isValidPasswordGivenPasswordTooShortWhenValidatedThenReturnsFalse() {
         // Given
         val input = "short"
 
@@ -125,7 +125,7 @@ class HelperTest {
 
     // Pruebas para moneyCodeByCountry
     @Test
-    fun `moneyCodeByCountry - Given Ecuador (EC) - When requested - Then returns USD for both`() {
+    fun moneyCodeByCountryGivenEcuadorWhenRequestedThenReturnsUsdForBoth() {
         // Given
         val countryCode = "EC"
 
@@ -138,7 +138,7 @@ class HelperTest {
     }
 
     @Test
-    fun `moneyCodeByCountry - Given Argentina (AR) - When requested - Then returns ARS and USD`() {
+    fun moneyCodeByCountryGivenArgentinaWhenRequestedThenReturnsArsAndUsd() {
         // Given
         val countryCode = "AR"
 
@@ -151,7 +151,7 @@ class HelperTest {
     }
 
     @Test
-    fun `moneyCodeByCountry - Given unknown country - When requested - Then returns USD as default`() {
+    fun moneyCodeByCountryGivenUnknownCountryWhenRequestedThenReturnsUsdAsDefault() {
         // Given
         val countryCode = "XX"
 
@@ -165,7 +165,7 @@ class HelperTest {
 
     // Pruebas para moneyConvertString
     @Test
-    fun `moneyConvertString - Given 10 USD to MXN - When converted - Then returns correct formatted string`() {
+    fun moneyConvertStringGiven10UsdToMxnWhenConvertedThenReturnsCorrectFormattedString() {
         // Given
         val amount = 10.0
         val moneyCode = "MXN"
@@ -180,7 +180,7 @@ class HelperTest {
     }
 
     @Test
-    fun `moneyConvertString - Given 1 USD to EUR - When converted - Then returns correct formatted string`() {
+    fun moneyConvertStringGiven1UsdToEurWhenConvertedThenReturnsCorrectFormattedString() {
         // Given
         val amount = 1.0
         val moneyCode = "EUR"
@@ -194,7 +194,7 @@ class HelperTest {
     }
 
     @Test
-    fun `moneyConvertString - Given an unknown currency - When converted - Then defaults to 1 to 1 ratio`() {
+    fun moneyConvertStringGivenAnUnknownCurrencyWhenConvertedThenDefaultsToOneToOneRatio() {
         // Given
         val amount = 50.0
         val moneyCode = "XYZ"

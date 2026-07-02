@@ -53,7 +53,23 @@ class PaymentUseCaseTest {
     }
 
     @Test
-    fun captureOrderUseCaseCallsRepositoryCorrectly() = runTest {
+    fun createOrderUseCaseReturnsErrorWhenOrderCreationFails() = runTest {
+        // Given
+        val request = CreateOrderRequestModel(plan = "premium", userId = 1)
+        val exception = Exception("Error al crear orden")
+        coEvery { paymentRepository.createOrder(request) } returns Result.Error(exception)
+
+        // When
+        val result = createOrderUseCase(request)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
+        coVerify(exactly = 1) { paymentRepository.createOrder(request) }
+    }
+
+    @Test
+    fun captureOrderUseCaseReturnsSuccessWhenOrderIsCaptured() = runTest {
         // Given
         val captureRequest = CaptureOrderRequestModel(orderId = "ORD-123")
         coEvery { paymentRepository.captureOrder(captureRequest) } returns Result.Success(Unit)
@@ -67,7 +83,23 @@ class PaymentUseCaseTest {
     }
 
     @Test
-    fun selectPaymentsUseCaseReturnsListOfPayments() = runTest {
+    fun captureOrderUseCaseReturnsErrorWhenOrderCaptureFails() = runTest {
+        // Given
+        val captureRequest = CaptureOrderRequestModel(orderId = "ORD-123")
+        val exception = Exception("Error al capturar orden")
+        coEvery { paymentRepository.captureOrder(captureRequest) } returns Result.Error(exception)
+
+        // When
+        val result = captureOrderUseCase(captureRequest)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
+        coVerify(exactly = 1) { paymentRepository.captureOrder(captureRequest) }
+    }
+
+    @Test
+    fun selectPaymentsUseCaseReturnsSuccessWithPaymentsList() = runTest {
         // Given
         val userId = 1
         val fakePayments = listOf(PaymentModel(id = 100, amount = 50.0f, moneyCode = "USD"))
@@ -79,6 +111,22 @@ class PaymentUseCaseTest {
         // Then
         assertTrue(result is Result.Success)
         assertEquals(fakePayments, (result as Result.Success).data)
+        coVerify(exactly = 1) { paymentRepository.selectPayments(userId, 10) }
+    }
+
+    @Test
+    fun selectPaymentsUseCaseReturnsErrorWhenSelectionFails() = runTest {
+        // Given
+        val userId = 1
+        val exception = Exception("Error al obtener historial de pagos")
+        coEvery { paymentRepository.selectPayments(userId, any()) } returns Result.Error(exception)
+
+        // When
+        val result = selectPaymentsUseCase(userId, 10)
+
+        // Then
+        assertTrue(result is Result.Error)
+        assertEquals(exception, (result as Result.Error).exception)
         coVerify(exactly = 1) { paymentRepository.selectPayments(userId, 10) }
     }
 }

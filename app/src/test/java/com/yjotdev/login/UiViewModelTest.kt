@@ -109,7 +109,7 @@ class UiViewModelTest {
         coEvery { findUserUseCase(loginModel) } returns Result.Success(fakeUser)
         every { getStringUseCase(R.string.toast_login_success) } returns successMessage
 
-        // Then
+        // When
         val job1 = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.Navigate(R.id.action_login_to_dashboard), awaitItem())
@@ -126,14 +126,12 @@ class UiViewModelTest {
                 assertEquals(fakeUser.copy(password = "password"), successState.user)
             }
         }
-
-        // When
         viewModel.loginUser(loginModel.name, loginModel.password)
         advanceUntilIdle()
-
         job1.cancel()
         job2.cancel()
 
+        // Then
         coVerify(exactly = 1) { findUserUseCase(loginModel) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_login_success) }
     }
@@ -147,7 +145,7 @@ class UiViewModelTest {
         coEvery { findUserUseCase(loginModel) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_login_error) } returns toastMessage
 
-        // Then
+        // When
         val job1 = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
@@ -164,14 +162,12 @@ class UiViewModelTest {
                 assertNull(errorState.user)
             }
         }
-
-        // When
         viewModel.loginUser(loginModel.name, loginModel.password)
         advanceUntilIdle()
-
         job1.cancel()
         job2.cancel()
 
+        // Then
         coVerify(exactly = 1) { findUserUseCase(loginModel) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_login_error) }
     }
@@ -184,7 +180,7 @@ class UiViewModelTest {
         coEvery { insertUserUseCase(userToInsert) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_insert_success) } returns successMessage
 
-        // Then
+        // When
         val job1 = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
@@ -198,14 +194,12 @@ class UiViewModelTest {
                 assertFalse(successState.isLoading)
             }
         }
-
-        // When
         viewModel.insertUser(userToInsert.name, userToInsert.email, userToInsert.password)
         advanceUntilIdle()
-
         job1.cancel()
         job2.cancel()
 
+        // Then
         coVerify(exactly = 1) { insertUserUseCase(userToInsert) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_insert_success) }
     }
@@ -219,7 +213,7 @@ class UiViewModelTest {
         coEvery { insertUserUseCase(userToInsert) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_insert_error) } returns toastMessage
 
-        // Then
+        // When
         val job1 = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
@@ -234,14 +228,12 @@ class UiViewModelTest {
                 assertFalse(errorState.isLoading)
             }
         }
-
-        // When
         viewModel.insertUser(userToInsert.name, userToInsert.email, userToInsert.password)
         advanceUntilIdle()
-
         job1.cancel()
         job2.cancel()
 
+        // Then
         coVerify(exactly = 1) { insertUserUseCase(userToInsert) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_insert_error) }
     }
@@ -256,7 +248,7 @@ class UiViewModelTest {
         coEvery { updateUserUseCase(initialUser.id, updatedUser) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
-        // Then
+        // When
         val job1 = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
@@ -270,14 +262,12 @@ class UiViewModelTest {
                 assertFalse(successState.isLoading)
             }
         }
-
-        // When
         viewModel.updateUser(updatedUser.name, updatedUser.email, updatedUser.password)
         advanceUntilIdle()
-
         job1.cancel()
         job2.cancel()
 
+        // Then
         coVerify(exactly = 1) { updateUserUseCase(initialUser.id, updatedUser) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_success) }
     }
@@ -293,7 +283,7 @@ class UiViewModelTest {
         coEvery { updateUserUseCase(initialUser.id, updatedUser) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_update_error) } returns toastMessage
 
-        // Then
+        // When
         val job1 = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
@@ -308,14 +298,12 @@ class UiViewModelTest {
                 assertFalse(errorState.isLoading)
             }
         }
-
-        // When
         viewModel.updateUser(updatedUser.name, updatedUser.email, updatedUser.password)
         advanceUntilIdle()
-
         job1.cancel()
         job2.cancel()
 
+        // Then
         coVerify(exactly = 1) { updateUserUseCase(initialUser.id, updatedUser) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_error) }
     }
@@ -329,19 +317,17 @@ class UiViewModelTest {
         coEvery { deleteUserUseCase(initialUser.id) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_delete_success) } returns successMessage
 
-        // Then
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
-
-        // When
         viewModel.deleteUser()
         advanceUntilIdle()
-
         job.cancel()
 
+        // Then
         coVerify(exactly = 1) { deleteUserUseCase(initialUser.id) }
     }
 
@@ -355,20 +341,18 @@ class UiViewModelTest {
         coEvery { deleteUserUseCase(initialUser.id) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_delete_error) } returns toastMessage
 
-        // Then
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
                 assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
             }
         }
-
-        // When
         viewModel.deleteUser()
         advanceUntilIdle()
-
         job.cancel()
 
+        // Then
         coVerify(exactly = 1) { deleteUserUseCase(initialUser.id) }
     }
 
@@ -380,19 +364,17 @@ class UiViewModelTest {
         coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
-        // Then
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
-
-        // When
         viewModel.changePasswordUser(recoveryModel.email, recoveryModel.password)
         advanceUntilIdle()
-
         job.cancel()
 
+        // Then
         coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
     }
 
@@ -405,20 +387,18 @@ class UiViewModelTest {
         coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_update_error) } returns errorMessage
 
-        // Then
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(errorMessage), awaitItem())
                 assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
             }
         }
-
-        // When
         viewModel.changePasswordUser(recoveryModel.email, recoveryModel.password)
         advanceUntilIdle()
-
         job.cancel()
 
+        // Then
         coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
     }
 
@@ -430,19 +410,17 @@ class UiViewModelTest {
         coEvery { sendEmailUseCase(any()) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_emailsend_success) } returns successMessage
 
-        // Then
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
-
-        // When
         viewModel.sendEmail(email, "Envio de email")
         advanceUntilIdle()
-
         job.cancel()
 
+        // Then
         coVerify(exactly = 1) { sendEmailUseCase(any()) }
     }
 
@@ -455,130 +433,141 @@ class UiViewModelTest {
         coEvery { sendEmailUseCase(any()) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_emailsend_error) } returns toastMessage
 
-        // Then
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
                 assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
             }
         }
-
-        // When
         viewModel.sendEmail(email, "Envio de email")
         advanceUntilIdle()
-
         job.cancel()
 
+        // Then
         coVerify(exactly = 1) { sendEmailUseCase(any()) }
     }
 
     // ---------- createOrder ----------
     @Test
     fun whenCreateOrderIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
+        // Given
         val fakeResponse = CreateOrderResultModel(approveUrl = "https://paypal.com/approve")
         coEvery { createOrderUseCase(any()) } returns Result.Success(fakeResponse)
         coEvery { getStringUseCase(R.string.toast_create_order_success) } returns "Order created"
 
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast("Order created"), awaitItem())
             }
         }
-
         viewModel.createOrder("test", "USD") {}
         advanceUntilIdle()
-
         job.cancel()
+
+        // Then
         coVerify(exactly = 1) { createOrderUseCase(any()) }
     }
 
     @Test
     fun whenCreateOrderFailsThenUiStateIsUpdatedAndErrorEventsAreSent() = runTest {
+        // Given
         val exception = Exception("Create order failed")
         coEvery { createOrderUseCase(any()) } returns Result.Error(exception)
         coEvery { getStringUseCase(R.string.toast_create_order_error) } returns "Order error"
 
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast("Order error"), awaitItem())
                 assertEquals(UiEvent.ShowLog("Create order failed"), awaitItem())
             }
         }
-
         viewModel.createOrder("test", "USD") {}
         advanceUntilIdle()
-
         job.cancel()
+
+        // Then
         coVerify(exactly = 1) { createOrderUseCase(any()) }
     }
 
     // ---------- captureOrder ----------
     @Test
     fun whenCaptureOrderIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
+        // Given
         coEvery { captureOrderUseCase(any()) } returns Result.Success(Unit)
         coEvery { getStringUseCase(R.string.toast_capture_order_success) } returns "Order captured"
 
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast("Order captured"), awaitItem())
             }
         }
-
         viewModel.captureOrder("123")
         advanceUntilIdle()
-
         job.cancel()
+
+        // Then
         coVerify(exactly = 1) { captureOrderUseCase(any()) }
     }
 
     @Test
     fun whenCaptureOrderFailsThenUiStateIsUpdatedAndErrorEventsAreSent() = runTest {
+        // Given
         val exception = Exception("Capture failed")
         coEvery { captureOrderUseCase(any()) } returns Result.Error(exception)
         coEvery { getStringUseCase(R.string.toast_capture_order_error) } returns "Capture error"
 
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast("Capture error"), awaitItem())
                 assertEquals(UiEvent.ShowLog("Capture failed"), awaitItem())
             }
         }
-
         viewModel.captureOrder("123")
         advanceUntilIdle()
-
         job.cancel()
+
+        // Then
         coVerify(exactly = 1) { captureOrderUseCase(any()) }
     }
 
     // ---------- selectPayments ----------
     @Test
     fun whenSelectPaymentsIsSuccessfulThenUiStateIsUpdatedWithPayments() = runTest {
+        // Given
         val fakePayments = listOf(PaymentModel())
         coEvery { selectPaymentsUseCase(any(), any()) } returns Result.Success(fakePayments)
 
+        // When
         viewModel.selectPayments()
         advanceUntilIdle()
 
+        // Then
         assertEquals(fakePayments, viewModel.uiState.value.payments)
         coVerify(exactly = 1) { selectPaymentsUseCase(any(), any()) }
     }
 
     @Test
     fun whenSelectPaymentsFailsThenUiStateIsUpdatedWithEmptyListAndLogEventIsSent() = runTest {
+        // Given
         val exception = Exception("Payments error")
         coEvery { selectPaymentsUseCase(any(), any()) } returns Result.Error(exception)
 
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowLog("Payments error"), awaitItem())
             }
         }
-
         viewModel.selectPayments()
         advanceUntilIdle()
-
         job.cancel()
+
+        // Then
         assertTrue(viewModel.uiState.value.payments.isEmpty())
         coVerify(exactly = 1) { selectPaymentsUseCase(any(), any()) }
     }
@@ -586,31 +575,36 @@ class UiViewModelTest {
     // ---------- selectNotifications ----------
     @Test
     fun whenSelectNotificationsIsSuccessfulThenUiStateIsUpdatedWithNotifications() = runTest {
+        // Given
         val fakeNotifications = listOf(NotificationModel())
         coEvery { selectNotificationsUseCase(any(), any()) } returns Result.Success(fakeNotifications)
 
+        // When
         viewModel.selectNotifications()
         advanceUntilIdle()
 
+        // Then
         assertEquals(fakeNotifications, viewModel.uiState.value.notifications)
         coVerify(exactly = 1) { selectNotificationsUseCase(any(), any()) }
     }
 
     @Test
     fun whenSelectNotificationsFailsThenUiStateIsUpdatedWithEmptyListAndLogEventIsSent() = runTest {
+        // Given
         val exception = Exception("Notifications error")
         coEvery { selectNotificationsUseCase(any(), any()) } returns Result.Error(exception)
 
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowLog("Notifications error"), awaitItem())
             }
         }
-
         viewModel.selectNotifications()
         advanceUntilIdle()
-
         job.cancel()
+
+        // Then
         assertTrue(viewModel.uiState.value.notifications.isEmpty())
         coVerify(exactly = 1) { selectNotificationsUseCase(any(), any()) }
     }
@@ -618,36 +612,41 @@ class UiViewModelTest {
     // ---------- sendNotification ----------
     @Test
     fun whenSendNotificationIsSuccessfulThenUiStateIsUpdated() = runTest {
+        // Given
         coEvery { sendNotificationUseCase(any()) } returns Result.Success(Unit)
         coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
         coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
         coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
 
+        // When
         viewModel.sendNotification()
         advanceUntilIdle()
 
+        // Then
         assertFalse(viewModel.uiState.value.isLoading)
         coVerify(exactly = 1) { sendNotificationUseCase(any()) }
     }
 
     @Test
     fun whenSendNotificationFailsThenUiStateIsUpdatedAndLogEventIsSent() = runTest {
+        // Given
         val exception = Exception("Notification error")
         coEvery { sendNotificationUseCase(any()) } returns Result.Error(exception)
         coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
         coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
         coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
 
+        // When
         val job = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowLog("Notification error"), awaitItem())
             }
         }
-
         viewModel.sendNotification()
         advanceUntilIdle()
-
         job.cancel()
+
+        // Then
         assertFalse(viewModel.uiState.value.isLoading)
         coVerify(exactly = 1) { sendNotificationUseCase(any()) }
     }
