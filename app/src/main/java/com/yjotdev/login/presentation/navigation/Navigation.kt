@@ -1,5 +1,10 @@
 package com.yjotdev.login.presentation.navigation
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.text.SpannableString
 import android.text.style.TabStopSpan
 import kotlinx.coroutines.launch
@@ -7,6 +12,13 @@ import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,14 +28,40 @@ import androidx.navigation.ui.setupWithNavController
 import com.yjotdev.login.MainActivity
 import com.yjotdev.login.R
 
-fun MainActivity.setupAppNavigation() {
-    // Inicializa el NavController
+fun MainActivity.setupPermissions() {
+    val context = this@setupPermissions
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                context,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                1001
+            )
+        }
+    }
+}
+
+fun MainActivity.setupNavigation() {
+    // 1. Configurar Edge-to-Edge
+    enableEdgeToEdge(
+        statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
+        navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
+    )
+    WindowCompat.getInsetsController(window, window.decorView).let { controller ->
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+        controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
+    // 2. Configurar el NavController
     val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentNav) as NavHostFragment
     val navController = navHostFragment.navController
-    // Vincula NavController con los BottomMenu
+    // 3. Vincular NavController con los BottomMenu
     binding.bottomMenu1.setupWithNavController(navController)
     binding.bottomMenu2.setupWithNavController(navController)
-    // Logica para alternar la visibilidad de los BottomMenu
+    // 4. Alternar visibilidad de los BottomMenu
     navController.addOnDestinationChangedListener { _, destination, _ ->
         when (destination.id) {
             R.id.navigationLogin,
@@ -66,6 +104,25 @@ fun MainActivity.observeViewModelState() {
                     // Muestra el error en el Log
                     is UiEvent.ShowLog -> Log.d("Https",event.message)
                 }
+            }
+        }
+    }
+}
+
+fun MainActivity.handlePaypalIntent(uri: Uri) {
+    val context = this@handlePaypalIntent
+    if (uri.scheme == "com.yjotdev.login" && uri.host == "paypal") {
+        when (uri.path) {
+            "/return" -> {
+                val orderId = uri.getQueryParameter("token")
+                if (!orderId.isNullOrEmpty()) {
+                    viewModel.captureOrder(orderId)
+                    viewModel.sendNotification()
+                }
+            }
+            "/cancel" -> {
+                val text = this.getString(R.string.toast_capture_order_error)
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
             }
         }
     }
