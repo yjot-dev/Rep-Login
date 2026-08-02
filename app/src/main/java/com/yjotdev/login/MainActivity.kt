@@ -1,13 +1,11 @@
 package com.yjotdev.login
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.databinding.ActivityMainBinding
-import com.yjotdev.login.presentation.navigation.handlePaypalIntent
 import com.yjotdev.login.presentation.navigation.observeViewModelState
 import com.yjotdev.login.presentation.navigation.setupNavigation
 import com.yjotdev.login.presentation.navigation.setupPermissions
@@ -29,13 +27,5 @@ class MainActivity : AppCompatActivity() {
         setupPermissions()
         // Observacion de estados del ViewModel
         observeViewModelState()
-        // Procesa el intent inicial
-        intent.data?.let { uri -> handlePaypalIntent(uri) }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        // Procesa el intent inicial
-        intent.data?.let { uri -> handlePaypalIntent(uri) }
     }
 }

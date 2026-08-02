@@ -2,9 +2,7 @@ package com.yjotdev.login.domain.repository
 
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.PaymentModel
-import com.yjotdev.login.domain.model.CreateOrderRequestModel
-import com.yjotdev.login.domain.model.CreateOrderResultModel
-import com.yjotdev.login.domain.model.CaptureOrderRequestModel
+import com.yjotdev.login.domain.model.ValidateModel
 
 /**
  * Define el contrato para las operaciones del repositorio de pagos.
@@ -13,22 +11,15 @@ import com.yjotdev.login.domain.model.CaptureOrderRequestModel
  */
 interface PaymentRepository {
     /**
-     * Selecciona todos los pagos del usuario en la BD
+     * selecciona todos los pagos del usuario en la BD
      * @return Result<List<PaymentModel>> que contiene los pagos del usuario si
      * se encuentra, o un error.
      */
     suspend fun selectPayments(userId: Int, maxRows: Int? = null): Result<List<PaymentModel>>
 
     /**
-     * Crea la orden de pago mediante el tipo de plan seleccionado
-     * @return Result<CreateOrderResultModel> que contiene la creación de la
-     * orden del usuario si se encuentra, o un error.
-     * **/
-    suspend fun createOrder(body: CreateOrderRequestModel): Result<CreateOrderResultModel>
-
-    /**
-     * Captura la orden de pago mediante ID de la orden
+     * Válida la compra del usuario en el backend con la Google Play Developer API
      * @return Result<Unit> que indica éxito o un error.
-     */
-    suspend fun captureOrder(orderId: CaptureOrderRequestModel): Result<Unit>
+     * **/
+    suspend fun validatePayment(validate: ValidateModel): Result<Unit>
 }

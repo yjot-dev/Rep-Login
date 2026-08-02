@@ -7,4 +7,5 @@ data class SendNotificationRequestDto(
     @SerializedName("token") val token: String = "",
     @SerializedName("title") val title: String = "",
     @SerializedName("body") val body: String = "",
+    @SerializedName("date") val date: String = ""
 )

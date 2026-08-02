@@ -7,5 +7,6 @@ fun SendNotificationRequestModel.toDto() = SendNotificationRequestDto(
     userId = this.userId,
     token = this.token,
     title = this.title,
-    body = this.body
+    body = this.body,
+    date = this.date
 )

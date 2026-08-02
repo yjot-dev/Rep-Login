@@ -30,10 +30,11 @@ class PaymentAdapter :
         private val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
 
         fun bind(payment: PaymentModel) {
-            val amount = "${payment.amount} ${payment.moneyCode}"
+            val amount = "${payment.amount} ${payment.money}"
+            val status = itemView.context.getString(R.string.fragment_payments_history_status)
             tvAmount.text = amount
             tvDate.text = payment.date
-            tvStatus.text = payment.status
+            tvStatus.text = status
         }
     }
 

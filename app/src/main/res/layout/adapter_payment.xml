@@ -18,28 +18,30 @@
         <TextView
             style="@style/MyItemAdapter"
             android:id="@+id/tvAmount"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:maxLines="2"
             tools:textSize="16sp"
-            tools:text="$20.90"/>
+            tools:text="$10.00"/>
 
         <TextView
             style="@style/MyItemAdapter"
             android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.4"
             android:maxLines="2"
-            android:maxWidth="100dp"
             tools:textSize="16sp"
             tools:text="03-02-2026 13:27:45"/>
 
         <TextView
             style="@style/MyItemAdapter"
             android:id="@+id/tvStatus"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:maxWidth="100dp"
+            android:layout_weight="0.4"
+            android:maxLines="2"
             tools:textSize="16sp"
             tools:text="Completado"/>
     </LinearLayout>

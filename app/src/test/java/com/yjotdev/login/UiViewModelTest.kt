@@ -25,19 +25,19 @@ import org.junit.Test
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.presentation.navigation.UiEvent
 import com.yjotdev.login.domain.core.Result
-import com.yjotdev.login.domain.model.CreateOrderResultModel
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.NotificationModel
 import com.yjotdev.login.domain.model.PaymentModel
 import com.yjotdev.login.domain.model.RecoveryModel
+import com.yjotdev.login.domain.model.SendNotificationRequestModel
 import com.yjotdev.login.domain.model.UserModel
+import com.yjotdev.login.domain.model.ValidateModel
 import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
 import com.yjotdev.login.domain.usecase.notification.SelectNotificationsUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
-import com.yjotdev.login.domain.usecase.payment.CaptureOrderUseCase
-import com.yjotdev.login.domain.usecase.payment.CreateOrderUseCase
 import com.yjotdev.login.domain.usecase.payment.SelectPaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
 import com.yjotdev.login.domain.usecase.string.GetStringUseCase
 import com.yjotdev.login.domain.usecase.user.*
 
@@ -58,11 +58,9 @@ class UiViewModelTest {
     @RelaxedMockK
     private lateinit var sendEmailUseCase: SendEmailUseCase
     @RelaxedMockK
-    private lateinit var createOrderUseCase: CreateOrderUseCase
-    @RelaxedMockK
-    private lateinit var captureOrderUseCase: CaptureOrderUseCase
-    @RelaxedMockK
     private lateinit var selectPaymentsUseCase: SelectPaymentsUseCase
+    @RelaxedMockK
+    private lateinit var validatePaymentUseCase: ValidatePaymentUseCase
     @RelaxedMockK
     private lateinit var selectNotificationsUseCase: SelectNotificationsUseCase
     @RelaxedMockK
@@ -85,9 +83,8 @@ class UiViewModelTest {
             deleteUserUseCase,
             changePasswordUserUseCase,
             sendEmailUseCase,
-            createOrderUseCase,
-            captureOrderUseCase,
             selectPaymentsUseCase,
+            validatePaymentUseCase,
             selectNotificationsUseCase,
             sendNotificationUseCase,
             getConfigUseCase
@@ -448,93 +445,6 @@ class UiViewModelTest {
         coVerify(exactly = 1) { sendEmailUseCase(any()) }
     }
 
-    // ---------- createOrder ----------
-    @Test
-    fun whenCreateOrderIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
-        // Given
-        val fakeResponse = CreateOrderResultModel(approveUrl = "https://paypal.com/approve")
-        coEvery { createOrderUseCase(any()) } returns Result.Success(fakeResponse)
-        coEvery { getStringUseCase(R.string.toast_create_order_success) } returns "Order created"
-
-        // When
-        val job = launch {
-            viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowToast("Order created"), awaitItem())
-            }
-        }
-        viewModel.createOrder("test", "USD") {}
-        advanceUntilIdle()
-        job.cancel()
-
-        // Then
-        coVerify(exactly = 1) { createOrderUseCase(any()) }
-    }
-
-    @Test
-    fun whenCreateOrderFailsThenUiStateIsUpdatedAndErrorEventsAreSent() = runTest {
-        // Given
-        val exception = Exception("Create order failed")
-        coEvery { createOrderUseCase(any()) } returns Result.Error(exception)
-        coEvery { getStringUseCase(R.string.toast_create_order_error) } returns "Order error"
-
-        // When
-        val job = launch {
-            viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowToast("Order error"), awaitItem())
-                assertEquals(UiEvent.ShowLog("Create order failed"), awaitItem())
-            }
-        }
-        viewModel.createOrder("test", "USD") {}
-        advanceUntilIdle()
-        job.cancel()
-
-        // Then
-        coVerify(exactly = 1) { createOrderUseCase(any()) }
-    }
-
-    // ---------- captureOrder ----------
-    @Test
-    fun whenCaptureOrderIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
-        // Given
-        coEvery { captureOrderUseCase(any()) } returns Result.Success(Unit)
-        coEvery { getStringUseCase(R.string.toast_capture_order_success) } returns "Order captured"
-
-        // When
-        val job = launch {
-            viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowToast("Order captured"), awaitItem())
-            }
-        }
-        viewModel.captureOrder("123")
-        advanceUntilIdle()
-        job.cancel()
-
-        // Then
-        coVerify(exactly = 1) { captureOrderUseCase(any()) }
-    }
-
-    @Test
-    fun whenCaptureOrderFailsThenUiStateIsUpdatedAndErrorEventsAreSent() = runTest {
-        // Given
-        val exception = Exception("Capture failed")
-        coEvery { captureOrderUseCase(any()) } returns Result.Error(exception)
-        coEvery { getStringUseCase(R.string.toast_capture_order_error) } returns "Capture error"
-
-        // When
-        val job = launch {
-            viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowToast("Capture error"), awaitItem())
-                assertEquals(UiEvent.ShowLog("Capture failed"), awaitItem())
-            }
-        }
-        viewModel.captureOrder("123")
-        advanceUntilIdle()
-        job.cancel()
-
-        // Then
-        coVerify(exactly = 1) { captureOrderUseCase(any()) }
-    }
-
     // ---------- selectPayments ----------
     @Test
     fun whenSelectPaymentsIsSuccessfulThenUiStateIsUpdatedWithPayments() = runTest {
@@ -570,6 +480,107 @@ class UiViewModelTest {
         // Then
         assertTrue(viewModel.uiState.value.payments.isEmpty())
         coVerify(exactly = 1) { selectPaymentsUseCase(any(), any()) }
+    }
+
+    // ---------- validatePayment ----------
+    @Test
+    fun whenValidatePaymentIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
+        // Given
+        val validateEntity = ValidateModel(
+            purchaseToken = "token123",
+            productId = "product1",
+            userId = 1,
+            amount = 10.0f,
+            money = "USD",
+            date = "2024-05-11 10:00:00"
+        )
+        val successMessage = "Payment validated"
+        coEvery { validatePaymentUseCase(any()) } returns Result.Success(Unit)
+        every { getStringUseCase(R.string.toast_payment_success) } returns successMessage
+        // Mock notification subflow
+        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
+        coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
+        coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
+        coEvery { sendNotificationUseCase(any()) } returns Result.Success(Unit)
+
+        // When
+        val job1 = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
+            }
+        }
+        val job2 = launch {
+            viewModel.uiState.test {
+                // Loading start
+                assertTrue(awaitItem().isLoading)
+                // Loading end
+                assertFalse(awaitItem().isLoading)
+            }
+        }
+        viewModel.validatePayment(
+            validateEntity.purchaseToken,
+            validateEntity.productId,
+            validateEntity.userId,
+            validateEntity.amount,
+            validateEntity.money,
+            validateEntity.date
+        )
+        advanceUntilIdle()
+        job1.cancel()
+        job2.cancel()
+
+        // Then
+        coVerify(exactly = 1) { validatePaymentUseCase(any()) }
+        coVerify(exactly = 1) { sendNotificationUseCase(any()) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_payment_success) }
+    }
+
+    @Test
+    fun whenValidatePaymentFailsThenUiStateIsUpdatedAndToastAndLogEventsAreSent() = runTest {
+        // Given
+        val validateEntity = ValidateModel(
+            purchaseToken = "token123",
+            productId = "product1",
+            userId = 1,
+            amount = 10.0f,
+            money = "USD",
+            date = "2024-05-11 10:00:00"
+        )
+        val exception = Exception("Validation failed")
+        val toastMessage = "Payment error"
+        coEvery { validatePaymentUseCase(any()) } returns Result.Error(exception)
+        every { getStringUseCase(R.string.toast_payment_error) } returns toastMessage
+
+        // When
+        val job1 = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
+                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
+            }
+        }
+        val job2 = launch {
+            viewModel.uiState.test {
+                // Loading start
+                assertTrue(awaitItem().isLoading)
+                // Loading end
+                assertFalse(awaitItem().isLoading)
+            }
+        }
+        viewModel.validatePayment(
+            validateEntity.purchaseToken,
+            validateEntity.productId,
+            validateEntity.userId,
+            validateEntity.amount,
+            validateEntity.money,
+            validateEntity.date
+        )
+        advanceUntilIdle()
+        job1.cancel()
+        job2.cancel()
+
+        // Then
+        coVerify(exactly = 1) { validatePaymentUseCase(any()) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_payment_error) }
     }
 
     // ---------- selectNotifications ----------
@@ -613,13 +624,14 @@ class UiViewModelTest {
     @Test
     fun whenSendNotificationIsSuccessfulThenUiStateIsUpdated() = runTest {
         // Given
+        val body = SendNotificationRequestModel(date = "12/12/2026")
         coEvery { sendNotificationUseCase(any()) } returns Result.Success(Unit)
         coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
         coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
         coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
 
         // When
-        viewModel.sendNotification()
+        viewModel.sendNotification(body.date)
         advanceUntilIdle()
 
         // Then
@@ -630,6 +642,7 @@ class UiViewModelTest {
     @Test
     fun whenSendNotificationFailsThenUiStateIsUpdatedAndLogEventIsSent() = runTest {
         // Given
+        val body = SendNotificationRequestModel(date = "12/12/2026")
         val exception = Exception("Notification error")
         coEvery { sendNotificationUseCase(any()) } returns Result.Error(exception)
         coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
@@ -642,7 +655,7 @@ class UiViewModelTest {
                 assertEquals(UiEvent.ShowLog("Notification error"), awaitItem())
             }
         }
-        viewModel.sendNotification()
+        viewModel.sendNotification(body.date)
         advanceUntilIdle()
         job.cancel()
 

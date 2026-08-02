@@ -2,13 +2,11 @@ package com.yjotdev.login.data.remote.api
 
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Body
 import retrofit2.http.Query
+import retrofit2.http.Body
+import retrofit2.http.POST
 import com.yjotdev.login.data.remote.dto.PaymentDto
-import com.yjotdev.login.data.remote.dto.CreateOrderRequestDto
-import com.yjotdev.login.data.remote.dto.CreateOrderResponseDto
-import com.yjotdev.login.data.remote.dto.CaptureOrderRequestDto
+import com.yjotdev.login.data.remote.dto.ValidateDto
 
 /**
  * Interfaz de Retrofit para las operaciones de la API de pagos.
@@ -21,9 +19,6 @@ interface PaymentApi {
         @Query("maxRows") maxRows: Int? = null
     ): Response<List<PaymentDto>>
 
-    @POST("payments/create-order")
-    suspend fun createOrder(@Body body: CreateOrderRequestDto): Response<CreateOrderResponseDto>
-
-    @POST("payments/capture-order")
-    suspend fun captureOrder(@Body orderId: CaptureOrderRequestDto): Response<Unit>
+    @POST("payments")
+    suspend fun validatePayment(@Body validate: ValidateDto): Response<Unit>
 }

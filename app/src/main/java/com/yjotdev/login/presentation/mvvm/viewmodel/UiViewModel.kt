@@ -19,12 +19,12 @@ import com.yjotdev.login.domain.model.EmailModel
 import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
-import com.yjotdev.login.domain.model.CreateOrderRequestModel
 import com.yjotdev.login.domain.model.SendNotificationRequestModel
+import com.yjotdev.login.domain.model.ValidateModel
 import com.yjotdev.login.domain.usecase.notification.SelectNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 import com.yjotdev.login.domain.usecase.payment.SelectPaymentsUseCase
-import com.yjotdev.login.domain.usecase.payment.CreateOrderUseCase
-import com.yjotdev.login.domain.usecase.payment.CaptureOrderUseCase
+import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
 import com.yjotdev.login.domain.usecase.string.GetStringUseCase
 import com.yjotdev.login.domain.usecase.user.ChangePasswordUserUseCase
@@ -33,9 +33,7 @@ import com.yjotdev.login.domain.usecase.user.FindUserUseCase
 import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
 import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
 import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
-import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 import com.yjotdev.login.R
-import com.yjotdev.login.domain.model.CaptureOrderRequestModel
 
 @HiltViewModel
 class UiViewModel @Inject constructor(
@@ -46,9 +44,8 @@ class UiViewModel @Inject constructor(
     private val deleteUserUseCase: DeleteUserUseCase,
     private val changePasswordUserUseCase: ChangePasswordUserUseCase,
     private val sendEmailUseCase: SendEmailUseCase,
-    private val createOrderUseCase: CreateOrderUseCase,
-    private val captureOrderUseCase: CaptureOrderUseCase,
     private val selectPaymentsUseCase: SelectPaymentsUseCase,
+    private val validatePaymentUseCase: ValidatePaymentUseCase,
     private val selectNotificationsUseCase: SelectNotificationsUseCase,
     private val sendNotificationUseCase: SendNotificationUseCase,
     private val getConfigUseCase: GetConfigUseCase
@@ -60,7 +57,6 @@ class UiViewModel @Inject constructor(
     val eventChannel = _eventChannel.receiveAsFlow()
 
     override fun onCleared() {
-        super.onCleared()
         cleanState()
     }
     /**
@@ -264,26 +260,33 @@ class UiViewModel @Inject constructor(
             }
         }
     }
+
     /**
-     * Crea una orden de pago del usuario mediante la API
+     * Válida el pago del usuario en el backend con la Google Play Developer API
      **/
-    fun createOrder(plan: String, paypalMoneyCode: String, onIntent: (String) -> Unit) {
-        val userId = uiState.value.user?.id ?: 0
-        val body = CreateOrderRequestModel(plan, userId, paypalMoneyCode)
+    fun validatePayment(
+        purchaseToken: String,
+        productId: String?,
+        userId: Int = uiState.value.user?.id ?: 0,
+        amount: Float,
+        money: String,
+        date: String
+    ) {
+        val validate = ValidateModel(purchaseToken, productId, userId, amount, money, date)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = createOrderUseCase(body)) {
+            when (val result = validatePaymentUseCase(validate)) {
                 is Result.Success -> {
-                    onIntent(result.data.approveUrl)
+                    executeSendNotification(date)
                     _uiState.update { it.copy(isLoading = false) }
                     _eventChannel.send(UiEvent.ShowToast(
-                        getStringUseCase(R.string.toast_create_order_success)
+                        getStringUseCase(R.string.toast_payment_success)
                     ))
                 }
                 is Result.Error -> {
                     _uiState.update { it.copy(isLoading = false) }
                     _eventChannel.send(UiEvent.ShowToast(
-                        getStringUseCase(R.string.toast_create_order_error)
+                        getStringUseCase(R.string.toast_payment_error)
                     ))
                     _eventChannel.send(UiEvent.ShowLog(
                         result.exception.message!!
@@ -293,33 +296,7 @@ class UiViewModel @Inject constructor(
         }
     }
     /**
-     * Captura una orden de pago del usuario mediante la API
-     **/
-    fun captureOrder(id: String) {
-        val orderId = CaptureOrderRequestModel(id)
-        _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            when (val result = captureOrderUseCase(orderId)) {
-                is Result.Success -> {
-                    _uiState.update { it.copy(isLoading = false) }
-                    _eventChannel.send(UiEvent.ShowToast(
-                        getStringUseCase(R.string.toast_capture_order_success)
-                    ))
-                }
-                is Result.Error -> {
-                    _uiState.update { it.copy(isLoading = false) }
-                    _eventChannel.send(UiEvent.ShowToast(
-                        getStringUseCase(R.string.toast_capture_order_error)
-                    ))
-                    _eventChannel.send(UiEvent.ShowLog(
-                        result.exception.message!!
-                    ))
-                }
-            }
-        }
-    }
-    /**
-     * Selecciona todos los pagos del usuario en la base de datos
+     * selecciona todos los pagos del usuario en la base de datos
      **/
     fun selectPayments(maxRows: Int? = null) {
         val userId = uiState.value.user?.id ?: 0
@@ -370,10 +347,8 @@ class UiViewModel @Inject constructor(
             }
         }
     }
-    /**
-     * Envia una notificacion del usuario mediante la API
-     **/
-    fun sendNotification() {
+
+    private suspend fun executeSendNotification(date: String) {
         val body = SendNotificationRequestModel(
             userId = uiState.value.user?.id ?: 0,
             token = getConfigUseCase()["token"] ?: "",
@@ -381,21 +356,26 @@ class UiViewModel @Inject constructor(
             body = getStringUseCase(
                 R.string.send_notification_body,
                 uiState.value.user?.name ?: ""
-            )
+            ),
+            date = date
         )
+        when (val result = sendNotificationUseCase(body)) {
+            is Result.Success -> {}
+            is Result.Error -> {
+                _eventChannel.send(UiEvent.ShowLog(
+                    result.exception.message!!
+                ))
+            }
+        }
+    }
+    /**
+     * Envia una notificacion del usuario mediante la API
+     **/
+    fun sendNotification(date: String) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = sendNotificationUseCase(body)) {
-                is Result.Success -> {
-                    _uiState.update { it.copy(isLoading = false)}
-                }
-                is Result.Error -> {
-                    _uiState.update { it.copy(isLoading = false)}
-                    _eventChannel.send(UiEvent.ShowLog(
-                        result.exception.message!!
-                    ))
-                }
-            }
+            executeSendNotification(date)
+            _uiState.update { it.copy(isLoading = false) }
         }
     }
 }

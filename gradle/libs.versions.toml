@@ -4,33 +4,33 @@ agp = "8.13.2"
 kotlin = "2.1.0"
 # Ksp
 ksp = "2.1.0-1.0.29"
-coreKtx = "1.15.0"
+coreKtx = "1.18.0"
 # Testing
 junit = "4.13.2"
-junitTest = "1.2.1"
-espresso = "3.6.1"
-mockk = "1.13.13"
-coroutines-test = "1.9.0"
-turbine = "1.1.0"
+junitTest = "1.3.0"
+espresso = "3.7.0"
+mockk = "1.14.11"
+coroutines-test = "1.11.0"
+turbine = "1.2.1"
 # Lifecycle & XML
-lifecycleRuntimeKtx = "2.8.7"
+lifecycleRuntimeKtx = "2.11.0"
 appcompat = "1.7.1"
-material = "1.13.0"
-activity = "1.10.0"
+material = "1.14.0"
+activity = "1.13.0"
 fragmentKtx = "1.8.9"
 # Navigation
-navVersion = "2.8.5"
+navVersion = "2.9.8"
 # Network
-retrofit = "2.11.0"
-gson = "2.11.0"
-loggingInterceptor = "4.12.0"
+retrofit = "3.0.0"
+gson = "2.14.0"
+loggingInterceptor = "5.4.0"
 # Dependency Injection (Hilt)
 hilt = "2.54"
-# Browser
-browser = "1.8.0"
+# Google Play Billing
+billing = "9.1.0"
 # Firebase y Servicios de Google
 firebaseVersion = "33.0.0"
-gms = "4.4.2"
+gms = "4.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,7 +42,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navVersion" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navVersion" }
 
-androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+android-billingclient-billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
 
 squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 squareup-retrofit2-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }

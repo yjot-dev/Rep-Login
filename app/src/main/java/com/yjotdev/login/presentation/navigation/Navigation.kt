@@ -3,7 +3,6 @@ package com.yjotdev.login.presentation.navigation
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.text.SpannableString
 import android.text.style.TabStopSpan
@@ -104,25 +103,6 @@ fun MainActivity.observeViewModelState() {
                     // Muestra el error en el Log
                     is UiEvent.ShowLog -> Log.d("Https",event.message)
                 }
-            }
-        }
-    }
-}
-
-fun MainActivity.handlePaypalIntent(uri: Uri) {
-    val context = this@handlePaypalIntent
-    if (uri.scheme == "com.yjotdev.login" && uri.host == "paypal") {
-        when (uri.path) {
-            "/return" -> {
-                val orderId = uri.getQueryParameter("token")
-                if (!orderId.isNullOrEmpty()) {
-                    viewModel.captureOrder(orderId)
-                    viewModel.sendNotification()
-                }
-            }
-            "/cancel" -> {
-                val text = this.getString(R.string.toast_capture_order_error)
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
             }
         }
     }

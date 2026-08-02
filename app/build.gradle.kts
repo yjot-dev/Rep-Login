@@ -14,8 +14,8 @@ android {
         applicationId = "com.yjotdev.login"
         minSdk = 24
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.9"
+        versionCode = 12
+        versionName = "2.2"
         testInstrumentationRunner = "com.yjotdev.login.CustomTestRunner"
     }
     signingConfigs {
@@ -28,6 +28,8 @@ android {
     }
     buildTypes {
         debug {
+            //applicationIdSuffix = ""
+            //signingConfig = signingConfigs.getByName("release")
             applicationIdSuffix = ".debug"
             isDebuggable = true
             buildConfigField("String", "API_BASE_URL", "\"${project.findProperty("API_BASE_URL_DEBUG")}\"")
@@ -81,8 +83,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    //Browser
-    implementation(libs.androidx.browser)
+    //Billing
+    implementation(libs.android.billingclient.billing)
     //Retrofit
     implementation(libs.squareup.retrofit2)
     implementation(libs.squareup.retrofit2.gson)

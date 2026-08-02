@@ -5,4 +5,5 @@ data class SendNotificationRequestModel(
     val token: String = "",
     val title: String = "",
     val body: String = "",
+    val date: String = ""
 )

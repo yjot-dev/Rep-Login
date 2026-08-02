@@ -5,9 +5,7 @@ import javax.inject.Singleton
 import com.yjotdev.login.domain.core.mapSuccess
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.PaymentModel
-import com.yjotdev.login.domain.model.CreateOrderRequestModel
-import com.yjotdev.login.domain.model.CreateOrderResultModel
-import com.yjotdev.login.domain.model.CaptureOrderRequestModel
+import com.yjotdev.login.domain.model.ValidateModel
 import com.yjotdev.login.domain.repository.PaymentRepository
 import com.yjotdev.login.data.remote.api.PaymentApi
 import com.yjotdev.login.data.remote.core.safeApiCallForBody
@@ -31,12 +29,7 @@ class PaymentRepositoryImpl @Inject constructor(
             .mapSuccess { result -> result.map { it.toDomain() }}
     }
 
-    override suspend fun createOrder(body: CreateOrderRequestModel): Result<CreateOrderResultModel> {
-        return safeApiCallForBody { paymentApi.createOrder(body.toDto()) }
-            .mapSuccess { result -> result.toDomain() }
-    }
-
-    override suspend fun captureOrder(orderId: CaptureOrderRequestModel): Result<Unit> {
-        return safeApiCallForUnit { paymentApi.captureOrder(orderId.toDto()) }
+    override suspend fun validatePayment(validate: ValidateModel): Result<Unit> {
+        return safeApiCallForUnit { paymentApi.validatePayment(validate.toDto()) }
     }
 }

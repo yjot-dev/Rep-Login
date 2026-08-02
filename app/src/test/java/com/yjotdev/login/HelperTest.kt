@@ -133,8 +133,7 @@ class HelperTest {
         val result = Helper.moneyCodeByCountry(countryCode)
 
         // Then
-        assertEquals("USD", result.first) // Moneda local
-        assertEquals("USD", result.second) // Moneda PayPal
+        assertEquals("USD", result) // Moneda local
     }
 
     @Test
@@ -146,8 +145,7 @@ class HelperTest {
         val result = Helper.moneyCodeByCountry(countryCode)
 
         // Then
-        assertEquals("ARS", result.first)
-        assertEquals("USD", result.second)
+        assertEquals("ARS", result)
     }
 
     @Test
@@ -159,15 +157,14 @@ class HelperTest {
         val result = Helper.moneyCodeByCountry(countryCode)
 
         // Then
-        assertEquals("USD", result.first)
-        assertEquals("USD", result.second)
+        assertEquals("USD", result)
     }
 
     // Pruebas para moneyConvertString
     @Test
     fun moneyConvertStringGiven10UsdToMxnWhenConvertedThenReturnsCorrectFormattedString() {
         // Given
-        val amount = 10.0
+        val amount = 10.0f
         val moneyCode = "MXN"
         // MXN is 17.23 then 10 * 17.23 = 172.3
         val expected = "172.3 MXN"
@@ -182,7 +179,7 @@ class HelperTest {
     @Test
     fun moneyConvertStringGiven1UsdToEurWhenConvertedThenReturnsCorrectFormattedString() {
         // Given
-        val amount = 1.0
+        val amount = 1.0f
         val moneyCode = "EUR"
         val expected = "0.87 EUR"
 
@@ -196,7 +193,7 @@ class HelperTest {
     @Test
     fun moneyConvertStringGivenAnUnknownCurrencyWhenConvertedThenDefaultsToOneToOneRatio() {
         // Given
-        val amount = 50.0
+        val amount = 50.0f
         val moneyCode = "XYZ"
         val expected = "50.0 XYZ"
 
@@ -205,5 +202,32 @@ class HelperTest {
 
         // Then
         assertEquals(expected, result)
+    }
+
+    // Pruebas para getAmountFromProductId
+    @Test
+    fun getAmountFromProductIdGivenValidIdWhenRequestedThenReturnsCorrectAmount() {
+        // Given
+        val productId = "support_lv1"
+        val expected = 1.0f
+
+        // When
+        val result = Helper.getAmountFromProductId(productId)
+
+        // Then
+        assertEquals(expected, result, 0.0f)
+    }
+
+    @Test
+    fun getAmountFromProductIdGivenInvalidOrNullIdWhenRequestedThenReturnsZero() {
+        // Given
+        val productId = "invalid_id"
+        val expected = 0.0f
+
+        // When
+        val result = Helper.getAmountFromProductId(productId)
+
+        // Then
+        assertEquals(expected, result, 0.0f)
     }
 }

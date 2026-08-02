@@ -25,7 +25,6 @@ import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
 class UserUseCaseTest {
 
     private lateinit var userRepository: UserRepository
-
     private lateinit var findUserUseCase: FindUserUseCase
     private lateinit var insertUserUseCase: InsertUserUseCase
     private lateinit var updateUserUseCase: UpdateUserUseCase
