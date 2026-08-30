@@ -1,5 +1,7 @@
 package com.yjotdev.login
 
+import android.Manifest
+import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -10,6 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.GrantPermissionRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -22,13 +25,22 @@ import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 @RunWith(AndroidJUnit4::class)
 class RegisterProcessTest {
 
-    // 1. Regla de Hilt (Orden 0: se ejecuta primero para inyectar)
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
-    // 2. Regla de Activity (Orden 1: lanza la activity después de configurar Hilt)
     @get:Rule(order = 1)
     val activityRule = ActivityScenarioRule(MainActivity::class.java)
+
+    @get:Rule(order = 2)
+    val permissionRule: GrantPermissionRule = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        // Android 13 (SDK 33) o superior
+        GrantPermissionRule.grant(
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+    } else {
+        // Android 12 (SDK 32) o inferior
+        GrantPermissionRule.grant()
+    }
 
     @Before
     fun init() {

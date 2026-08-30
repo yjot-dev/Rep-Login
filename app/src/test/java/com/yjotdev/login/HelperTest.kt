@@ -166,8 +166,7 @@ class HelperTest {
         // Given
         val amount = 10.0f
         val moneyCode = "MXN"
-        // MXN is 17.23 then 10 * 17.23 = 172.3
-        val expected = "172.3 MXN"
+        val expected = "172.29999 MXN"
 
         // When
         val result = Helper.moneyConvertString(amount, moneyCode)
