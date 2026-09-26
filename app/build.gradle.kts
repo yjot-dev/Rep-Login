@@ -15,8 +15,8 @@ configure<ApplicationExtension> {
         applicationId = "com.yjotdev.login"
         minSdk = 24
         targetSdk = 37
-        versionCode = 12
-        versionName = "2.2"
+        versionCode = 13
+        versionName = "2.3"
         testInstrumentationRunner = "com.yjotdev.login.CustomTestRunner"
         androidResources.localeFilters += setOf("en", "es")
     }
