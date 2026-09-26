@@ -1,5 +1,5 @@
-# LOGIN
-LOGIN es una aplicación móvil avanzada para la gestión integral de autenticación y operaciones de usuario, diseñada bajo los más altos estándares de seguridad y experiencia de usuario. La app implementa una arquitectura robusta (MVVM + Clean Architecture) y ofrece una interfaz intuitiva basada en XML, permitiendo a los usuarios acceder, gestionar y proteger su identidad digital de manera eficiente. Además de las funciones clásicas de inicio de sesión, registro y recuperación de clave, LOGIN incorpora nuevas vistas que enriquecen la experiencia: un Dashboard centralizado para acceder rápidamente a videollamadas (Zoom o Meet) y visualizar los últimos pagos, un módulo de Pagos integrado con PayPal, un historial detallado de todas las transacciones, un sistema de notificaciones automáticas por cada pago realizado y una sección de usuario para la gestión de información personal.
+# GESTION DE USUARIO, PAGOS Y NOTIFICACIONES (GUPN)
+GUPN es una aplicación móvil avanzada para la gestión integral de autenticación y operaciones de usuario, diseñada bajo los más altos estándares de seguridad y experiencia de usuario. La app implementa una arquitectura robusta (MVVM + Clean Architecture) y ofrece una interfaz intuitiva basada en XML, permitiendo a los usuarios acceder, gestionar y proteger su identidad digital de manera eficiente. Además de las funciones clásicas de inicio de sesión, registro y recuperación de clave, incorpora nuevas vistas que enriquecen la experiencia: un Dashboard centralizado para acceder rápidamente a videollamadas (Zoom o Meet) y visualizar los últimos pagos, un módulo de Pagos integrado con Google Play Billing, un historial detallado de todas las transacciones, un sistema de notificaciones automáticas por cada pago realizado y una sección de usuario para la gestión de información personal.
 
 # Características principales
 - 🪟 Interfaz clasica con XML
@@ -34,7 +34,7 @@ El flujo de uso de la aplicación está diseñado para ser intuitivo y completo,
 - Notificaciones: Por cada pago realizado, el sistema envía notificaciones automáticas, manteniendo al usuario informado en tiempo real sobre sus movimientos.
 - Usuario: En la vista de usuario, se puede consultar y actualizar la información personal, cambiar la contraseña, cerrar sesión o eliminar la cuenta de manera definitiva.
 
-En conjunto, LOGIN proporciona un ecosistema seguro, moderno y eficiente para la gestión de cuentas, pagos y comunicaciones, adaptado a las necesidades actuales de los usuarios y alineado con las mejores prácticas de desarrollo Android.
+En conjunto, GUPN proporciona un ecosistema seguro, moderno y eficiente para la gestión de cuentas, pagos y comunicaciones, adaptado a las necesidades actuales de los usuarios y alineado con las mejores prácticas de desarrollo Android.
 
 # Ver video Demo
 [Ver en Youtube](https://youtu.be/o_KMGnOFWJg)

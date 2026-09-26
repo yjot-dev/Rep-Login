@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Login</string>
+    <string name="app_name">GUPN</string>
     <string name="fragment_login_lb_title">Inicio de sesión</string>
     <string name="fragment_login_btn_login">Ingresar</string>
     <string name="fragment_register_lb_title">Registro de usuario</string>

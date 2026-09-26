@@ -1,10 +1,9 @@
 [versions]
 # Android y Kotlin
-agp = "8.13.2"
-kotlin = "2.1.0"
+agp = "9.2.1"
 # Ksp
-ksp = "2.1.0-1.0.29"
-coreKtx = "1.18.0"
+ksp = "2.3.10"
+coreKtx = "1.19.1"
 # Testing
 junit = "4.13.2"
 junitTest = "1.3.0"
@@ -15,22 +14,22 @@ coroutines-test = "1.11.0"
 turbine = "1.2.1"
 # Lifecycle & XML
 lifecycleRuntimeKtx = "2.11.0"
-appcompat = "1.7.1"
+appcompat = "1.8.0"
 material = "1.14.0"
 activity = "1.13.0"
-fragmentKtx = "1.8.9"
+fragmentKtx = "1.9.1"
 # Navigation
-navVersion = "2.9.8"
+navVersion = "2.10.2"
 # Network
 retrofit = "3.0.0"
 gson = "2.14.0"
-loggingInterceptor = "5.4.0"
+loggingInterceptor = "5.5.0"
 # Dependency Injection (Hilt)
-hilt = "2.54"
+hilt = "2.60.1"
 # Google Play Billing
 billing = "9.1.0"
 # Firebase y Servicios de Google
-firebaseVersion = "33.0.0"
+firebaseVersion = "34.19.0"
 gms = "4.5.0"
 
 [libraries]
@@ -69,7 +68,6 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-services = { id = "com.google.gms.google-services", version.ref = "gms" }

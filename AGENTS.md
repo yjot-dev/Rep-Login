@@ -4,7 +4,7 @@
 
 ## 1. CONTEXTO DEL PROYECTO
 - **Nombre:** LOGIN
-- **Descripción:** Aplicación móvil avanzada para la gestión integral de autenticación y operaciones de usuario. Implementa una arquitectura robusta (MVVM + Clean Architecture) y ofrece una interfaz intuitiva basada en XML, permitiendo gestionar identidad digital, realizar videollamadas, pagos vía PayPal y consultar historiales de transacciones.
+- **Descripción:** Aplicación móvil avanzada para la gestión integral de autenticación y operaciones de usuario. Implementa una arquitectura robusta (MVVM + Clean Architecture) y ofrece una interfaz intuitiva basada en XML, permitiendo gestionar identidad digital, realizar videollamadas, pagos vía Google Play Billing y consultar historiales de transacciones.
 
 ## 2. STACK TECNOLÓGICO
 El proyecto utiliza las siguientes tecnologías y patrones:
