@@ -3,4 +3,5 @@
     <dimen name="short1_dp">10dp</dimen>
     <dimen name="short2_dp">48dp</dimen>
     <dimen name="short3_dp">70dp</dimen>
+    <dimen name="medium2_dp">300dp</dimen>
 </resources>

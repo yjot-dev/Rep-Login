@@ -6,7 +6,7 @@ import com.yjotdev.login.domain.core.mapSuccess
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.NotificationModel
 import com.yjotdev.login.domain.model.SendNotificationRequestModel
-import com.yjotdev.login.domain.repository.NotificationRepository
+import com.yjotdev.login.domain.repository.NotificationApiRepository
 import com.yjotdev.login.data.remote.api.NotificationApi
 import com.yjotdev.login.data.remote.core.safeApiCallForBody
 import com.yjotdev.login.data.remote.core.safeApiCallForUnit
@@ -20,12 +20,12 @@ import com.yjotdev.login.data.remote.mapper.toDto
  * que la capa de Dominio entiende (Result<T>).
  */
 @Singleton
-class NotificationRepositoryImpl @Inject constructor(
+class NotificationApiRepositoryImpl @Inject constructor(
     private val notificationApi: NotificationApi
-) : NotificationRepository {
+) : NotificationApiRepository {
 
-    override suspend fun selectNotifications(userId: Int, maxRows: Int?): Result<List<NotificationModel>> {
-        return safeApiCallForBody { notificationApi.selectNotifications(userId, maxRows) }
+    override suspend fun selectNotifications(userId: Int): Result<List<NotificationModel>> {
+        return safeApiCallForBody { notificationApi.selectNotifications(userId) }
             .mapSuccess { result -> result.map { it.toDomain() }}
     }
 

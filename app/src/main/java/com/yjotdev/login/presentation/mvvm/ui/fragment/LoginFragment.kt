@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.databinding.FragmentLoginBinding
 import com.yjotdev.login.presentation.utils.Helper
+import com.yjotdev.login.databinding.FragmentLoginBinding
 import com.yjotdev.login.R
 
 @AndroidEntryPoint

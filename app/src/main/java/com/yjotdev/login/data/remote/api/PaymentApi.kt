@@ -16,7 +16,6 @@ interface PaymentApi {
     @GET("payments")
     suspend fun selectPayments(
         @Query("userId") userId: Int,
-        @Query("maxRows") maxRows: Int? = null
     ): Response<List<PaymentDto>>
 
     @POST("payments")

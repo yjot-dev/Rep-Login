@@ -11,8 +11,8 @@ import org.junit.Test
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.NotificationModel
 import com.yjotdev.login.domain.model.SendNotificationRequestModel
-import com.yjotdev.login.domain.repository.NotificationRepository
-import com.yjotdev.login.domain.usecase.notification.SelectNotificationsUseCase
+import com.yjotdev.login.domain.repository.NotificationApiRepository
+import com.yjotdev.login.domain.usecase.notification.FindNotificationsUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 
 /**
@@ -20,15 +20,15 @@ import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
  */
 class NotificationUseCaseTest {
 
-    private lateinit var notificationRepository: NotificationRepository
-    private lateinit var selectNotificationsUseCase: SelectNotificationsUseCase
+    private lateinit var notificationApiRepository: NotificationApiRepository
+    private lateinit var findNotificationsUseCase: FindNotificationsUseCase
     private lateinit var sendNotificationUseCase: SendNotificationUseCase
 
     @Before
     fun setUp() {
-        notificationRepository = mockk()
-        selectNotificationsUseCase = SelectNotificationsUseCase(notificationRepository)
-        sendNotificationUseCase = SendNotificationUseCase(notificationRepository)
+        notificationApiRepository = mockk()
+        findNotificationsUseCase = FindNotificationsUseCase(notificationApiRepository)
+        sendNotificationUseCase = SendNotificationUseCase(notificationApiRepository)
     }
 
     @Test
@@ -36,15 +36,15 @@ class NotificationUseCaseTest {
         // Given
         val userId = 1
         val fakeNotifications = listOf(NotificationModel(id = 1, message = "Pago realizado", date = "11-05-2026"))
-        coEvery { notificationRepository.selectNotifications(userId, any()) } returns Result.Success(fakeNotifications)
+        coEvery { notificationApiRepository.selectNotifications(userId) } returns Result.Success(fakeNotifications)
 
         // When
-        val result = selectNotificationsUseCase(userId, 5)
+        val result = findNotificationsUseCase(userId)
 
         // Then
         assertTrue(result is Result.Success)
         assertEquals(fakeNotifications, (result as Result.Success).data)
-        coVerify(exactly = 1) { notificationRepository.selectNotifications(userId, 5) }
+        coVerify(exactly = 1) { notificationApiRepository.selectNotifications(userId) }
     }
 
     @Test
@@ -52,29 +52,29 @@ class NotificationUseCaseTest {
         // Given
         val userId = 1
         val exception = Exception("Error al obtener notificaciones")
-        coEvery { notificationRepository.selectNotifications(userId, any()) } returns Result.Error(exception)
+        coEvery { notificationApiRepository.selectNotifications(userId) } returns Result.Error(exception)
 
         // When
-        val result = selectNotificationsUseCase(userId, 5)
+        val result = findNotificationsUseCase(userId)
 
         // Then
         assertTrue(result is Result.Error)
         assertEquals(exception, (result as Result.Error).exception)
-        coVerify(exactly = 1) { notificationRepository.selectNotifications(userId, 5) }
+        coVerify(exactly = 1) { notificationApiRepository.selectNotifications(userId) }
     }
 
     @Test
     fun sendNotificationUseCaseReturnsSuccessWhenNotificationIsSent() = runTest {
         // Given
         val request = SendNotificationRequestModel(token = "fcm_token", title = "Aviso FCM", body = "Notificacion FCM enviada")
-        coEvery { notificationRepository.sendNotification(request) } returns Result.Success(Unit)
+        coEvery { notificationApiRepository.sendNotification(request) } returns Result.Success(Unit)
 
         // When
         val result = sendNotificationUseCase(request)
 
         // Then
         assertTrue(result is Result.Success)
-        coVerify(exactly = 1) { notificationRepository.sendNotification(request) }
+        coVerify(exactly = 1) { notificationApiRepository.sendNotification(request) }
     }
 
     @Test
@@ -82,7 +82,7 @@ class NotificationUseCaseTest {
         // Given
         val request = SendNotificationRequestModel(token = "fcm_token", title = "Aviso FCM", body = "Notificacion FCM enviada")
         val exception = Exception("Error al enviar notificación")
-        coEvery { notificationRepository.sendNotification(request) } returns Result.Error(exception)
+        coEvery { notificationApiRepository.sendNotification(request) } returns Result.Error(exception)
 
         // When
         val result = sendNotificationUseCase(request)
@@ -90,6 +90,6 @@ class NotificationUseCaseTest {
         // Then
         assertTrue(result is Result.Error)
         assertEquals(exception, (result as Result.Error).exception)
-        coVerify(exactly = 1) { notificationRepository.sendNotification(request) }
+        coVerify(exactly = 1) { notificationApiRepository.sendNotification(request) }
     }
 }

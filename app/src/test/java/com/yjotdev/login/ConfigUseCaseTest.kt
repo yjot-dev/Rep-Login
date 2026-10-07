@@ -29,7 +29,7 @@ class ConfigUseCaseTest {
     @Test
     fun getConfigUseCaseReturnsMapFromRepository() {
         // Given
-        val expectedConfig = mutableMapOf<String, String?>("api_key" to "12345", "env" to "prod")
+        val expectedConfig = mutableMapOf("api_key" to "12345", "env" to "prod")
         every { configRepository.getConfig() } returns expectedConfig
 
         // When

@@ -9,12 +9,12 @@ import com.yjotdev.login.domain.model.SendNotificationRequestModel
  * Esta interfaz pertenece a la capa de Dominio. No conoce Retrofit ni detalles de la API.
  * Devuelve tipos de datos del Dominio (NotificationModel).
  */
-interface NotificationRepository {
+interface NotificationApiRepository {
     /**
      * Busca las notificaciones del usuario
      * @return Result<NotificationModel> que contiene el usuario si se encuentra, o un error.
      */
-    suspend fun selectNotifications(userId: Int, maxRows: Int? = null): Result<List<NotificationModel>>
+    suspend fun selectNotifications(userId: Int): Result<List<NotificationModel>>
 
     /**
      * Envia la notificacion al usuario

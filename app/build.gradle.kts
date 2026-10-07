@@ -15,8 +15,8 @@ configure<ApplicationExtension> {
         applicationId = "com.yjotdev.login"
         minSdk = 24
         targetSdk = 37
-        versionCode = 13
-        versionName = "2.3"
+        versionCode = 14
+        versionName = "2.4"
         testInstrumentationRunner = "com.yjotdev.login.CustomTestRunner"
         androidResources.localeFilters += setOf("en", "es")
     }
@@ -91,6 +91,10 @@ dependencies {
     implementation(libs.squareup.retrofit2)
     implementation(libs.squareup.retrofit2.gson)
     implementation(libs.google.code.gson)
+    //Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
     //Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)

@@ -16,9 +16,10 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import dagger.hilt.android.AndroidEntryPoint
+import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.databinding.FragmentUserBinding
 import com.yjotdev.login.presentation.utils.Helper
+import com.yjotdev.login.databinding.FragmentUserBinding
 import com.yjotdev.login.R
 
 @AndroidEntryPoint
@@ -106,7 +107,8 @@ class UserFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
-                    uiState.user?.let { user ->
+                    val user = uiState.user
+                    if (user != UserModel()) {
                         if (user.isInvited) {
                             binding.btnSendCode.isEnabled = false
                         }

@@ -8,7 +8,7 @@ import com.yjotdev.login.domain.model.EmailModel
  * Esta interfaz pertenece a la capa de Dominio. No conoce Retrofit ni detalles de la API.
  * Devuelve resultados encapsulados.
  */
-interface EmailRepository {
+interface EmailApiRepository {
     /**
      * Envia un correo electrónico a un usuario
      * @return Result<Unit> que indica éxito o un error.

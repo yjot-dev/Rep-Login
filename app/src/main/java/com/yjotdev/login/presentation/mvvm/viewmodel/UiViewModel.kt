@@ -21,10 +21,14 @@ import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
 import com.yjotdev.login.domain.model.SendNotificationRequestModel
 import com.yjotdev.login.domain.model.ValidateModel
-import com.yjotdev.login.domain.usecase.notification.SelectNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.FindNotificationsUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
-import com.yjotdev.login.domain.usecase.payment.SelectPaymentsUseCase
+import com.yjotdev.login.domain.usecase.notification.GetNotificationsByUserIdUseCase
+import com.yjotdev.login.domain.usecase.notification.InsertNotificationsUseCase
+import com.yjotdev.login.domain.usecase.payment.FindPaymentsUseCase
 import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
+import com.yjotdev.login.domain.usecase.payment.GetPaymentsByUserIdUseCase
+import com.yjotdev.login.domain.usecase.payment.InsertPaymentsUseCase
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
 import com.yjotdev.login.domain.usecase.string.GetStringUseCase
 import com.yjotdev.login.domain.usecase.user.ChangePasswordUserUseCase
@@ -32,6 +36,10 @@ import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
 import com.yjotdev.login.domain.usecase.user.FindUserUseCase
 import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
 import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
+import com.yjotdev.login.domain.usecase.user.InsertLocalUserUseCase
+import com.yjotdev.login.domain.usecase.user.UpdateLocalUserUseCase
+import com.yjotdev.login.domain.usecase.user.DeleteLocalUserUseCase
+import com.yjotdev.login.domain.usecase.user.GetLocalUserUseCase
 import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
 import com.yjotdev.login.R
 
@@ -39,14 +47,22 @@ import com.yjotdev.login.R
 class UiViewModel @Inject constructor(
     private val getStringUseCase: GetStringUseCase,
     private val findUserUseCase: FindUserUseCase,
+    private val getLocalUserUseCase: GetLocalUserUseCase,
     private val insertUserUseCase: InsertUserUseCase,
+    private val insertLocalUserUseCase: InsertLocalUserUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
+    private val updateLocalUserUseCase: UpdateLocalUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
+    private val deleteLocalUserUseCase: DeleteLocalUserUseCase,
     private val changePasswordUserUseCase: ChangePasswordUserUseCase,
     private val sendEmailUseCase: SendEmailUseCase,
-    private val selectPaymentsUseCase: SelectPaymentsUseCase,
+    private val findPaymentsUseCase: FindPaymentsUseCase,
+    private val getPaymentsByUserIdUseCase: GetPaymentsByUserIdUseCase,
+    private val insertPaymentsUseCase: InsertPaymentsUseCase,
     private val validatePaymentUseCase: ValidatePaymentUseCase,
-    private val selectNotificationsUseCase: SelectNotificationsUseCase,
+    private val findNotificationsUseCase: FindNotificationsUseCase,
+    private val getNotificationsByUserIdUseCase: GetNotificationsByUserIdUseCase,
+    private val insertNotificationsUseCase: InsertNotificationsUseCase,
     private val sendNotificationUseCase: SendNotificationUseCase,
     private val getConfigUseCase: GetConfigUseCase
 ): ViewModel() {
@@ -55,6 +71,8 @@ class UiViewModel @Inject constructor(
     private val _eventChannel = Channel<UiEvent>()
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     val eventChannel = _eventChannel.receiveAsFlow()
+
+    init { loadLocalUser() }
 
     override fun onCleared() {
         cleanState()
@@ -78,10 +96,11 @@ class UiViewModel @Inject constructor(
         _uiState.update { it.copy(user = user) }
     }
     /**
-     * Cierra la sesion del usuario
+     * Cierra la sesión del usuario, borra al usuario en la base de datos local
      **/
     fun logoutUser() {
         viewModelScope.launch {
+            deleteLocalUserUseCase(uiState.value.user)
             cleanState()
             _eventChannel.send(UiEvent.Navigate(
                 R.id.action_user_to_login
@@ -89,7 +108,7 @@ class UiViewModel @Inject constructor(
         }
     }
     /**
-     * Busca al usuario en la base de datos
+     * Inicia la sesión del usuario, Crea al usuario en la base de datos local
      **/
     fun loginUser(nameOrEmail: String, password: String) {
         val login = LoginModel(nameOrEmail, password)
@@ -97,20 +116,16 @@ class UiViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = findUserUseCase(login)) {
                 is Result.Success -> {
+                    val user = result.data.copy(password = password)
+                    insertLocalUserUseCase(user)
                     _uiState.update { it.copy(
-                        user = result.data.copy(password = password),
+                        user = user,
                         isLoading = false
                     )}
-                    _eventChannel.send(UiEvent.Navigate(
-                        R.id.action_login_to_dashboard
-                    ))
-                    _eventChannel.send(UiEvent.ShowToast(
-                        getStringUseCase(R.string.toast_login_success)
-                    ))
                 }
                 is Result.Error -> {
                     _uiState.update { it.copy(
-                        user = null,
+                        user = UserModel(),
                         isLoading = false
                     )}
                     _eventChannel.send(UiEvent.ShowToast(
@@ -153,12 +168,13 @@ class UiViewModel @Inject constructor(
      * Actualiza al usuario en la base de datos
      */
     fun updateUser(name: String, email: String, password: String) {
-        val id = uiState.value.user?.id ?: 0
+        val id = uiState.value.user.id
         val user = UserModel(id, name, email, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             when (val result = updateUserUseCase(id, user)) {
                 is Result.Success -> {
+                    updateLocalUserUseCase(user)
                     _uiState.update { it.copy(isLoading = false) }
                     _eventChannel.send(UiEvent.ShowToast(
                         getStringUseCase(R.string.toast_update_success)
@@ -180,11 +196,12 @@ class UiViewModel @Inject constructor(
      * Elimina al usuario en la base de datos
      */
     fun deleteUser() {
-        val id = uiState.value.user?.id ?: 0
+        val id = uiState.value.user.id
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             when (val result = deleteUserUseCase(id)) {
                 is Result.Success -> {
+                    deleteLocalUserUseCase(uiState.value.user)
                     _uiState.update { it.copy(isLoading = false) }
                     _eventChannel.send(UiEvent.ShowToast(
                         getStringUseCase(R.string.toast_delete_success)
@@ -243,6 +260,8 @@ class UiViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = changePasswordUserUseCase(recovery)) {
                 is Result.Success -> {
+                    val user = uiState.value.user.copy(password = password)
+                    updateLocalUserUseCase(user)
                     _uiState.update { it.copy(isLoading = false) }
                     _eventChannel.send(UiEvent.ShowToast(
                         getStringUseCase(R.string.toast_update_success)
@@ -260,14 +279,13 @@ class UiViewModel @Inject constructor(
             }
         }
     }
-
     /**
      * Válida el pago del usuario en el backend con la Google Play Developer API
      **/
     fun validatePayment(
         purchaseToken: String,
         productId: String?,
-        userId: Int = uiState.value.user?.id ?: 0,
+        userId: Int = uiState.value.user.id,
         amount: Float,
         money: String,
         date: String
@@ -296,18 +314,69 @@ class UiViewModel @Inject constructor(
         }
     }
     /**
-     * selecciona todos los pagos del usuario en la base de datos
+     * Obtiene todos los pagos del usuario en la base de datos local
+     * o remota si es que no existen en local
      **/
-    fun selectPayments(maxRows: Int? = null) {
-        val userId = uiState.value.user?.id ?: 0
+    fun getPaymentsOfUser(limit: Int = Int.MAX_VALUE) {
+        viewModelScope.launch {
+            val userId = uiState.value.user.id
+            getPaymentsByUserIdUseCase(userId, limit).collect { payments ->
+                _uiState.update { it.copy(payments = payments) }
+                if (payments.isEmpty()) {
+                    findPaymentsInRemoteBD(userId)
+                }
+            }
+        }
+    }
+    /**
+     * Obtiene todas las notificaciones del usuario en la base de datos local
+     * o remota si es que no existen en local
+     **/
+    fun getNotificationsOfUser(limit: Int = Int.MAX_VALUE) {
+        viewModelScope.launch {
+            val userId = uiState.value.user.id
+            getNotificationsByUserIdUseCase(userId, limit).collect { notifications ->
+                _uiState.update { it.copy(notifications = notifications) }
+                if (notifications.isEmpty()) {
+                    findNotificationsInRemoteBD(userId)
+                }
+            }
+        }
+    }
+    /**
+     * Envia una notificacion del usuario mediante la API
+     **/
+    fun sendNotification(date: String) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = selectPaymentsUseCase(userId, maxRows)) {
+            executeSendNotification(date)
+            _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    private fun loadLocalUser() {
+        viewModelScope.launch {
+            getLocalUserUseCase().collect { user ->
+                _uiState.update { it.copy(user = user) }
+                if (user != UserModel()) {
+                    _eventChannel.send(UiEvent.Navigate(
+                        R.id.action_login_to_dashboard
+                    ))
+                    _eventChannel.send(UiEvent.ShowToast(
+                        getStringUseCase(R.string.toast_login_success)
+                    ))
+                }
+            }
+        }
+    }
+
+    private fun findPaymentsInRemoteBD(userId: Int) {
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            when (val result = findPaymentsUseCase(userId)) {
                 is Result.Success -> {
-                    _uiState.update { it.copy(
-                        payments = result.data,
-                        isLoading = false
-                    )}
+                    insertPaymentsUseCase(result.data)
+                    _uiState.update { it.copy(isLoading = false)}
                 }
                 is Result.Error -> {
                     _uiState.update { it.copy(
@@ -321,19 +390,14 @@ class UiViewModel @Inject constructor(
             }
         }
     }
-    /**
-     * Selecciona todas las notificaciones del usuario en la base de datos
-     **/
-    fun selectNotifications(maxRows: Int? = null) {
-        val userId = uiState.value.user?.id ?: 0
+
+    private fun findNotificationsInRemoteBD(userId: Int) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = selectNotificationsUseCase(userId, maxRows)) {
+            when (val result = findNotificationsUseCase(userId)) {
                 is Result.Success -> {
-                    _uiState.update { it.copy(
-                        notifications = result.data,
-                        isLoading = false
-                    )}
+                    insertNotificationsUseCase(result.data)
+                    _uiState.update { it.copy(isLoading = false)}
                 }
                 is Result.Error -> {
                     _uiState.update { it.copy(
@@ -350,12 +414,12 @@ class UiViewModel @Inject constructor(
 
     private suspend fun executeSendNotification(date: String) {
         val body = SendNotificationRequestModel(
-            userId = uiState.value.user?.id ?: 0,
+            userId = uiState.value.user.id,
             token = getConfigUseCase()["token"] ?: "",
             title = getStringUseCase(R.string.send_notification_title),
             body = getStringUseCase(
                 R.string.send_notification_body,
-                uiState.value.user?.name ?: ""
+                uiState.value.user.name
             ),
             date = date
         )
@@ -366,16 +430,6 @@ class UiViewModel @Inject constructor(
                     result.exception.message!!
                 ))
             }
-        }
-    }
-    /**
-     * Envia una notificacion del usuario mediante la API
-     **/
-    fun sendNotification(date: String) {
-        _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            executeSendNotification(date)
-            _uiState.update { it.copy(isLoading = false) }
         }
     }
 }

@@ -95,7 +95,20 @@ fun MainActivity.observeViewModelState() {
                 when (event) {
                     // Login -> Dashboard (Revisar UiViewModel.kt lineas 88 - 117)
                     // User -> Login (Revisar UiViewModel.kt lineas 78 - 84)
-                    is UiEvent.Navigate -> navController.navigate(event.resId)
+                    is UiEvent.Navigate -> {
+                        val currentDest = navController.currentDestination
+                        if (currentDest != null) {
+                            val isValidAction = currentDest.getAction(event.resId) != null
+                            val isValidDestination = currentDest.id != event.resId && navController.graph.findNode(event.resId) != null
+                            if (isValidAction || isValidDestination) {
+                                try {
+                                    navController.navigate(event.resId)
+                                } catch (e: Exception) {
+                                    Log.e("Navigation", "Error al navegar: ${e.message}")
+                                }
+                            }
+                        }
+                    }
                     // Muestra un mensaje de exito o error en el Toast
                     is UiEvent.ShowToast -> Toast.makeText(
                         context, event.message, Toast.LENGTH_SHORT

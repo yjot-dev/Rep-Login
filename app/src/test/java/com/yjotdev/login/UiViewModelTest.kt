@@ -1,6 +1,5 @@
 package com.yjotdev.login
 
-import app.cash.turbine.test
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -9,6 +8,8 @@ import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -18,12 +19,10 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.presentation.navigation.UiEvent
+import app.cash.turbine.test
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.NotificationModel
@@ -34,37 +33,87 @@ import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.model.ValidateModel
 import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
-import com.yjotdev.login.domain.usecase.notification.SelectNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.FindNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.GetNotificationsByUserIdUseCase
+import com.yjotdev.login.domain.usecase.notification.InsertNotificationsUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
-import com.yjotdev.login.domain.usecase.payment.SelectPaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.FindPaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.GetPaymentsByUserIdUseCase
+import com.yjotdev.login.domain.usecase.payment.InsertPaymentsUseCase
 import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
 import com.yjotdev.login.domain.usecase.string.GetStringUseCase
-import com.yjotdev.login.domain.usecase.user.*
+import com.yjotdev.login.domain.usecase.user.ChangePasswordUserUseCase
+import com.yjotdev.login.domain.usecase.user.DeleteLocalUserUseCase
+import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
+import com.yjotdev.login.domain.usecase.user.FindUserUseCase
+import com.yjotdev.login.domain.usecase.user.GetLocalUserUseCase
+import com.yjotdev.login.domain.usecase.user.InsertLocalUserUseCase
+import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
+import com.yjotdev.login.domain.usecase.user.UpdateLocalUserUseCase
+import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
+import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
+import com.yjotdev.login.presentation.navigation.UiEvent
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
 class UiViewModelTest {
+
     @RelaxedMockK
     private lateinit var getStringUseCase: GetStringUseCase
+
     @RelaxedMockK
     private lateinit var findUserUseCase: FindUserUseCase
+
+    @RelaxedMockK
+    private lateinit var getLocalUserUseCase: GetLocalUserUseCase
+
     @RelaxedMockK
     private lateinit var insertUserUseCase: InsertUserUseCase
+
+    @RelaxedMockK
+    private lateinit var insertLocalUserUseCase: InsertLocalUserUseCase
+
     @RelaxedMockK
     private lateinit var updateUserUseCase: UpdateUserUseCase
+
+    @RelaxedMockK
+    private lateinit var updateLocalUserUseCase: UpdateLocalUserUseCase
+
     @RelaxedMockK
     private lateinit var deleteUserUseCase: DeleteUserUseCase
+
+    @RelaxedMockK
+    private lateinit var deleteLocalUserUseCase: DeleteLocalUserUseCase
+
     @RelaxedMockK
     private lateinit var changePasswordUserUseCase: ChangePasswordUserUseCase
+
     @RelaxedMockK
     private lateinit var sendEmailUseCase: SendEmailUseCase
+
     @RelaxedMockK
-    private lateinit var selectPaymentsUseCase: SelectPaymentsUseCase
+    private lateinit var findPaymentsUseCase: FindPaymentsUseCase
+
+    @RelaxedMockK
+    private lateinit var getPaymentsByUserIdUseCase: GetPaymentsByUserIdUseCase
+
+    @RelaxedMockK
+    private lateinit var insertPaymentsUseCase: InsertPaymentsUseCase
+
     @RelaxedMockK
     private lateinit var validatePaymentUseCase: ValidatePaymentUseCase
+
     @RelaxedMockK
-    private lateinit var selectNotificationsUseCase: SelectNotificationsUseCase
+    private lateinit var findNotificationsUseCase: FindNotificationsUseCase
+
+    @RelaxedMockK
+    private lateinit var getNotificationsByUserIdUseCase: GetNotificationsByUserIdUseCase
+
+    @RelaxedMockK
+    private lateinit var insertNotificationsUseCase: InsertNotificationsUseCase
+
     @RelaxedMockK
     private lateinit var sendNotificationUseCase: SendNotificationUseCase
+
     @RelaxedMockK
     private lateinit var getConfigUseCase: GetConfigUseCase
 
@@ -78,14 +127,22 @@ class UiViewModelTest {
         viewModel = UiViewModel(
             getStringUseCase,
             findUserUseCase,
+            getLocalUserUseCase,
             insertUserUseCase,
+            insertLocalUserUseCase,
             updateUserUseCase,
+            updateLocalUserUseCase,
             deleteUserUseCase,
+            deleteLocalUserUseCase,
             changePasswordUserUseCase,
             sendEmailUseCase,
-            selectPaymentsUseCase,
+            findPaymentsUseCase,
+            getPaymentsByUserIdUseCase,
+            insertPaymentsUseCase,
             validatePaymentUseCase,
-            selectNotificationsUseCase,
+            findNotificationsUseCase,
+            getNotificationsByUserIdUseCase,
+            insertNotificationsUseCase,
             sendNotificationUseCase,
             getConfigUseCase
         )
@@ -98,105 +155,103 @@ class UiViewModelTest {
     }
 
     @Test
-    fun whenLoginUserIsSuccessfulThenUiStateIsUpdatedAndEventsAreSent() = runTest {
+    fun whenLoginUserIsSuccessfulFromRemoteThenUiStateIsUpdatedAndNavigateEventIsSent() = runTest {
         // Given
-        val fakeUser = UserModel(id = 1, name = "testUser", email = "test@test.com", password = "password")
-        val loginModel = LoginModel(name = "testUser", password = "password")
-        val successMessage = "Login successful"
-        coEvery { findUserUseCase(loginModel) } returns Result.Success(fakeUser)
-        every { getStringUseCase(R.string.toast_login_success) } returns successMessage
+        val fakeUserRemote = UserModel(
+            id = 1,
+            name = "testUser",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        val fakeLoginModel = LoginModel(
+            name = "testUser",
+            password = "password"
+        )
+        val localUserFlow = MutableStateFlow(UserModel())
+        coEvery { findUserUseCase(fakeLoginModel) } returns Result.Success(fakeUserRemote)
+        coEvery { insertLocalUserUseCase(fakeUserRemote) } answers {
+            localUserFlow.value = fakeUserRemote
+        }
 
         // When
-        val job1 = launch {
-            viewModel.eventChannel.test {
-                assertEquals(UiEvent.Navigate(R.id.action_login_to_dashboard), awaitItem())
-                assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
-            }
-        }
-        val job2 = launch {
-            viewModel.uiState.test {
-                val loadingState = awaitItem()
-                assertTrue(loadingState.isLoading)
-
-                val successState = awaitItem()
-                assertFalse(successState.isLoading)
-                assertEquals(fakeUser.copy(password = "password"), successState.user)
-            }
-        }
-        viewModel.loginUser(loginModel.name, loginModel.password)
+        viewModel.loginUser("testUser", "password")
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
 
         // Then
-        coVerify(exactly = 1) { findUserUseCase(loginModel) }
-        coVerify(exactly = 1) { getStringUseCase(R.string.toast_login_success) }
+        assertEquals(fakeUserRemote, viewModel.uiState.value.user)
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { findUserUseCase(fakeLoginModel) }
+        coVerify(exactly = 1) { insertLocalUserUseCase(fakeUserRemote) }
     }
 
     @Test
-    fun whenLoginUserFailsThenToastAndLogEventsAreSent() = runTest {
+    fun whenLoginUserFailsFromRemoteThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val loginModel = LoginModel("testUser", "wrongPassword")
+        val fakeUserLocal = UserModel(
+            id = 0,
+            name = "",
+            email = "",
+            password = "",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        val fakeLoginModel = LoginModel(
+            name = "testUser",
+            password = "wrongPassword"
+        )
         val exception = Exception("Invalid credentials")
         val toastMessage = "Login failed"
-        coEvery { findUserUseCase(loginModel) } returns Result.Error(exception)
+        every { getLocalUserUseCase() } returns flowOf(fakeUserLocal)
+        coEvery { findUserUseCase(fakeLoginModel) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_login_error) } returns toastMessage
 
         // When
-        val job1 = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
-                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
+                assertEquals(UiEvent.ShowLog("Invalid credentials"), awaitItem())
             }
         }
-        val job2 = launch {
-            viewModel.uiState.test {
-                val loadingState = awaitItem()
-                assertTrue(loadingState.isLoading)
-
-                val errorState = awaitItem()
-                assertFalse(errorState.isLoading)
-                assertNull(errorState.user)
-            }
-        }
-        viewModel.loginUser(loginModel.name, loginModel.password)
+        viewModel.loginUser("testUser", "wrongPassword")
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
+        eventJob.cancel()
 
         // Then
-        coVerify(exactly = 1) { findUserUseCase(loginModel) }
+        assertEquals(UserModel(), viewModel.uiState.value.user)
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { findUserUseCase(fakeLoginModel) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_login_error) }
     }
 
     @Test
     fun whenInsertUserIsSuccessfulThenShowToastEventIsSent() = runTest {
         // Given
-        val userToInsert = UserModel(name = "newUser", email = "new@test.com", password = "newPass")
-        val successMessage = "User created"
+        val userToInsert = UserModel(
+            id = 0,
+            name = "newUser",
+            email = "new@test.com",
+            password = "newPassword",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        val successMessage = "User inserted"
         coEvery { insertUserUseCase(userToInsert) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_insert_success) } returns successMessage
 
         // When
-        val job1 = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
-        val job2 = launch {
-            viewModel.uiState.test {
-                val loadingState = awaitItem()
-                assertTrue(loadingState.isLoading)
-                val successState = awaitItem()
-                assertFalse(successState.isLoading)
-            }
-        }
-        viewModel.insertUser(userToInsert.name, userToInsert.email, userToInsert.password)
+        viewModel.insertUser("newUser", "new@test.com", "newPassword")
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
+        eventJob.cancel()
 
         // Then
+        assertFalse(viewModel.uiState.value.isLoading)
         coVerify(exactly = 1) { insertUserUseCase(userToInsert) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_insert_success) }
     }
@@ -204,463 +259,649 @@ class UiViewModelTest {
     @Test
     fun whenInsertUserFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val userToInsert = UserModel(name = "existingUser", email = "existing@test.com", password = "pass")
-        val exception = Exception("User already exists")
-        val toastMessage = "Insert failed"
+        val userToInsert = UserModel(
+            id = 0,
+            name = "newUser",
+            email = "new@test.com",
+            password = "newPassword",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        val exception = Exception("Database error")
+        val toastMessage = "Insert error"
         coEvery { insertUserUseCase(userToInsert) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_insert_error) } returns toastMessage
 
         // When
-        val job1 = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
-                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
+                assertEquals(UiEvent.ShowLog("Database error"), awaitItem())
             }
         }
-        val job2 = launch {
-            viewModel.uiState.test {
-                val loadingState = awaitItem()
-                assertTrue(loadingState.isLoading)
-                val errorState = awaitItem()
-                assertFalse(errorState.isLoading)
-            }
-        }
-        viewModel.insertUser(userToInsert.name, userToInsert.email, userToInsert.password)
+        viewModel.insertUser("newUser", "new@test.com", "newPassword")
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
+        eventJob.cancel()
 
         // Then
+        assertFalse(viewModel.uiState.value.isLoading)
         coVerify(exactly = 1) { insertUserUseCase(userToInsert) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_insert_error) }
     }
 
     @Test
-    fun whenUpdateUserIsSuccessfulThenToastEventIsSent() = runTest {
+    fun whenUpdateUserIsSuccessfulThenLocalUserIsUpdatedAndToastEventIsSent() = runTest {
         // Given
-        val initialUser = UserModel(id = 1, name = "oldName", email = "old@test.com", password = "oldPassword")
-        val updatedUser = UserModel(id = 1, name = "newName", email = "new@test.com", password = "newPassword")
+        val initialUser = UserModel(
+            id = 1,
+            name = "oldName",
+            email = "old@test.com",
+            password = "oldPassword",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        val updatedUser = UserModel(
+            id = 1,
+            name = "newName",
+            email = "new@test.com",
+            password = "newPassword",
+            isInvited = false,
+            isInWhiteList = false
+        )
         val successMessage = "User updated"
         viewModel.setUser(initialUser)
-        coEvery { updateUserUseCase(initialUser.id, updatedUser) } returns Result.Success(Unit)
+        coEvery { updateUserUseCase(1, updatedUser) } returns Result.Success(Unit)
+        coEvery { updateLocalUserUseCase(updatedUser) } returns Unit
         every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
         // When
-        val job1 = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
-        val job2 = launch {
-            viewModel.uiState.test {
-                val loadingState = awaitItem()
-                assertTrue(loadingState.isLoading)
-                val successState = awaitItem()
-                assertFalse(successState.isLoading)
-            }
-        }
-        viewModel.updateUser(updatedUser.name, updatedUser.email, updatedUser.password)
+        viewModel.updateUser("newName", "new@test.com", "newPassword")
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
+        eventJob.cancel()
 
         // Then
-        coVerify(exactly = 1) { updateUserUseCase(initialUser.id, updatedUser) }
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { updateUserUseCase(1, updatedUser) }
+        coVerify(exactly = 1) { updateLocalUserUseCase(updatedUser) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_success) }
     }
 
     @Test
     fun whenUpdateUserFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val initialUser = UserModel(id = 1, name = "oldName", email = "old@test.com", password = "oldPassword")
-        val updatedUser = UserModel(id = 1, name = "newName", email = "new@test.com", password = "newPassword")
+        val initialUser = UserModel(
+            id = 1,
+            name = "oldName",
+            email = "old@test.com",
+            password = "oldPassword",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        val updatedUser = UserModel(
+            id = 1,
+            name = "newName",
+            email = "new@test.com",
+            password = "newPassword",
+            isInvited = false,
+            isInWhiteList = false
+        )
         val exception = Exception("Update failed")
         val toastMessage = "Update error"
         viewModel.setUser(initialUser)
-        coEvery { updateUserUseCase(initialUser.id, updatedUser) } returns Result.Error(exception)
+        coEvery { updateUserUseCase(1, updatedUser) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_update_error) } returns toastMessage
 
         // When
-        val job1 = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
-                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
+                assertEquals(UiEvent.ShowLog("Update failed"), awaitItem())
             }
         }
-        val job2 = launch {
-            viewModel.uiState.test {
-                val loadingState = awaitItem()
-                assertTrue(loadingState.isLoading)
-                val errorState = awaitItem()
-                assertFalse(errorState.isLoading)
-            }
-        }
-        viewModel.updateUser(updatedUser.name, updatedUser.email, updatedUser.password)
+        viewModel.updateUser("newName", "new@test.com", "newPassword")
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
+        eventJob.cancel()
 
         // Then
-        coVerify(exactly = 1) { updateUserUseCase(initialUser.id, updatedUser) }
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { updateUserUseCase(1, updatedUser) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_error) }
     }
 
     @Test
     fun whenDeleteUserIsSuccessfulThenToastEventIsSent() = runTest {
         // Given
-        val initialUser = UserModel(id = 1, name = "user", email = "user@test.com", password = "password")
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "user@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
         val successMessage = "User deleted"
         viewModel.setUser(initialUser)
-        coEvery { deleteUserUseCase(initialUser.id) } returns Result.Success(Unit)
+        coEvery { deleteUserUseCase(1) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_delete_success) } returns successMessage
 
         // When
-        val job = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
         viewModel.deleteUser()
         advanceUntilIdle()
-        job.cancel()
+        eventJob.cancel()
 
         // Then
-        coVerify(exactly = 1) { deleteUserUseCase(initialUser.id) }
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { deleteUserUseCase(1) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_delete_success) }
     }
 
     @Test
     fun whenDeleteUserFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val initialUser = UserModel(id = 1, name = "user", email = "user@test.com", password = "password")
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "user@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
         val exception = Exception("Deletion failed")
         val toastMessage = "Delete error"
         viewModel.setUser(initialUser)
-        coEvery { deleteUserUseCase(initialUser.id) } returns Result.Error(exception)
+        coEvery { deleteUserUseCase(1) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_delete_error) } returns toastMessage
 
         // When
-        val job = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
-                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
+                assertEquals(UiEvent.ShowLog("Deletion failed"), awaitItem())
             }
         }
         viewModel.deleteUser()
         advanceUntilIdle()
-        job.cancel()
+        eventJob.cancel()
 
         // Then
-        coVerify(exactly = 1) { deleteUserUseCase(initialUser.id) }
-    }
-
-    @Test
-    fun whenRecoveryPasswordIsCalledWithCorrectCodeThenChangePasswordIsCalled() = runTest {
-        // Given
-        val recoveryModel = RecoveryModel(email = "test@test.com", password = "newPassword")
-        val successMessage = "Password updated"
-        coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Success(Unit)
-        every { getStringUseCase(R.string.toast_update_success) } returns successMessage
-
-        // When
-        val job = launch {
-            viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
-            }
-        }
-        viewModel.changePasswordUser(recoveryModel.email, recoveryModel.password)
-        advanceUntilIdle()
-        job.cancel()
-
-        // Then
-        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
-    }
-
-    @Test
-    fun whenRecoveryPasswordIsCalledWithIncorrectCodeThenToastEventIsSent() = runTest {
-        // Given
-        val recoveryModel = RecoveryModel(email = "test@test.com", password = "newPassword")
-        val exception = Exception("Update failed")
-        val errorMessage = "Password didn't update"
-        coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Error(exception)
-        every { getStringUseCase(R.string.toast_update_error) } returns errorMessage
-
-        // When
-        val job = launch {
-            viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowToast(errorMessage), awaitItem())
-                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
-            }
-        }
-        viewModel.changePasswordUser(recoveryModel.email, recoveryModel.password)
-        advanceUntilIdle()
-        job.cancel()
-
-        // Then
-        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { deleteUserUseCase(1) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_delete_error) }
     }
 
     @Test
     fun whenSendEmailIsSuccessfulThenToastEventIsSent() = runTest {
         // Given
-        val email = "test@test.com"
+        val emailTo = "test@test.com"
+        val emailSubject = "Subject"
         val successMessage = "Email sent"
+        every { getStringUseCase(R.string.email_message, any()) } returns "Code: 1234"
         coEvery { sendEmailUseCase(any()) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_emailsend_success) } returns successMessage
 
         // When
-        val job = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
-        viewModel.sendEmail(email, "Envio de email")
+        viewModel.sendEmail(emailTo, emailSubject)
         advanceUntilIdle()
-        job.cancel()
+        eventJob.cancel()
 
         // Then
+        assertFalse(viewModel.uiState.value.isLoading)
         coVerify(exactly = 1) { sendEmailUseCase(any()) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_emailsend_success) }
     }
 
     @Test
     fun whenSendEmailFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val email = "test@test.com"
-        val exception = Exception("Email service down")
-        val toastMessage = "Email send error"
+        val emailTo = "test@test.com"
+        val emailSubject = "Subject"
+        val exception = Exception("Email send error")
+        val toastMessage = "Email error"
+        every { getStringUseCase(R.string.email_message, any()) } returns "Code: 1234"
         coEvery { sendEmailUseCase(any()) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_emailsend_error) } returns toastMessage
 
         // When
-        val job = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
-                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
+                assertEquals(UiEvent.ShowLog("Email send error"), awaitItem())
             }
         }
-        viewModel.sendEmail(email, "Envio de email")
+        viewModel.sendEmail(emailTo, emailSubject)
         advanceUntilIdle()
-        job.cancel()
+        eventJob.cancel()
 
         // Then
+        assertFalse(viewModel.uiState.value.isLoading)
         coVerify(exactly = 1) { sendEmailUseCase(any()) }
-    }
-
-    // ---------- selectPayments ----------
-    @Test
-    fun whenSelectPaymentsIsSuccessfulThenUiStateIsUpdatedWithPayments() = runTest {
-        // Given
-        val fakePayments = listOf(PaymentModel())
-        coEvery { selectPaymentsUseCase(any(), any()) } returns Result.Success(fakePayments)
-
-        // When
-        viewModel.selectPayments()
-        advanceUntilIdle()
-
-        // Then
-        assertEquals(fakePayments, viewModel.uiState.value.payments)
-        coVerify(exactly = 1) { selectPaymentsUseCase(any(), any()) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_emailsend_error) }
     }
 
     @Test
-    fun whenSelectPaymentsFailsThenUiStateIsUpdatedWithEmptyListAndLogEventIsSent() = runTest {
+    fun whenChangePasswordUserIsSuccessfulThenLocalUserIsUpdatedAndToastEventIsSent() = runTest {
         // Given
-        val exception = Exception("Payments error")
-        coEvery { selectPaymentsUseCase(any(), any()) } returns Result.Error(exception)
-
-        // When
-        val job = launch {
-            viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowLog("Payments error"), awaitItem())
-            }
-        }
-        viewModel.selectPayments()
-        advanceUntilIdle()
-        job.cancel()
-
-        // Then
-        assertTrue(viewModel.uiState.value.payments.isEmpty())
-        coVerify(exactly = 1) { selectPaymentsUseCase(any(), any()) }
-    }
-
-    // ---------- validatePayment ----------
-    @Test
-    fun whenValidatePaymentIsSuccessfulThenUiStateIsUpdatedAndToastEventIsSent() = runTest {
-        // Given
-        val validateEntity = ValidateModel(
-            purchaseToken = "token123",
-            productId = "product1",
-            userId = 1,
-            amount = 10.0f,
-            money = "USD",
-            date = "2024-05-11 10:00:00"
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "oldPassword",
+            isInvited = false,
+            isInWhiteList = false
         )
-        val successMessage = "Payment validated"
-        coEvery { validatePaymentUseCase(any()) } returns Result.Success(Unit)
-        every { getStringUseCase(R.string.toast_payment_success) } returns successMessage
-        // Mock notification subflow
-        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
-        coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
-        coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
-        coEvery { sendNotificationUseCase(any()) } returns Result.Success(Unit)
+        val updatedUser = initialUser.copy(password = "newPassword")
+        val recoveryModel = RecoveryModel(
+            email = "test@test.com",
+            password = "newPassword"
+        )
+        val successMessage = "Password updated"
+        viewModel.setUser(initialUser)
+        coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Success(Unit)
+        coEvery { updateLocalUserUseCase(updatedUser) } returns Unit
+        every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
         // When
-        val job1 = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
-        val job2 = launch {
-            viewModel.uiState.test {
-                // Loading start
-                assertTrue(awaitItem().isLoading)
-                // Loading end
-                assertFalse(awaitItem().isLoading)
+        viewModel.changePasswordUser("test@test.com", "newPassword")
+        advanceUntilIdle()
+        eventJob.cancel()
+
+        // Then
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
+        coVerify(exactly = 1) { updateLocalUserUseCase(updatedUser) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_success) }
+    }
+
+    @Test
+    fun whenChangePasswordUserFailsThenToastAndLogEventsAreSent() = runTest {
+        // Given
+        val recoveryModel = RecoveryModel(
+            email = "test@test.com",
+            password = "newPassword"
+        )
+        val exception = Exception("Password change error")
+        val toastMessage = "Update error"
+        coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Error(exception)
+        every { getStringUseCase(R.string.toast_update_error) } returns toastMessage
+
+        // When
+        val eventJob = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
+                assertEquals(UiEvent.ShowLog("Password change error"), awaitItem())
+            }
+        }
+        viewModel.changePasswordUser("test@test.com", "newPassword")
+        advanceUntilIdle()
+        eventJob.cancel()
+
+        // Then
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_error) }
+    }
+
+    @Test
+    fun whenGetPaymentsOfUserLocalIsEmptyThenFetchFromRemoteAndInsertToLocal() = runTest {
+        // Given
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
+        val fakePayments = listOf(
+            PaymentModel(
+                id = 10,
+                amount = 100.0f,
+                money = "USD",
+                date = "2024-01-01",
+                status = 1,
+                purchaseToken = "token123",
+                userId = 1
+            )
+        )
+        val paymentsFlow = MutableStateFlow<List<PaymentModel>>(emptyList())
+        every { getPaymentsByUserIdUseCase(1, Int.MAX_VALUE) } returns paymentsFlow
+        coEvery { findPaymentsUseCase(1) } returns Result.Success(fakePayments)
+        coEvery { insertPaymentsUseCase(fakePayments) } answers {
+            paymentsFlow.value = fakePayments
+        }
+
+        // When
+        viewModel.getPaymentsOfUser()
+        advanceUntilIdle()
+
+        // Then
+        assertEquals(fakePayments, viewModel.uiState.value.payments)
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { findPaymentsUseCase(1) }
+        coVerify(exactly = 1) { insertPaymentsUseCase(fakePayments) }
+    }
+
+    @Test
+    fun whenGetPaymentsOfUserLocalIsEmptyAndRemoteFailsThenLogEventIsSent() = runTest {
+        // Given
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
+        val exception = Exception("Payments fetch error")
+        every { getPaymentsByUserIdUseCase(1, Int.MAX_VALUE) } returns flowOf(emptyList())
+        coEvery { findPaymentsUseCase(1) } returns Result.Error(exception)
+
+        // When
+        val eventJob = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowLog("Payments fetch error"), awaitItem())
+            }
+        }
+        viewModel.getPaymentsOfUser()
+        advanceUntilIdle()
+        eventJob.cancel()
+
+        // Then
+        assertTrue(viewModel.uiState.value.payments.isEmpty())
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { findPaymentsUseCase(1) }
+    }
+
+    @Test
+    fun whenValidatePaymentIsSuccessfulThenNotificationIsSentAndToastEventIsSent() = runTest {
+        // Given
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
+        val validateModel = ValidateModel(
+            purchaseToken = "token123",
+            productId = "prod1",
+            userId = 1,
+            amount = 10.0f,
+            money = "USD",
+            date = "2024-01-01"
+        )
+        val successMessage = "Payment validated"
+        coEvery { validatePaymentUseCase(validateModel) } returns Result.Success(Unit)
+        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "token123")
+        every { getStringUseCase(R.string.send_notification_title) } returns "Title"
+        every { getStringUseCase(R.string.send_notification_body, "user") } returns "Body user"
+        coEvery { sendNotificationUseCase(any()) } returns Result.Success(Unit)
+        every { getStringUseCase(R.string.toast_payment_success) } returns successMessage
+
+        // When
+        val eventJob = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
             }
         }
         viewModel.validatePayment(
-            validateEntity.purchaseToken,
-            validateEntity.productId,
-            validateEntity.userId,
-            validateEntity.amount,
-            validateEntity.money,
-            validateEntity.date
+            purchaseToken = "token123",
+            productId = "prod1",
+            userId = 1,
+            amount = 10.0f,
+            money = "USD",
+            date = "2024-01-01"
         )
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
+        eventJob.cancel()
 
         // Then
-        coVerify(exactly = 1) { validatePaymentUseCase(any()) }
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { validatePaymentUseCase(validateModel) }
         coVerify(exactly = 1) { sendNotificationUseCase(any()) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_payment_success) }
     }
 
     @Test
-    fun whenValidatePaymentFailsThenUiStateIsUpdatedAndToastAndLogEventsAreSent() = runTest {
+    fun whenValidatePaymentFailsThenToastAndLogEventsAreSent() = runTest {
         // Given
-        val validateEntity = ValidateModel(
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
+        val validateModel = ValidateModel(
             purchaseToken = "token123",
-            productId = "product1",
+            productId = "prod1",
             userId = 1,
             amount = 10.0f,
             money = "USD",
-            date = "2024-05-11 10:00:00"
+            date = "2024-01-01"
         )
-        val exception = Exception("Validation failed")
+        val exception = Exception("Validation error")
         val toastMessage = "Payment error"
-        coEvery { validatePaymentUseCase(any()) } returns Result.Error(exception)
+        coEvery { validatePaymentUseCase(validateModel) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_payment_error) } returns toastMessage
 
         // When
-        val job1 = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowToast(toastMessage), awaitItem())
-                assertEquals(UiEvent.ShowLog(exception.message!!), awaitItem())
-            }
-        }
-        val job2 = launch {
-            viewModel.uiState.test {
-                // Loading start
-                assertTrue(awaitItem().isLoading)
-                // Loading end
-                assertFalse(awaitItem().isLoading)
+                assertEquals(UiEvent.ShowLog("Validation error"), awaitItem())
             }
         }
         viewModel.validatePayment(
-            validateEntity.purchaseToken,
-            validateEntity.productId,
-            validateEntity.userId,
-            validateEntity.amount,
-            validateEntity.money,
-            validateEntity.date
+            purchaseToken = "token123",
+            productId = "prod1",
+            userId = 1,
+            amount = 10.0f,
+            money = "USD",
+            date = "2024-01-01"
         )
         advanceUntilIdle()
-        job1.cancel()
-        job2.cancel()
+        eventJob.cancel()
 
         // Then
-        coVerify(exactly = 1) { validatePaymentUseCase(any()) }
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { validatePaymentUseCase(validateModel) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_payment_error) }
     }
 
-    // ---------- selectNotifications ----------
     @Test
-    fun whenSelectNotificationsIsSuccessfulThenUiStateIsUpdatedWithNotifications() = runTest {
+    fun whenGetNotificationsOfUserLocalIsEmptyThenFetchFromRemoteAndInsertToLocal() = runTest {
         // Given
-        val fakeNotifications = listOf(NotificationModel())
-        coEvery { selectNotificationsUseCase(any(), any()) } returns Result.Success(fakeNotifications)
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
+        val fakeNotifications = listOf(
+            NotificationModel(
+                id = 5,
+                message = "Msg",
+                date = "2024-01-01",
+                userId = 1
+            )
+        )
+        val notificationsFlow = MutableStateFlow<List<NotificationModel>>(emptyList())
+        every { getNotificationsByUserIdUseCase(1, Int.MAX_VALUE) } returns notificationsFlow
+        coEvery { findNotificationsUseCase(1) } returns Result.Success(fakeNotifications)
+        coEvery { insertNotificationsUseCase(fakeNotifications) } answers {
+            notificationsFlow.value = fakeNotifications
+        }
 
         // When
-        viewModel.selectNotifications()
+        viewModel.getNotificationsOfUser()
         advanceUntilIdle()
 
         // Then
         assertEquals(fakeNotifications, viewModel.uiState.value.notifications)
-        coVerify(exactly = 1) { selectNotificationsUseCase(any(), any()) }
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { findNotificationsUseCase(1) }
+        coVerify(exactly = 1) { insertNotificationsUseCase(fakeNotifications) }
     }
 
     @Test
-    fun whenSelectNotificationsFailsThenUiStateIsUpdatedWithEmptyListAndLogEventIsSent() = runTest {
+    fun whenGetNotificationsOfUserLocalIsEmptyAndRemoteFailsThenLogEventIsSent() = runTest {
         // Given
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
         val exception = Exception("Notifications error")
-        coEvery { selectNotificationsUseCase(any(), any()) } returns Result.Error(exception)
+        every { getNotificationsByUserIdUseCase(1, Int.MAX_VALUE) } returns flowOf(emptyList())
+        coEvery { findNotificationsUseCase(1) } returns Result.Error(exception)
 
         // When
-        val job = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
                 assertEquals(UiEvent.ShowLog("Notifications error"), awaitItem())
             }
         }
-        viewModel.selectNotifications()
+        viewModel.getNotificationsOfUser()
         advanceUntilIdle()
-        job.cancel()
+        eventJob.cancel()
 
         // Then
         assertTrue(viewModel.uiState.value.notifications.isEmpty())
-        coVerify(exactly = 1) { selectNotificationsUseCase(any(), any()) }
+        assertFalse(viewModel.uiState.value.isLoading)
+        coVerify(exactly = 1) { findNotificationsUseCase(1) }
     }
 
-    // ---------- sendNotification ----------
     @Test
-    fun whenSendNotificationIsSuccessfulThenUiStateIsUpdated() = runTest {
+    fun whenSendNotificationIsSuccessfulThenNotificationUseCaseIsCalled() = runTest {
         // Given
-        val body = SendNotificationRequestModel(date = "12/12/2026")
-        coEvery { sendNotificationUseCase(any()) } returns Result.Success(Unit)
-        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
-        coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
-        coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
+        val requestModel = SendNotificationRequestModel(
+            userId = 1,
+            token = "token123",
+            title = "Title",
+            body = "Body user",
+            date = "2024-01-01"
+        )
+        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "token123")
+        every { getStringUseCase(R.string.send_notification_title) } returns "Title"
+        every { getStringUseCase(R.string.send_notification_body, "user") } returns "Body user"
+        coEvery { sendNotificationUseCase(requestModel) } returns Result.Success(Unit)
 
         // When
-        viewModel.sendNotification(body.date)
+        viewModel.sendNotification("2024-01-01")
         advanceUntilIdle()
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { sendNotificationUseCase(any()) }
+        coVerify(exactly = 1) { sendNotificationUseCase(requestModel) }
     }
 
     @Test
-    fun whenSendNotificationFailsThenUiStateIsUpdatedAndLogEventIsSent() = runTest {
+    fun whenSendNotificationFailsThenLogEventIsSent() = runTest {
         // Given
-        val body = SendNotificationRequestModel(date = "12/12/2026")
-        val exception = Exception("Notification error")
-        coEvery { sendNotificationUseCase(any()) } returns Result.Error(exception)
-        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "abc")
-        coEvery { getStringUseCase(R.string.send_notification_title) } returns "Title"
-        coEvery { getStringUseCase(R.string.send_notification_body, any()) } returns "Body"
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
+        val requestModel = SendNotificationRequestModel(
+            userId = 1,
+            token = "token123",
+            title = "Title",
+            body = "Body user",
+            date = "2024-01-01"
+        )
+        val exception = Exception("Send notification error")
+        coEvery { getConfigUseCase() } returns mutableMapOf("token" to "token123")
+        every { getStringUseCase(R.string.send_notification_title) } returns "Title"
+        every { getStringUseCase(R.string.send_notification_body, "user") } returns "Body user"
+        coEvery { sendNotificationUseCase(requestModel) } returns Result.Error(exception)
 
         // When
-        val job = launch {
+        val eventJob = launch {
             viewModel.eventChannel.test {
-                assertEquals(UiEvent.ShowLog("Notification error"), awaitItem())
+                assertEquals(UiEvent.ShowLog("Send notification error"), awaitItem())
             }
         }
-        viewModel.sendNotification(body.date)
+        viewModel.sendNotification("2024-01-01")
         advanceUntilIdle()
-        job.cancel()
+        eventJob.cancel()
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { sendNotificationUseCase(any()) }
+        coVerify(exactly = 1) { sendNotificationUseCase(requestModel) }
+    }
+
+    @Test
+    fun whenLogoutUserIsCalledThenStateIsCleanedAndNavigateEventIsSent() = runTest {
+        // Given
+        val initialUser = UserModel(
+            id = 1,
+            name = "user",
+            email = "test@test.com",
+            password = "password",
+            isInvited = false,
+            isInWhiteList = false
+        )
+        viewModel.setUser(initialUser)
+
+        // When
+        val eventJob = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.Navigate(R.id.action_user_to_login), awaitItem())
+            }
+        }
+        viewModel.logoutUser()
+        advanceUntilIdle()
+        eventJob.cancel()
+
+        // Then
+        assertEquals(UserModel(), viewModel.uiState.value.user)
     }
 }

@@ -18,7 +18,6 @@ import kotlin.getValue
 import com.yjotdev.login.databinding.FragmentDashboardBinding
 import com.yjotdev.login.presentation.mvvm.ui.adapter.PaymentAdapter
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.R
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
@@ -75,11 +74,10 @@ class DashboardFragment : Fragment() {
         binding.rvPayments.adapter = adapter
 
         // Iniciar corrutina para observar cambios en la lista de pagos
-        viewModel.selectPayments(maxRows = 3)
+        viewModel.getPaymentsOfUser(limit = 3)
     }
 
     private fun observeViewModelState(){
-        val overlay = requireActivity().findViewById<View>(R.id.loadingOverlay)
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
@@ -87,7 +85,6 @@ class DashboardFragment : Fragment() {
                         //Guarda resultados en el adapter
                         adapter.submitList(uiState.payments)
                     }
-                    overlay.visibility = if (uiState.isLoading) {View.VISIBLE} else {View.GONE}
                 }
             }
         }

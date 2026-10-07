@@ -16,7 +16,6 @@ import kotlin.getValue
 import com.yjotdev.login.databinding.FragmentNotificationsBinding
 import com.yjotdev.login.presentation.mvvm.ui.adapter.NotificationAdapter
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.R
 
 @AndroidEntryPoint
 class NotificationsFragment : Fragment() {
@@ -51,12 +50,11 @@ class NotificationsFragment : Fragment() {
         binding.rvNotifications.layoutManager = LinearLayoutManager(requireContext())
         binding.rvNotifications.adapter = adapter
 
-        // Iniciar corrutina para observar cambios en la lista de pagos
-        viewModel.selectNotifications()
+        // Iniciar corrutina para observar cambios en la lista de notificaciones
+        viewModel.getNotificationsOfUser()
     }
 
     private fun observeViewModelState() {
-        val overlay = requireActivity().findViewById<View>(R.id.loadingOverlay)
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
@@ -64,7 +62,6 @@ class NotificationsFragment : Fragment() {
                         //Guarda resultados en el adapter
                         adapter.submitList(uiState.notifications)
                     }
-                    overlay.visibility = if (uiState.isLoading) {View.VISIBLE} else {View.GONE}
                 }
             }
         }

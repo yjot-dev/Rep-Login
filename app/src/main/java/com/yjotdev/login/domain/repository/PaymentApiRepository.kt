@@ -9,13 +9,13 @@ import com.yjotdev.login.domain.model.ValidateModel
  * Esta interfaz pertenece a la capa de Dominio. No conoce Retrofit ni detalles de la API.
  * Devuelve tipos de datos del Dominio (PaymentModel).
  */
-interface PaymentRepository {
+interface PaymentApiRepository {
     /**
      * selecciona todos los pagos del usuario en la BD
      * @return Result<List<PaymentModel>> que contiene los pagos del usuario si
      * se encuentra, o un error.
      */
-    suspend fun selectPayments(userId: Int, maxRows: Int? = null): Result<List<PaymentModel>>
+    suspend fun selectPayments(userId: Int): Result<List<PaymentModel>>
 
     /**
      * Válida la compra del usuario en el backend con la Google Play Developer API

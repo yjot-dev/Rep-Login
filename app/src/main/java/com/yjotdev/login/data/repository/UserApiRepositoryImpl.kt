@@ -5,7 +5,7 @@ import javax.inject.Singleton
 import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
-import com.yjotdev.login.domain.repository.UserRepository
+import com.yjotdev.login.domain.repository.UserApiRepository
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.data.remote.core.safeApiCallForBody
 import com.yjotdev.login.data.remote.core.safeApiCallForUnit
@@ -21,9 +21,9 @@ import com.yjotdev.login.domain.core.mapSuccess
  * que la capa de Dominio entiende (Result<T>).
  */
 @Singleton
-class UserRepositoryImpl @Inject constructor(
+class UserApiRepositoryImpl @Inject constructor(
     private val userApi: UserApi
-) : UserRepository {
+) : UserApiRepository {
 
     override suspend fun findUser(login: LoginModel): Result<UserModel> {
         return safeApiCallForBody { userApi.findUser(login.toDto()) }

@@ -7,7 +7,7 @@ class GetConfigUseCase @Inject constructor(
     private val configRepository: ConfigRepository
 ) {
     /** Obtiene todas las configuraciones mediante caso de uso **/
-    operator fun invoke(): MutableMap<String, String?> {
+    operator fun invoke(): MutableMap<String, String> {
         return configRepository.getConfig()
     }
 }

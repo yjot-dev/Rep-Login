@@ -16,7 +16,6 @@ interface NotificationApi {
     @GET("notifications")
     suspend fun selectNotifications(
         @Query("userId") userId: Int,
-        @Query("maxRows") maxRows: Int? = null
     ): Response<List<NotificationDto>>
 
     @POST("notifications")

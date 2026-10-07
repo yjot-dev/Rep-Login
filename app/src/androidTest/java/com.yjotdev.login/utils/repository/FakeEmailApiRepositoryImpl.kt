@@ -4,10 +4,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.EmailModel
-import com.yjotdev.login.domain.repository.EmailRepository
+import com.yjotdev.login.domain.repository.EmailApiRepository
 
 @Singleton
-class FakeEmailRepositoryImpl @Inject constructor() : EmailRepository {
+class FakeEmailApiRepositoryImpl @Inject constructor() : EmailApiRepository {
 
     override suspend fun sendEmail(email: EmailModel): Result<Unit> {
         return if(email != EmailModel()) {

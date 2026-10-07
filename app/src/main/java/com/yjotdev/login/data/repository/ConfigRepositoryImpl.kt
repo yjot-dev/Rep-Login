@@ -23,6 +23,6 @@ class ConfigRepositoryImpl @Inject constructor(
     }
 
     override fun getConfig() = mutableMapOf(
-        "token" to sp.getString("token", "")
+        "token" to sp.getString("token", "")!!
     )
 }

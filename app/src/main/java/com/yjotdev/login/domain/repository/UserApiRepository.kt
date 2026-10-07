@@ -10,7 +10,7 @@ import com.yjotdev.login.domain.core.Result
  * Esta interfaz pertenece a la capa de Dominio. No conoce Retrofit ni detalles de la API.
  * Devuelve tipos de datos del Dominio (UserModel) o resultados encapsulados.
  */
-interface UserRepository {
+interface UserApiRepository {
     /**
      * Busca un usuario basado en sus credenciales.
      * @return Result<UserModel> que contiene el usuario si se encuentra, o un error.

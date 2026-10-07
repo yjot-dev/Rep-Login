@@ -6,7 +6,7 @@ import com.yjotdev.login.domain.model.UserModel
 
 data class UiState(
     val randomCode: Int = 0,
-    val user: UserModel? = null,
+    val user: UserModel = UserModel(),
     val payments: List<PaymentModel> = emptyList(),
     val notifications: List<NotificationModel> = emptyList(),
     val isLoading: Boolean = false

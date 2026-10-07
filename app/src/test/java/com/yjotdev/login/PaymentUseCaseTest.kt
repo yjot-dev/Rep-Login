@@ -11,8 +11,8 @@ import org.junit.Test
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.PaymentModel
 import com.yjotdev.login.domain.model.ValidateModel
-import com.yjotdev.login.domain.repository.PaymentRepository
-import com.yjotdev.login.domain.usecase.payment.SelectPaymentsUseCase
+import com.yjotdev.login.domain.repository.PaymentApiRepository
+import com.yjotdev.login.domain.usecase.payment.FindPaymentsUseCase
 import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
 
 /**
@@ -20,15 +20,15 @@ import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
  */
 class PaymentUseCaseTest {
 
-    private lateinit var paymentRepository: PaymentRepository
-    private lateinit var selectPaymentsUseCase: SelectPaymentsUseCase
+    private lateinit var paymentApiRepository: PaymentApiRepository
+    private lateinit var findPaymentsUseCase: FindPaymentsUseCase
     private lateinit var validatePaymentUseCase: ValidatePaymentUseCase
 
     @Before
     fun setUp() {
-        paymentRepository = mockk()
-        selectPaymentsUseCase = SelectPaymentsUseCase(paymentRepository)
-        validatePaymentUseCase = ValidatePaymentUseCase(paymentRepository)
+        paymentApiRepository = mockk()
+        findPaymentsUseCase = FindPaymentsUseCase(paymentApiRepository)
+        validatePaymentUseCase = ValidatePaymentUseCase(paymentApiRepository)
     }
 
     @Test
@@ -36,15 +36,15 @@ class PaymentUseCaseTest {
         // Given
         val userId = 1
         val fakePayments = listOf(PaymentModel(id = 100, amount = 50.0f, money = "USD"))
-        coEvery { paymentRepository.selectPayments(userId, any()) } returns Result.Success(fakePayments)
+        coEvery { paymentApiRepository.selectPayments(userId) } returns Result.Success(fakePayments)
 
         // When
-        val result = selectPaymentsUseCase(userId, 10)
+        val result = findPaymentsUseCase(userId)
 
         // Then
         assertTrue(result is Result.Success)
         assertEquals(fakePayments, (result as Result.Success).data)
-        coVerify(exactly = 1) { paymentRepository.selectPayments(userId, 10) }
+        coVerify(exactly = 1) { paymentApiRepository.selectPayments(userId) }
     }
 
     @Test
@@ -52,15 +52,15 @@ class PaymentUseCaseTest {
         // Given
         val userId = 1
         val exception = Exception("Error al obtener historial de pagos")
-        coEvery { paymentRepository.selectPayments(userId, any()) } returns Result.Error(exception)
+        coEvery { paymentApiRepository.selectPayments(userId) } returns Result.Error(exception)
 
         // When
-        val result = selectPaymentsUseCase(userId, 10)
+        val result = findPaymentsUseCase(userId)
 
         // Then
         assertTrue(result is Result.Error)
         assertEquals(exception, (result as Result.Error).exception)
-        coVerify(exactly = 1) { paymentRepository.selectPayments(userId, 10) }
+        coVerify(exactly = 1) { paymentApiRepository.selectPayments(userId) }
     }
 
     @Test
@@ -74,7 +74,7 @@ class PaymentUseCaseTest {
             money = "USD",
             date = "2024-05-11 10:00:00"
         )
-        coEvery { paymentRepository.validatePayment(validateModel) } returns Result.Success(Unit)
+        coEvery { paymentApiRepository.validatePayment(validateModel) } returns Result.Success(Unit)
 
         // When
         val result = validatePaymentUseCase(validateModel)
@@ -82,7 +82,7 @@ class PaymentUseCaseTest {
         // Then
         assertTrue(result is Result.Success)
         assertEquals(Unit, (result as Result.Success).data)
-        coVerify(exactly = 1) { paymentRepository.validatePayment(validateModel) }
+        coVerify(exactly = 1) { paymentApiRepository.validatePayment(validateModel) }
     }
 
     @Test
@@ -97,7 +97,7 @@ class PaymentUseCaseTest {
             date = "2024-05-11 10:00:00"
         )
         val exception = Exception("Error al validar pago")
-        coEvery { paymentRepository.validatePayment(validateModel) } returns Result.Error(exception)
+        coEvery { paymentApiRepository.validatePayment(validateModel) } returns Result.Error(exception)
 
         // When
         val result = validatePaymentUseCase(validateModel)
@@ -105,6 +105,6 @@ class PaymentUseCaseTest {
         // Then
         assertTrue(result is Result.Error)
         assertEquals(exception, (result as Result.Error).exception)
-        coVerify(exactly = 1) { paymentRepository.validatePayment(validateModel) }
+        coVerify(exactly = 1) { paymentApiRepository.validatePayment(validateModel) }
     }
 }

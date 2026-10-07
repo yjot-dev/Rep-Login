@@ -8,5 +8,5 @@ interface ConfigRepository {
     /**
      * Obtener todas las configuraciones guardadas
      */
-    fun getConfig(): MutableMap<String, String?>
+    fun getConfig(): MutableMap<String, String>
 }

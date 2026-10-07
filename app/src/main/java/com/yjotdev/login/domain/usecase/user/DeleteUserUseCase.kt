@@ -2,13 +2,13 @@ package com.yjotdev.login.domain.usecase.user
 
 import javax.inject.Inject
 import com.yjotdev.login.domain.core.Result
-import com.yjotdev.login.domain.repository.UserRepository
+import com.yjotdev.login.domain.repository.UserApiRepository
 
 class DeleteUserUseCase @Inject constructor(
-    private val userRepository: UserRepository
+    private val userApiRepository: UserApiRepository
 ) {
     /** Eliminar usuario mediante caso de uso **/
     suspend operator fun invoke(id: Int): Result<Unit> {
-        return userRepository.deleteUser(id)
+        return userApiRepository.deleteUser(id)
     }
 }

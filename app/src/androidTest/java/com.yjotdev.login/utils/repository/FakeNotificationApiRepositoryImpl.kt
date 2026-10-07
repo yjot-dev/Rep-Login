@@ -5,12 +5,12 @@ import javax.inject.Singleton
 import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.NotificationModel
 import com.yjotdev.login.domain.model.SendNotificationRequestModel
-import com.yjotdev.login.domain.repository.NotificationRepository
+import com.yjotdev.login.domain.repository.NotificationApiRepository
 
 @Singleton
-class FakeNotificationRepositoryImpl @Inject constructor() : NotificationRepository {
+class FakeNotificationApiRepositoryImpl @Inject constructor() : NotificationApiRepository {
 
-    override suspend fun selectNotifications(userId: Int, maxRows: Int?): Result<List<NotificationModel>> {
+    override suspend fun selectNotifications(userId: Int): Result<List<NotificationModel>> {
         return if (userId > 0) {
             Result.Success(listOf(NotificationModel()))
         } else {

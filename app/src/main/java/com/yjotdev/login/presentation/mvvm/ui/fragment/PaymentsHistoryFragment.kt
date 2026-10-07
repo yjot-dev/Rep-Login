@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.yjotdev.login.databinding.FragmentPaymentsHistoryBinding
 import com.yjotdev.login.presentation.mvvm.ui.adapter.PaymentAdapter
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
-import com.yjotdev.login.R
 
 @AndroidEntryPoint
 class PaymentsHistoryFragment : Fragment() {
@@ -52,11 +51,10 @@ class PaymentsHistoryFragment : Fragment() {
         binding.rvPaymentsHistory.adapter = adapter
 
         // Iniciar corrutina para observar cambios en la lista de pagos
-        viewModel.selectPayments()
+        viewModel.getPaymentsOfUser()
     }
 
     private fun observeViewModelState(){
-        val overlay = requireActivity().findViewById<View>(R.id.loadingOverlay)
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
@@ -64,7 +62,6 @@ class PaymentsHistoryFragment : Fragment() {
                         //Guarda resultados en el adapter
                         adapter.submitList(uiState.payments)
                     }
-                    overlay.visibility = if (uiState.isLoading) {View.VISIBLE} else {View.GONE}
                 }
             }
         }
