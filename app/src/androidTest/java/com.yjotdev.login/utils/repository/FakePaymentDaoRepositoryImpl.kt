@@ -15,7 +15,6 @@ class FakePaymentDaoRepositoryImpl @Inject constructor()
             id = 1,
             amount = 100.0f,
             money = "USD",
-            purchaseToken = "token1",
             date = "2023-07-01",
             userId = 1
         ),
@@ -23,7 +22,6 @@ class FakePaymentDaoRepositoryImpl @Inject constructor()
             id = 2,
             amount = 200.0f,
             money = "USD",
-            purchaseToken = "token2",
             date = "2023-08-03",
             userId = 1
         )

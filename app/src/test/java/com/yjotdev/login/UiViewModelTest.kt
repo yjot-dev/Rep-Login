@@ -578,9 +578,8 @@ class UiViewModelTest {
                 id = 10,
                 amount = 100.0f,
                 money = "USD",
+                status = "Comprado",
                 date = "2024-01-01",
-                status = 1,
-                purchaseToken = "token123",
                 userId = 1
             )
         )

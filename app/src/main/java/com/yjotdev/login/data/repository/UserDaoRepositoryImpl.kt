@@ -5,6 +5,8 @@ import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.yjotdev.login.data.local.dao.UserDao
+import com.yjotdev.login.data.local.dao.PaymentDao
+import com.yjotdev.login.data.local.dao.NotificationDao
 import com.yjotdev.login.data.local.mapper.toBD
 import com.yjotdev.login.data.local.mapper.toDomain
 import com.yjotdev.login.domain.model.UserModel
@@ -12,7 +14,9 @@ import com.yjotdev.login.domain.repository.UserDaoRepository
 
 @Singleton
 class UserDaoRepositoryImpl @Inject constructor(
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val paymentDao: PaymentDao,
+    private val notificationDao: NotificationDao
 ): UserDaoRepository {
 
     override suspend fun updateLocalUser(user: UserModel) {
@@ -24,6 +28,8 @@ class UserDaoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteLocalUser(user: UserModel) {
+        paymentDao.deletePaymentsByUserId(user.id)
+        notificationDao.deleteNotificationsByUserId(user.id)
         return userDao.deleteLocalUser(user.toBD())
     }
 

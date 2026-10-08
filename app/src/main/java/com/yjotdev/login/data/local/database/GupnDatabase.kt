@@ -11,7 +11,7 @@ import com.yjotdev.login.data.local.dao.PaymentDao
 
 @Database(
     entities = [UserEntity::class, NotificationEntity::class, PaymentEntity::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 abstract class GupnDatabase: RoomDatabase() {

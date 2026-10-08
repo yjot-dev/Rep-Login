@@ -17,6 +17,9 @@ interface NotificationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNotifications(notifications: List<NotificationEntity>)
 
+    @Query("DELETE FROM notification WHERE userId = :userId")
+    suspend fun deleteNotificationsByUserId(userId: Int)
+
     @Query("""
         SELECT * FROM notification 
         WHERE userId = :userId 

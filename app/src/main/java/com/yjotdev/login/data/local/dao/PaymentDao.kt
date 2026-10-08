@@ -17,6 +17,9 @@ interface PaymentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPayments(payments: List<PaymentEntity>)
 
+    @Query("DELETE FROM payment WHERE userId = :userId")
+    suspend fun deletePaymentsByUserId(userId: Int)
+
     @Query("""
         SELECT * FROM payment 
         WHERE userId = :userId

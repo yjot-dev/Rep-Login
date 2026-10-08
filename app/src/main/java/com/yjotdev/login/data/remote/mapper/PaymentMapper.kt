@@ -10,9 +10,8 @@ fun PaymentDto.toDomain() = PaymentModel(
     id = this.id,
     amount = this.amount,
     money = this.money,
-    date = this.date,
     status = this.status,
-    purchaseToken = this.purchaseToken,
+    date = this.date,
     userId = this.userId
 )
 
@@ -23,8 +22,7 @@ fun PaymentModel.toDto() = PaymentDto(
     id = this.id,
     amount = this.amount,
     money = this.money,
-    date = this.date,
     status = this.status,
-    purchaseToken = this.purchaseToken,
+    date = this.date,
     userId = this.userId
 )

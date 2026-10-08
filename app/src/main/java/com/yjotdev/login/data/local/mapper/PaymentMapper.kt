@@ -9,7 +9,6 @@ fun PaymentEntity.toDomain() = PaymentModel(
     money = this.money,
     date = this.date,
     status = this.status,
-    purchaseToken = this.purchaseToken,
     userId = this.userId
 )
 
@@ -19,6 +18,5 @@ fun PaymentModel.toBD() = PaymentEntity(
     money = this.money,
     date = this.date,
     status = this.status,
-    purchaseToken = this.purchaseToken,
     userId = this.userId
 )
