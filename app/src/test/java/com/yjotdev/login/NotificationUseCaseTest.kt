@@ -12,7 +12,7 @@ import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.NotificationModel
 import com.yjotdev.login.domain.model.SendNotificationRequestModel
 import com.yjotdev.login.domain.repository.NotificationApiRepository
-import com.yjotdev.login.domain.usecase.notification.FindNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.GetRemoteNotificationsUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 
 /**
@@ -21,13 +21,13 @@ import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
 class NotificationUseCaseTest {
 
     private lateinit var notificationApiRepository: NotificationApiRepository
-    private lateinit var findNotificationsUseCase: FindNotificationsUseCase
+    private lateinit var getRemoteNotificationsUseCase: GetRemoteNotificationsUseCase
     private lateinit var sendNotificationUseCase: SendNotificationUseCase
 
     @Before
     fun setUp() {
         notificationApiRepository = mockk()
-        findNotificationsUseCase = FindNotificationsUseCase(notificationApiRepository)
+        getRemoteNotificationsUseCase = GetRemoteNotificationsUseCase(notificationApiRepository)
         sendNotificationUseCase = SendNotificationUseCase(notificationApiRepository)
     }
 
@@ -36,15 +36,15 @@ class NotificationUseCaseTest {
         // Given
         val userId = 1
         val fakeNotifications = listOf(NotificationModel(id = 1, message = "Pago realizado", date = "11-05-2026"))
-        coEvery { notificationApiRepository.selectNotifications(userId) } returns Result.Success(fakeNotifications)
+        coEvery { notificationApiRepository.getRemoteNotifications(userId) } returns Result.Success(fakeNotifications)
 
         // When
-        val result = findNotificationsUseCase(userId)
+        val result = getRemoteNotificationsUseCase(userId)
 
         // Then
         assertTrue(result is Result.Success)
         assertEquals(fakeNotifications, (result as Result.Success).data)
-        coVerify(exactly = 1) { notificationApiRepository.selectNotifications(userId) }
+        coVerify(exactly = 1) { notificationApiRepository.getRemoteNotifications(userId) }
     }
 
     @Test
@@ -52,15 +52,15 @@ class NotificationUseCaseTest {
         // Given
         val userId = 1
         val exception = Exception("Error al obtener notificaciones")
-        coEvery { notificationApiRepository.selectNotifications(userId) } returns Result.Error(exception)
+        coEvery { notificationApiRepository.getRemoteNotifications(userId) } returns Result.Error(exception)
 
         // When
-        val result = findNotificationsUseCase(userId)
+        val result = getRemoteNotificationsUseCase(userId)
 
         // Then
         assertTrue(result is Result.Error)
         assertEquals(exception, (result as Result.Error).exception)
-        coVerify(exactly = 1) { notificationApiRepository.selectNotifications(userId) }
+        coVerify(exactly = 1) { notificationApiRepository.getRemoteNotifications(userId) }
     }
 
     @Test

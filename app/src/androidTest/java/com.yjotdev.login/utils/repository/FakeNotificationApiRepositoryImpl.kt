@@ -10,7 +10,7 @@ import com.yjotdev.login.domain.repository.NotificationApiRepository
 @Singleton
 class FakeNotificationApiRepositoryImpl @Inject constructor() : NotificationApiRepository {
 
-    override suspend fun selectNotifications(userId: Int): Result<List<NotificationModel>> {
+    override suspend fun getRemoteNotifications(userId: Int): Result<List<NotificationModel>> {
         return if (userId > 0) {
             Result.Success(listOf(NotificationModel()))
         } else {

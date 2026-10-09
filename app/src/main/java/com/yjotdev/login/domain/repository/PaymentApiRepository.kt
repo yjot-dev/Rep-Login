@@ -15,7 +15,7 @@ interface PaymentApiRepository {
      * @return Result<List<PaymentModel>> que contiene los pagos del usuario si
      * se encuentra, o un error.
      */
-    suspend fun selectPayments(userId: Int): Result<List<PaymentModel>>
+    suspend fun getRemotePayments(userId: Int): Result<List<PaymentModel>>
 
     /**
      * Válida la compra del usuario en el backend con la Google Play Developer API

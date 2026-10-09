@@ -14,13 +14,13 @@ import com.yjotdev.login.domain.repository.NotificationDaoRepository
 class NotificationDaoRepositoryImpl @Inject constructor(
     private val notificationDao: NotificationDao
 ): NotificationDaoRepository {
-    override fun getNotificationsByUserId(userId: Int, limit: Int): Flow<List<NotificationModel>> {
-        return notificationDao.getNotificationsByUserId(userId, limit).map { items ->
+    override fun getLocalNotifications(userId: Int, limit: Int): Flow<List<NotificationModel>> {
+        return notificationDao.getLocalNotifications(userId, limit).map { items ->
             items.map { it.toDomain() }
         }
     }
 
-    override suspend fun insertNotifications(notifications: List<NotificationModel>) {
-        return notificationDao.insertNotifications(notifications.map { it.toBD() })
+    override suspend fun insertLocalNotifications(notifications: List<NotificationModel>) {
+        return notificationDao.insertLocalNotifications(notifications.map { it.toBD() })
     }
 }

@@ -10,7 +10,7 @@ import com.yjotdev.login.domain.repository.PaymentApiRepository
 @Singleton
 class FakePaymentApiRepositoryImpl @Inject constructor() : PaymentApiRepository {
 
-    override suspend fun selectPayments(userId: Int): Result<List<PaymentModel>> {
+    override suspend fun getRemotePayments(userId: Int): Result<List<PaymentModel>> {
         return if (userId > 0) {
             Result.Success(listOf(PaymentModel()))
         } else {

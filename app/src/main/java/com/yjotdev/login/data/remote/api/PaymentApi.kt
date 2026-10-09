@@ -14,7 +14,7 @@ import com.yjotdev.login.data.remote.dto.ValidateDto
  */
 interface PaymentApi {
     @GET("payments")
-    suspend fun selectPayments(
+    suspend fun getRemotePayments(
         @Query("userId") userId: Int,
     ): Response<List<PaymentDto>>
 

@@ -14,13 +14,13 @@ import com.yjotdev.login.domain.repository.PaymentDaoRepository
 class PaymentDaoRepositoryImpl @Inject constructor(
     private val paymentDao: PaymentDao
 ): PaymentDaoRepository {
-    override fun getPaymentsByUserId(userId: Int, limit: Int): Flow<List<PaymentModel>> {
-        return paymentDao.getPaymentsByUserId(userId, limit).map { items ->
+    override fun getLocalPayments(userId: Int, limit: Int): Flow<List<PaymentModel>> {
+        return paymentDao.getLocalPayments(userId, limit).map { items ->
             items.map { it.toDomain() }
         }
     }
 
-    override suspend fun insertPayments(payments: List<PaymentModel>) {
-        return paymentDao.insertPayments(payments.map { it.toBD() })
+    override suspend fun insertLocalPayments(payments: List<PaymentModel>) {
+        return paymentDao.insertLocalPayments(payments.map { it.toBD() })
     }
 }

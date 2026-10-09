@@ -14,17 +14,17 @@ import com.yjotdev.login.data.local.entity.PaymentEntity
  */
 @Dao
 interface PaymentDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPayments(payments: List<PaymentEntity>)
-
-    @Query("DELETE FROM payment WHERE userId = :userId")
-    suspend fun deletePaymentsByUserId(userId: Int)
-
     @Query("""
         SELECT * FROM payment 
         WHERE userId = :userId
         ORDER BY id DESC 
         LIMIT :limit
     """)
-    fun getPaymentsByUserId(userId: Int, limit: Int): Flow<List<PaymentEntity>>
+    fun getLocalPayments(userId: Int, limit: Int): Flow<List<PaymentEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLocalPayments(payments: List<PaymentEntity>)
+
+    @Query("DELETE FROM payment WHERE userId = :userId")
+    suspend fun deleteLocalPayments(userId: Int)
 }

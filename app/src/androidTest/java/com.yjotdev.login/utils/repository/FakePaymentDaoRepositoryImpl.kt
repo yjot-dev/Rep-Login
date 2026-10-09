@@ -27,13 +27,13 @@ class FakePaymentDaoRepositoryImpl @Inject constructor()
         )
     )
 
-    override suspend fun insertPayments(payments: List<PaymentModel>) {
+    override suspend fun insertLocalPayments(payments: List<PaymentModel>) {
         if (!fakeData.containsAll(payments)) {
             fakeData = payments
         }
     }
 
-    override fun getPaymentsByUserId(userId: Int, limit: Int): Flow<List<PaymentModel>> {
+    override fun getLocalPayments(userId: Int, limit: Int): Flow<List<PaymentModel>> {
         return flow {
             val filtered = fakeData.filter {
                 it.userId == userId

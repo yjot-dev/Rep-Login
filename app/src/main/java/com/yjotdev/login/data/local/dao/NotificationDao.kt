@@ -14,17 +14,17 @@ import com.yjotdev.login.data.local.entity.NotificationEntity
  */
 @Dao
 interface NotificationDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNotifications(notifications: List<NotificationEntity>)
-
-    @Query("DELETE FROM notification WHERE userId = :userId")
-    suspend fun deleteNotificationsByUserId(userId: Int)
-
     @Query("""
         SELECT * FROM notification 
         WHERE userId = :userId 
         ORDER BY id DESC 
         LIMIT :limit
     """)
-    fun getNotificationsByUserId(userId: Int, limit: Int): Flow<List<NotificationEntity>>
+    fun getLocalNotifications(userId: Int, limit: Int): Flow<List<NotificationEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLocalNotifications(notifications: List<NotificationEntity>)
+
+    @Query("DELETE FROM notification WHERE userId = :userId")
+    suspend fun deleteLocalNotifications(userId: Int)
 }

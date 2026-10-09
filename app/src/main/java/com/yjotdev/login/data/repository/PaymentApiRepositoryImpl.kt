@@ -24,8 +24,8 @@ class PaymentApiRepositoryImpl @Inject constructor(
     private val paymentApi: PaymentApi
 ) : PaymentApiRepository {
 
-    override suspend fun selectPayments(userId: Int): Result<List<PaymentModel>> {
-        return safeApiCallForBody { paymentApi.selectPayments(userId) }
+    override suspend fun getRemotePayments(userId: Int): Result<List<PaymentModel>> {
+        return safeApiCallForBody { paymentApi.getRemotePayments(userId) }
             .mapSuccess { result -> result.map { it.toDomain() }}
     }
 

@@ -15,15 +15,12 @@ import com.yjotdev.login.data.local.entity.UserEntity
  */
 @Dao
 interface UserDao {
-    @Update
-    suspend fun updateLocalUser(user: UserEntity)
-
-    @Insert
-    suspend fun insertLocalUser(user: UserEntity)
-
-    @Delete
-    suspend fun deleteLocalUser(user: UserEntity)
-
     @Query("SELECT * FROM user LIMIT 1")
     fun getLocalUser(): Flow<UserEntity?>
+    @Insert
+    suspend fun insertLocalUser(user: UserEntity)
+    @Update
+    suspend fun updateLocalUser(user: UserEntity)
+    @Delete
+    suspend fun deleteLocalUser(user: UserEntity)
 }

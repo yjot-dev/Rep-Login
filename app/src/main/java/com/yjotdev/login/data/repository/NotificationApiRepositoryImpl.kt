@@ -24,8 +24,8 @@ class NotificationApiRepositoryImpl @Inject constructor(
     private val notificationApi: NotificationApi
 ) : NotificationApiRepository {
 
-    override suspend fun selectNotifications(userId: Int): Result<List<NotificationModel>> {
-        return safeApiCallForBody { notificationApi.selectNotifications(userId) }
+    override suspend fun getRemoteNotifications(userId: Int): Result<List<NotificationModel>> {
+        return safeApiCallForBody { notificationApi.getRemoteNotifications(userId) }
             .mapSuccess { result -> result.map { it.toDomain() }}
     }
 

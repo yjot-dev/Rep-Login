@@ -21,21 +21,21 @@ import com.yjotdev.login.domain.model.LoginModel
 import com.yjotdev.login.domain.model.RecoveryModel
 import com.yjotdev.login.domain.model.SendNotificationRequestModel
 import com.yjotdev.login.domain.model.ValidateModel
-import com.yjotdev.login.domain.usecase.notification.FindNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.GetRemoteNotificationsUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
-import com.yjotdev.login.domain.usecase.notification.GetNotificationsByUserIdUseCase
-import com.yjotdev.login.domain.usecase.notification.InsertNotificationsUseCase
-import com.yjotdev.login.domain.usecase.payment.FindPaymentsUseCase
+import com.yjotdev.login.domain.usecase.notification.GetLocalNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.InsertLocalNotificationsUseCase
+import com.yjotdev.login.domain.usecase.payment.GetRemotePaymentsUseCase
 import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
-import com.yjotdev.login.domain.usecase.payment.GetPaymentsByUserIdUseCase
-import com.yjotdev.login.domain.usecase.payment.InsertPaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.GetLocalPaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.InsertLocalPaymentsUseCase
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
 import com.yjotdev.login.domain.usecase.string.GetStringUseCase
-import com.yjotdev.login.domain.usecase.user.ChangePasswordUserUseCase
-import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
-import com.yjotdev.login.domain.usecase.user.FindUserUseCase
-import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
-import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
+import com.yjotdev.login.domain.usecase.user.SetPasswordRemoteUserUseCase
+import com.yjotdev.login.domain.usecase.user.DeleteRemoteUserUseCase
+import com.yjotdev.login.domain.usecase.user.GetRemoteUserUseCase
+import com.yjotdev.login.domain.usecase.user.InsertRemoteUserUseCase
+import com.yjotdev.login.domain.usecase.user.UpdateRemoteUserUseCase
 import com.yjotdev.login.domain.usecase.user.InsertLocalUserUseCase
 import com.yjotdev.login.domain.usecase.user.UpdateLocalUserUseCase
 import com.yjotdev.login.domain.usecase.user.DeleteLocalUserUseCase
@@ -46,23 +46,23 @@ import com.yjotdev.login.R
 @HiltViewModel
 class UiViewModel @Inject constructor(
     private val getStringUseCase: GetStringUseCase,
-    private val findUserUseCase: FindUserUseCase,
+    private val getRemoteUserUseCase: GetRemoteUserUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase,
-    private val insertUserUseCase: InsertUserUseCase,
+    private val insertRemoteUserUseCase: InsertRemoteUserUseCase,
     private val insertLocalUserUseCase: InsertLocalUserUseCase,
-    private val updateUserUseCase: UpdateUserUseCase,
+    private val updateRemoteUserUseCase: UpdateRemoteUserUseCase,
     private val updateLocalUserUseCase: UpdateLocalUserUseCase,
-    private val deleteUserUseCase: DeleteUserUseCase,
+    private val deleteRemoteUserUseCase: DeleteRemoteUserUseCase,
     private val deleteLocalUserUseCase: DeleteLocalUserUseCase,
-    private val changePasswordUserUseCase: ChangePasswordUserUseCase,
+    private val setPasswordRemoteUserUseCase: SetPasswordRemoteUserUseCase,
     private val sendEmailUseCase: SendEmailUseCase,
-    private val findPaymentsUseCase: FindPaymentsUseCase,
-    private val getPaymentsByUserIdUseCase: GetPaymentsByUserIdUseCase,
-    private val insertPaymentsUseCase: InsertPaymentsUseCase,
+    private val getRemotePaymentsUseCase: GetRemotePaymentsUseCase,
+    private val getLocalPaymentsUseCase: GetLocalPaymentsUseCase,
+    private val insertLocalPaymentsUseCase: InsertLocalPaymentsUseCase,
     private val validatePaymentUseCase: ValidatePaymentUseCase,
-    private val findNotificationsUseCase: FindNotificationsUseCase,
-    private val getNotificationsByUserIdUseCase: GetNotificationsByUserIdUseCase,
-    private val insertNotificationsUseCase: InsertNotificationsUseCase,
+    private val getRemoteNotificationsUseCase: GetRemoteNotificationsUseCase,
+    private val getLocalNotificationsUseCase: GetLocalNotificationsUseCase,
+    private val insertLocalNotificationsUseCase: InsertLocalNotificationsUseCase,
     private val sendNotificationUseCase: SendNotificationUseCase,
     private val getConfigUseCase: GetConfigUseCase
 ): ViewModel() {
@@ -114,18 +114,20 @@ class UiViewModel @Inject constructor(
         val login = LoginModel(nameOrEmail, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = findUserUseCase(login)) {
+            when (val result = getRemoteUserUseCase(login)) {
                 is Result.Success -> {
                     val user = result.data.copy(password = password)
                     insertLocalUserUseCase(user)
                     _uiState.update { it.copy(
                         user = user,
+                        isCompletedLogin = true,
                         isLoading = false
                     )}
                 }
                 is Result.Error -> {
                     _uiState.update { it.copy(
                         user = UserModel(),
+                        isCompletedLogin = false,
                         isLoading = false
                     )}
                     _eventChannel.send(UiEvent.ShowToast(
@@ -145,7 +147,7 @@ class UiViewModel @Inject constructor(
         val user = UserModel(0, name, email, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = insertUserUseCase(user)) {
+            when (val result = insertRemoteUserUseCase(user)) {
                 is Result.Success -> {
                     _uiState.update { it.copy(isLoading = false) }
                     _eventChannel.send(UiEvent.ShowToast(
@@ -172,7 +174,7 @@ class UiViewModel @Inject constructor(
         val user = UserModel(id, name, email, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = updateUserUseCase(id, user)) {
+            when (val result = updateRemoteUserUseCase(id, user)) {
                 is Result.Success -> {
                     updateLocalUserUseCase(user)
                     _uiState.update { it.copy(isLoading = false) }
@@ -199,7 +201,7 @@ class UiViewModel @Inject constructor(
         val id = uiState.value.user.id
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = deleteUserUseCase(id)) {
+            when (val result = deleteRemoteUserUseCase(id)) {
                 is Result.Success -> {
                     deleteLocalUserUseCase(uiState.value.user)
                     _uiState.update { it.copy(isLoading = false) }
@@ -258,7 +260,7 @@ class UiViewModel @Inject constructor(
         val recovery = RecoveryModel(email, password)
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            when (val result = changePasswordUserUseCase(recovery)) {
+            when (val result = setPasswordRemoteUserUseCase(recovery)) {
                 is Result.Success -> {
                     val user = uiState.value.user.copy(password = password)
                     updateLocalUserUseCase(user)
@@ -296,6 +298,7 @@ class UiViewModel @Inject constructor(
             when (val result = validatePaymentUseCase(validate)) {
                 is Result.Success -> {
                     executeSendNotification(date)
+                    syncPaymentsWithRemote(userId)
                     _uiState.update { it.copy(isLoading = false) }
                     _eventChannel.send(UiEvent.ShowToast(
                         getStringUseCase(R.string.toast_payment_success)
@@ -320,10 +323,10 @@ class UiViewModel @Inject constructor(
     fun getPaymentsOfUser(limit: Int = Int.MAX_VALUE) {
         viewModelScope.launch {
             val userId = uiState.value.user.id
-            getPaymentsByUserIdUseCase(userId, limit).collect { payments ->
+            getLocalPaymentsUseCase(userId, limit).collect { payments ->
                 _uiState.update { it.copy(payments = payments) }
                 if (payments.isEmpty()) {
-                    findPaymentsInRemoteBD(userId)
+                    syncPaymentsWithRemote(userId)
                 }
             }
         }
@@ -335,10 +338,10 @@ class UiViewModel @Inject constructor(
     fun getNotificationsOfUser(limit: Int = Int.MAX_VALUE) {
         viewModelScope.launch {
             val userId = uiState.value.user.id
-            getNotificationsByUserIdUseCase(userId, limit).collect { notifications ->
+            getLocalNotificationsUseCase(userId, limit).collect { notifications ->
                 _uiState.update { it.copy(notifications = notifications) }
                 if (notifications.isEmpty()) {
-                    findNotificationsInRemoteBD(userId)
+                    syncNotificationsWithRemote(userId)
                 }
             }
         }
@@ -358,7 +361,7 @@ class UiViewModel @Inject constructor(
         viewModelScope.launch {
             getLocalUserUseCase().collect { user ->
                 _uiState.update { it.copy(user = user) }
-                if (user != UserModel()) {
+                if (uiState.value.isCompletedLogin) {
                     _eventChannel.send(UiEvent.Navigate(
                         R.id.action_login_to_dashboard
                     ))
@@ -370,44 +373,34 @@ class UiViewModel @Inject constructor(
         }
     }
 
-    private fun findPaymentsInRemoteBD(userId: Int) {
+    private suspend fun syncPaymentsWithRemote(userId: Int) {
         _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            when (val result = findPaymentsUseCase(userId)) {
-                is Result.Success -> {
-                    insertPaymentsUseCase(result.data)
-                    _uiState.update { it.copy(isLoading = false)}
-                }
-                is Result.Error -> {
-                    _uiState.update { it.copy(
-                        payments = emptyList(),
-                        isLoading = false
-                    )}
-                    _eventChannel.send(UiEvent.ShowLog(
-                        result.exception.message!!
-                    ))
-                }
+        when (val result = getRemotePaymentsUseCase(userId)) {
+            is Result.Success -> {
+                insertLocalPaymentsUseCase(result.data)
+                _uiState.update { it.copy(isLoading = false) }
+            }
+            is Result.Error -> {
+                _uiState.update { it.copy(isLoading = false) }
+                _eventChannel.send(UiEvent.ShowLog(
+                    result.exception.message!!
+                ))
             }
         }
     }
 
-    private fun findNotificationsInRemoteBD(userId: Int) {
+    private suspend fun syncNotificationsWithRemote(userId: Int) {
         _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            when (val result = findNotificationsUseCase(userId)) {
-                is Result.Success -> {
-                    insertNotificationsUseCase(result.data)
-                    _uiState.update { it.copy(isLoading = false)}
-                }
-                is Result.Error -> {
-                    _uiState.update { it.copy(
-                        notifications = emptyList(),
-                        isLoading = false
-                    )}
-                    _eventChannel.send(UiEvent.ShowLog(
-                        result.exception.message!!
-                    ))
-                }
+        when (val result = getRemoteNotificationsUseCase(userId)) {
+            is Result.Success -> {
+                insertLocalNotificationsUseCase(result.data)
+                _uiState.update { it.copy(isLoading = false) }
+            }
+            is Result.Error -> {
+                _uiState.update { it.copy(isLoading = false) }
+                _eventChannel.send(UiEvent.ShowLog(
+                    result.exception.message!!
+                ))
             }
         }
     }
@@ -424,7 +417,9 @@ class UiViewModel @Inject constructor(
             date = date
         )
         when (val result = sendNotificationUseCase(body)) {
-            is Result.Success -> {}
+            is Result.Success -> {
+                syncNotificationsWithRemote(uiState.value.user.id)
+            }
             is Result.Error -> {
                 _eventChannel.send(UiEvent.ShowLog(
                     result.exception.message!!

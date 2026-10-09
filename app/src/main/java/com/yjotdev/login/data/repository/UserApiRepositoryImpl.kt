@@ -25,24 +25,24 @@ class UserApiRepositoryImpl @Inject constructor(
     private val userApi: UserApi
 ) : UserApiRepository {
 
-    override suspend fun findUser(login: LoginModel): Result<UserModel> {
-        return safeApiCallForBody { userApi.findUser(login.toDto()) }
+    override suspend fun getRemoteUser(login: LoginModel): Result<UserModel> {
+        return safeApiCallForBody { userApi.getRemoteUser(login.toDto()) }
             .mapSuccess { result -> result.toDomain() }
     }
 
-    override suspend fun changePasswordUser(recovery: RecoveryModel): Result<Unit> {
-        return safeApiCallForUnit { userApi.changePasswordUser(recovery.toDto()) }
+    override suspend fun setPasswordRemoteUser(recovery: RecoveryModel): Result<Unit> {
+        return safeApiCallForUnit { userApi.setPasswordRemoteUser(recovery.toDto()) }
     }
 
-    override suspend fun insertUser(user: UserModel): Result<Unit> {
-        return safeApiCallForUnit { userApi.insertUser(user.toDto()) }
+    override suspend fun insertRemoteUser(user: UserModel): Result<Unit> {
+        return safeApiCallForUnit { userApi.insertRemoteUser(user.toDto()) }
     }
 
-    override suspend fun updateUser(id: Int, user: UserModel): Result<Unit> {
-        return safeApiCallForUnit { userApi.updateUser(id, user.toDto()) }
+    override suspend fun updateRemoteUser(id: Int, user: UserModel): Result<Unit> {
+        return safeApiCallForUnit { userApi.updateRemoteUser(id, user.toDto()) }
     }
 
-    override suspend fun deleteUser(id: Int): Result<Unit> {
-        return safeApiCallForUnit { userApi.deleteUser(id) }
+    override suspend fun deleteRemoteUser(id: Int): Result<Unit> {
+        return safeApiCallForUnit { userApi.deleteRemoteUser(id) }
     }
 }

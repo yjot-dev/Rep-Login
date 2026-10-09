@@ -1,13 +1,14 @@
 package com.yjotdev.login.domain.usecase.payment
 
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import com.yjotdev.login.domain.model.PaymentModel
 import com.yjotdev.login.domain.repository.PaymentDaoRepository
 
-class InsertPaymentsUseCase @Inject constructor(
+class GetLocalPaymentsUseCase @Inject constructor(
     private val paymentDaoRepository: PaymentDaoRepository
 ) {
-    suspend operator fun invoke(payments: List<PaymentModel>) {
-        paymentDaoRepository.insertPayments(payments)
+    operator fun invoke(userId: Int, limit: Int): Flow<List<PaymentModel>> {
+        return paymentDaoRepository.getLocalPayments(userId, limit)
     }
 }

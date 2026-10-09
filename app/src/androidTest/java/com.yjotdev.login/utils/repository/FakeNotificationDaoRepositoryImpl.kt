@@ -25,13 +25,13 @@ class FakeNotificationDaoRepositoryImpl @Inject constructor()
         )
     )
 
-    override suspend fun insertNotifications(notifications: List<NotificationModel>) {
+    override suspend fun insertLocalNotifications(notifications: List<NotificationModel>) {
         if (!fakeData.containsAll(notifications)) {
             fakeData = notifications
         }
     }
 
-    override fun getNotificationsByUserId(userId: Int, limit: Int): Flow<List<NotificationModel>> {
+    override fun getLocalNotifications(userId: Int, limit: Int): Flow<List<NotificationModel>> {
         return flow {
             val filtered = fakeData.filter {
                 it.userId == userId

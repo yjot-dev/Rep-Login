@@ -33,24 +33,24 @@ import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.model.ValidateModel
 import com.yjotdev.login.domain.usecase.config.GetConfigUseCase
 import com.yjotdev.login.domain.usecase.email.SendEmailUseCase
-import com.yjotdev.login.domain.usecase.notification.FindNotificationsUseCase
-import com.yjotdev.login.domain.usecase.notification.GetNotificationsByUserIdUseCase
-import com.yjotdev.login.domain.usecase.notification.InsertNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.GetRemoteNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.GetLocalNotificationsUseCase
+import com.yjotdev.login.domain.usecase.notification.InsertLocalNotificationsUseCase
 import com.yjotdev.login.domain.usecase.notification.SendNotificationUseCase
-import com.yjotdev.login.domain.usecase.payment.FindPaymentsUseCase
-import com.yjotdev.login.domain.usecase.payment.GetPaymentsByUserIdUseCase
-import com.yjotdev.login.domain.usecase.payment.InsertPaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.GetRemotePaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.GetLocalPaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.InsertLocalPaymentsUseCase
 import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
 import com.yjotdev.login.domain.usecase.string.GetStringUseCase
-import com.yjotdev.login.domain.usecase.user.ChangePasswordUserUseCase
+import com.yjotdev.login.domain.usecase.user.SetPasswordRemoteUserUseCase
 import com.yjotdev.login.domain.usecase.user.DeleteLocalUserUseCase
-import com.yjotdev.login.domain.usecase.user.DeleteUserUseCase
-import com.yjotdev.login.domain.usecase.user.FindUserUseCase
+import com.yjotdev.login.domain.usecase.user.DeleteRemoteUserUseCase
+import com.yjotdev.login.domain.usecase.user.GetRemoteUserUseCase
 import com.yjotdev.login.domain.usecase.user.GetLocalUserUseCase
 import com.yjotdev.login.domain.usecase.user.InsertLocalUserUseCase
-import com.yjotdev.login.domain.usecase.user.InsertUserUseCase
+import com.yjotdev.login.domain.usecase.user.InsertRemoteUserUseCase
 import com.yjotdev.login.domain.usecase.user.UpdateLocalUserUseCase
-import com.yjotdev.login.domain.usecase.user.UpdateUserUseCase
+import com.yjotdev.login.domain.usecase.user.UpdateRemoteUserUseCase
 import com.yjotdev.login.presentation.mvvm.viewmodel.UiViewModel
 import com.yjotdev.login.presentation.navigation.UiEvent
 
@@ -61,55 +61,55 @@ class UiViewModelTest {
     private lateinit var getStringUseCase: GetStringUseCase
 
     @RelaxedMockK
-    private lateinit var findUserUseCase: FindUserUseCase
+    private lateinit var getRemoteUserUseCase: GetRemoteUserUseCase
 
     @RelaxedMockK
     private lateinit var getLocalUserUseCase: GetLocalUserUseCase
 
     @RelaxedMockK
-    private lateinit var insertUserUseCase: InsertUserUseCase
+    private lateinit var insertRemoteUserUseCase: InsertRemoteUserUseCase
 
     @RelaxedMockK
     private lateinit var insertLocalUserUseCase: InsertLocalUserUseCase
 
     @RelaxedMockK
-    private lateinit var updateUserUseCase: UpdateUserUseCase
+    private lateinit var updateRemoteUserUseCase: UpdateRemoteUserUseCase
 
     @RelaxedMockK
     private lateinit var updateLocalUserUseCase: UpdateLocalUserUseCase
 
     @RelaxedMockK
-    private lateinit var deleteUserUseCase: DeleteUserUseCase
+    private lateinit var deleteRemoteUserUseCase: DeleteRemoteUserUseCase
 
     @RelaxedMockK
     private lateinit var deleteLocalUserUseCase: DeleteLocalUserUseCase
 
     @RelaxedMockK
-    private lateinit var changePasswordUserUseCase: ChangePasswordUserUseCase
+    private lateinit var setPasswordRemoteUserUseCase: SetPasswordRemoteUserUseCase
 
     @RelaxedMockK
     private lateinit var sendEmailUseCase: SendEmailUseCase
 
     @RelaxedMockK
-    private lateinit var findPaymentsUseCase: FindPaymentsUseCase
+    private lateinit var getRemotePaymentsUseCase: GetRemotePaymentsUseCase
 
     @RelaxedMockK
-    private lateinit var getPaymentsByUserIdUseCase: GetPaymentsByUserIdUseCase
+    private lateinit var getLocalPaymentsUseCase: GetLocalPaymentsUseCase
 
     @RelaxedMockK
-    private lateinit var insertPaymentsUseCase: InsertPaymentsUseCase
+    private lateinit var insertLocalPaymentsUseCase: InsertLocalPaymentsUseCase
 
     @RelaxedMockK
     private lateinit var validatePaymentUseCase: ValidatePaymentUseCase
 
     @RelaxedMockK
-    private lateinit var findNotificationsUseCase: FindNotificationsUseCase
+    private lateinit var getRemoteNotificationsUseCase: GetRemoteNotificationsUseCase
 
     @RelaxedMockK
-    private lateinit var getNotificationsByUserIdUseCase: GetNotificationsByUserIdUseCase
+    private lateinit var getLocalNotificationsUseCase: GetLocalNotificationsUseCase
 
     @RelaxedMockK
-    private lateinit var insertNotificationsUseCase: InsertNotificationsUseCase
+    private lateinit var insertLocalNotificationsUseCase: InsertLocalNotificationsUseCase
 
     @RelaxedMockK
     private lateinit var sendNotificationUseCase: SendNotificationUseCase
@@ -126,23 +126,23 @@ class UiViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel = UiViewModel(
             getStringUseCase,
-            findUserUseCase,
+            getRemoteUserUseCase,
             getLocalUserUseCase,
-            insertUserUseCase,
+            insertRemoteUserUseCase,
             insertLocalUserUseCase,
-            updateUserUseCase,
+            updateRemoteUserUseCase,
             updateLocalUserUseCase,
-            deleteUserUseCase,
+            deleteRemoteUserUseCase,
             deleteLocalUserUseCase,
-            changePasswordUserUseCase,
+            setPasswordRemoteUserUseCase,
             sendEmailUseCase,
-            findPaymentsUseCase,
-            getPaymentsByUserIdUseCase,
-            insertPaymentsUseCase,
+            getRemotePaymentsUseCase,
+            getLocalPaymentsUseCase,
+            insertLocalPaymentsUseCase,
             validatePaymentUseCase,
-            findNotificationsUseCase,
-            getNotificationsByUserIdUseCase,
-            insertNotificationsUseCase,
+            getRemoteNotificationsUseCase,
+            getLocalNotificationsUseCase,
+            insertLocalNotificationsUseCase,
             sendNotificationUseCase,
             getConfigUseCase
         )
@@ -170,7 +170,7 @@ class UiViewModelTest {
             password = "password"
         )
         val localUserFlow = MutableStateFlow(UserModel())
-        coEvery { findUserUseCase(fakeLoginModel) } returns Result.Success(fakeUserRemote)
+        coEvery { getRemoteUserUseCase(fakeLoginModel) } returns Result.Success(fakeUserRemote)
         coEvery { insertLocalUserUseCase(fakeUserRemote) } answers {
             localUserFlow.value = fakeUserRemote
         }
@@ -182,7 +182,7 @@ class UiViewModelTest {
         // Then
         assertEquals(fakeUserRemote, viewModel.uiState.value.user)
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { findUserUseCase(fakeLoginModel) }
+        coVerify(exactly = 1) { getRemoteUserUseCase(fakeLoginModel) }
         coVerify(exactly = 1) { insertLocalUserUseCase(fakeUserRemote) }
     }
 
@@ -204,7 +204,7 @@ class UiViewModelTest {
         val exception = Exception("Invalid credentials")
         val toastMessage = "Login failed"
         every { getLocalUserUseCase() } returns flowOf(fakeUserLocal)
-        coEvery { findUserUseCase(fakeLoginModel) } returns Result.Error(exception)
+        coEvery { getRemoteUserUseCase(fakeLoginModel) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_login_error) } returns toastMessage
 
         // When
@@ -221,7 +221,7 @@ class UiViewModelTest {
         // Then
         assertEquals(UserModel(), viewModel.uiState.value.user)
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { findUserUseCase(fakeLoginModel) }
+        coVerify(exactly = 1) { getRemoteUserUseCase(fakeLoginModel) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_login_error) }
     }
 
@@ -237,7 +237,7 @@ class UiViewModelTest {
             isInWhiteList = false
         )
         val successMessage = "User inserted"
-        coEvery { insertUserUseCase(userToInsert) } returns Result.Success(Unit)
+        coEvery { insertRemoteUserUseCase(userToInsert) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_insert_success) } returns successMessage
 
         // When
@@ -252,7 +252,7 @@ class UiViewModelTest {
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { insertUserUseCase(userToInsert) }
+        coVerify(exactly = 1) { insertRemoteUserUseCase(userToInsert) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_insert_success) }
     }
 
@@ -269,7 +269,7 @@ class UiViewModelTest {
         )
         val exception = Exception("Database error")
         val toastMessage = "Insert error"
-        coEvery { insertUserUseCase(userToInsert) } returns Result.Error(exception)
+        coEvery { insertRemoteUserUseCase(userToInsert) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_insert_error) } returns toastMessage
 
         // When
@@ -285,7 +285,7 @@ class UiViewModelTest {
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { insertUserUseCase(userToInsert) }
+        coVerify(exactly = 1) { insertRemoteUserUseCase(userToInsert) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_insert_error) }
     }
 
@@ -310,7 +310,7 @@ class UiViewModelTest {
         )
         val successMessage = "User updated"
         viewModel.setUser(initialUser)
-        coEvery { updateUserUseCase(1, updatedUser) } returns Result.Success(Unit)
+        coEvery { updateRemoteUserUseCase(1, updatedUser) } returns Result.Success(Unit)
         coEvery { updateLocalUserUseCase(updatedUser) } returns Unit
         every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
@@ -326,7 +326,7 @@ class UiViewModelTest {
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { updateUserUseCase(1, updatedUser) }
+        coVerify(exactly = 1) { updateRemoteUserUseCase(1, updatedUser) }
         coVerify(exactly = 1) { updateLocalUserUseCase(updatedUser) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_success) }
     }
@@ -353,7 +353,7 @@ class UiViewModelTest {
         val exception = Exception("Update failed")
         val toastMessage = "Update error"
         viewModel.setUser(initialUser)
-        coEvery { updateUserUseCase(1, updatedUser) } returns Result.Error(exception)
+        coEvery { updateRemoteUserUseCase(1, updatedUser) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_update_error) } returns toastMessage
 
         // When
@@ -369,7 +369,7 @@ class UiViewModelTest {
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { updateUserUseCase(1, updatedUser) }
+        coVerify(exactly = 1) { updateRemoteUserUseCase(1, updatedUser) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_error) }
     }
 
@@ -386,7 +386,7 @@ class UiViewModelTest {
         )
         val successMessage = "User deleted"
         viewModel.setUser(initialUser)
-        coEvery { deleteUserUseCase(1) } returns Result.Success(Unit)
+        coEvery { deleteRemoteUserUseCase(1) } returns Result.Success(Unit)
         every { getStringUseCase(R.string.toast_delete_success) } returns successMessage
 
         // When
@@ -401,7 +401,7 @@ class UiViewModelTest {
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { deleteUserUseCase(1) }
+        coVerify(exactly = 1) { deleteRemoteUserUseCase(1) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_delete_success) }
     }
 
@@ -419,7 +419,7 @@ class UiViewModelTest {
         val exception = Exception("Deletion failed")
         val toastMessage = "Delete error"
         viewModel.setUser(initialUser)
-        coEvery { deleteUserUseCase(1) } returns Result.Error(exception)
+        coEvery { deleteRemoteUserUseCase(1) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_delete_error) } returns toastMessage
 
         // When
@@ -435,7 +435,7 @@ class UiViewModelTest {
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { deleteUserUseCase(1) }
+        coVerify(exactly = 1) { deleteRemoteUserUseCase(1) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_delete_error) }
     }
 
@@ -511,7 +511,7 @@ class UiViewModelTest {
         )
         val successMessage = "Password updated"
         viewModel.setUser(initialUser)
-        coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Success(Unit)
+        coEvery { setPasswordRemoteUserUseCase(recoveryModel) } returns Result.Success(Unit)
         coEvery { updateLocalUserUseCase(updatedUser) } returns Unit
         every { getStringUseCase(R.string.toast_update_success) } returns successMessage
 
@@ -527,7 +527,7 @@ class UiViewModelTest {
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
+        coVerify(exactly = 1) { setPasswordRemoteUserUseCase(recoveryModel) }
         coVerify(exactly = 1) { updateLocalUserUseCase(updatedUser) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_success) }
     }
@@ -541,7 +541,7 @@ class UiViewModelTest {
         )
         val exception = Exception("Password change error")
         val toastMessage = "Update error"
-        coEvery { changePasswordUserUseCase(recoveryModel) } returns Result.Error(exception)
+        coEvery { setPasswordRemoteUserUseCase(recoveryModel) } returns Result.Error(exception)
         every { getStringUseCase(R.string.toast_update_error) } returns toastMessage
 
         // When
@@ -557,7 +557,7 @@ class UiViewModelTest {
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { changePasswordUserUseCase(recoveryModel) }
+        coVerify(exactly = 1) { setPasswordRemoteUserUseCase(recoveryModel) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_update_error) }
     }
 
@@ -584,9 +584,9 @@ class UiViewModelTest {
             )
         )
         val paymentsFlow = MutableStateFlow<List<PaymentModel>>(emptyList())
-        every { getPaymentsByUserIdUseCase(1, Int.MAX_VALUE) } returns paymentsFlow
-        coEvery { findPaymentsUseCase(1) } returns Result.Success(fakePayments)
-        coEvery { insertPaymentsUseCase(fakePayments) } answers {
+        every { getLocalPaymentsUseCase(1, Int.MAX_VALUE) } returns paymentsFlow
+        coEvery { getRemotePaymentsUseCase(1) } returns Result.Success(fakePayments)
+        coEvery { insertLocalPaymentsUseCase(fakePayments) } answers {
             paymentsFlow.value = fakePayments
         }
 
@@ -597,8 +597,8 @@ class UiViewModelTest {
         // Then
         assertEquals(fakePayments, viewModel.uiState.value.payments)
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { findPaymentsUseCase(1) }
-        coVerify(exactly = 1) { insertPaymentsUseCase(fakePayments) }
+        coVerify(exactly = 1) { getRemotePaymentsUseCase(1) }
+        coVerify(exactly = 1) { insertLocalPaymentsUseCase(fakePayments) }
     }
 
     @Test
@@ -614,8 +614,8 @@ class UiViewModelTest {
         )
         viewModel.setUser(initialUser)
         val exception = Exception("Payments fetch error")
-        every { getPaymentsByUserIdUseCase(1, Int.MAX_VALUE) } returns flowOf(emptyList())
-        coEvery { findPaymentsUseCase(1) } returns Result.Error(exception)
+        every { getLocalPaymentsUseCase(1, Int.MAX_VALUE) } returns flowOf(emptyList())
+        coEvery { getRemotePaymentsUseCase(1) } returns Result.Error(exception)
 
         // When
         val eventJob = launch {
@@ -630,7 +630,7 @@ class UiViewModelTest {
         // Then
         assertTrue(viewModel.uiState.value.payments.isEmpty())
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { findPaymentsUseCase(1) }
+        coVerify(exactly = 1) { getRemotePaymentsUseCase(1) }
     }
 
     @Test
@@ -659,6 +659,8 @@ class UiViewModelTest {
         every { getStringUseCase(R.string.send_notification_title) } returns "Title"
         every { getStringUseCase(R.string.send_notification_body, "user") } returns "Body user"
         coEvery { sendNotificationUseCase(any()) } returns Result.Success(Unit)
+        coEvery { getRemoteNotificationsUseCase(1) } returns Result.Success(emptyList())
+        coEvery { getRemotePaymentsUseCase(1) } returns Result.Success(emptyList())
         every { getStringUseCase(R.string.toast_payment_success) } returns successMessage
 
         // When
@@ -682,6 +684,8 @@ class UiViewModelTest {
         assertFalse(viewModel.uiState.value.isLoading)
         coVerify(exactly = 1) { validatePaymentUseCase(validateModel) }
         coVerify(exactly = 1) { sendNotificationUseCase(any()) }
+        coVerify(exactly = 1) { getRemoteNotificationsUseCase(1) }
+        coVerify(exactly = 1) { getRemotePaymentsUseCase(1) }
         coVerify(exactly = 1) { getStringUseCase(R.string.toast_payment_success) }
     }
 
@@ -755,9 +759,9 @@ class UiViewModelTest {
             )
         )
         val notificationsFlow = MutableStateFlow<List<NotificationModel>>(emptyList())
-        every { getNotificationsByUserIdUseCase(1, Int.MAX_VALUE) } returns notificationsFlow
-        coEvery { findNotificationsUseCase(1) } returns Result.Success(fakeNotifications)
-        coEvery { insertNotificationsUseCase(fakeNotifications) } answers {
+        every { getLocalNotificationsUseCase(1, Int.MAX_VALUE) } returns notificationsFlow
+        coEvery { getRemoteNotificationsUseCase(1) } returns Result.Success(fakeNotifications)
+        coEvery { insertLocalNotificationsUseCase(fakeNotifications) } answers {
             notificationsFlow.value = fakeNotifications
         }
 
@@ -768,8 +772,8 @@ class UiViewModelTest {
         // Then
         assertEquals(fakeNotifications, viewModel.uiState.value.notifications)
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { findNotificationsUseCase(1) }
-        coVerify(exactly = 1) { insertNotificationsUseCase(fakeNotifications) }
+        coVerify(exactly = 1) { getRemoteNotificationsUseCase(1) }
+        coVerify(exactly = 1) { insertLocalNotificationsUseCase(fakeNotifications) }
     }
 
     @Test
@@ -785,8 +789,8 @@ class UiViewModelTest {
         )
         viewModel.setUser(initialUser)
         val exception = Exception("Notifications error")
-        every { getNotificationsByUserIdUseCase(1, Int.MAX_VALUE) } returns flowOf(emptyList())
-        coEvery { findNotificationsUseCase(1) } returns Result.Error(exception)
+        every { getLocalNotificationsUseCase(1, Int.MAX_VALUE) } returns flowOf(emptyList())
+        coEvery { getRemoteNotificationsUseCase(1) } returns Result.Error(exception)
 
         // When
         val eventJob = launch {
@@ -801,7 +805,7 @@ class UiViewModelTest {
         // Then
         assertTrue(viewModel.uiState.value.notifications.isEmpty())
         assertFalse(viewModel.uiState.value.isLoading)
-        coVerify(exactly = 1) { findNotificationsUseCase(1) }
+        coVerify(exactly = 1) { getRemoteNotificationsUseCase(1) }
     }
 
     @Test
@@ -827,6 +831,7 @@ class UiViewModelTest {
         every { getStringUseCase(R.string.send_notification_title) } returns "Title"
         every { getStringUseCase(R.string.send_notification_body, "user") } returns "Body user"
         coEvery { sendNotificationUseCase(requestModel) } returns Result.Success(Unit)
+        coEvery { getRemoteNotificationsUseCase(1) } returns Result.Success(emptyList())
 
         // When
         viewModel.sendNotification("2024-01-01")

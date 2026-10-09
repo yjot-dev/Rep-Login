@@ -9,5 +9,6 @@ data class UiState(
     val user: UserModel = UserModel(),
     val payments: List<PaymentModel> = emptyList(),
     val notifications: List<NotificationModel> = emptyList(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isCompletedLogin: Boolean = false
 )

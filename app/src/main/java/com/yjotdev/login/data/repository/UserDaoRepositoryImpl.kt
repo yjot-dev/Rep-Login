@@ -28,8 +28,8 @@ class UserDaoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteLocalUser(user: UserModel) {
-        paymentDao.deletePaymentsByUserId(user.id)
-        notificationDao.deleteNotificationsByUserId(user.id)
+        paymentDao.deleteLocalPayments(user.id)
+        notificationDao.deleteLocalNotifications(user.id)
         return userDao.deleteLocalUser(user.toBD())
     }
 

@@ -11,7 +11,7 @@ import com.yjotdev.login.domain.repository.UserApiRepository
 @Singleton
 class FakeUserApiRepositoryImpl @Inject constructor() : UserApiRepository {
 
-    override suspend fun findUser(login: LoginModel): Result<UserModel> {
+    override suspend fun getRemoteUser(login: LoginModel): Result<UserModel> {
         return if (login != LoginModel()) {
             Result.Success(
                 UserModel(
@@ -26,7 +26,7 @@ class FakeUserApiRepositoryImpl @Inject constructor() : UserApiRepository {
         }
     }
 
-    override suspend fun changePasswordUser(recovery: RecoveryModel): Result<Unit> {
+    override suspend fun setPasswordRemoteUser(recovery: RecoveryModel): Result<Unit> {
         return if (recovery != RecoveryModel()) {
             Result.Success(Unit)
         } else {
@@ -34,7 +34,7 @@ class FakeUserApiRepositoryImpl @Inject constructor() : UserApiRepository {
         }
     }
 
-    override suspend fun insertUser(user: UserModel): Result<Unit> {
+    override suspend fun insertRemoteUser(user: UserModel): Result<Unit> {
         return if (user != UserModel()) {
             Result.Success(Unit)
         } else {
@@ -42,7 +42,7 @@ class FakeUserApiRepositoryImpl @Inject constructor() : UserApiRepository {
         }
     }
 
-    override suspend fun updateUser(id: Int, user: UserModel): Result<Unit> {
+    override suspend fun updateRemoteUser(id: Int, user: UserModel): Result<Unit> {
         return if (user != UserModel()) {
             Result.Success(Unit)
         } else {
@@ -50,7 +50,7 @@ class FakeUserApiRepositoryImpl @Inject constructor() : UserApiRepository {
         }
     }
 
-    override suspend fun deleteUser(id: Int): Result<Unit> {
+    override suspend fun deleteRemoteUser(id: Int): Result<Unit> {
         return if (id != 0) {
             Result.Success(Unit)
         } else {

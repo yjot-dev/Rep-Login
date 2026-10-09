@@ -14,7 +14,7 @@ interface NotificationApiRepository {
      * Busca las notificaciones del usuario
      * @return Result<NotificationModel> que contiene el usuario si se encuentra, o un error.
      */
-    suspend fun selectNotifications(userId: Int): Result<List<NotificationModel>>
+    suspend fun getRemoteNotifications(userId: Int): Result<List<NotificationModel>>
 
     /**
      * Envia la notificacion al usuario

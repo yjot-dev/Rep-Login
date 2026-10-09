@@ -14,7 +14,7 @@ import com.yjotdev.login.data.remote.dto.SendNotificationRequestDto
  */
 interface NotificationApi {
     @GET("notifications")
-    suspend fun selectNotifications(
+    suspend fun getRemoteNotifications(
         @Query("userId") userId: Int,
     ): Response<List<NotificationDto>>
 

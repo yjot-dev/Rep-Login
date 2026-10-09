@@ -5,11 +5,11 @@ import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.UserModel
 import com.yjotdev.login.domain.repository.UserApiRepository
 
-class UpdateUserUseCase @Inject constructor(
+class InsertRemoteUserUseCase @Inject constructor(
     private val userApiRepository: UserApiRepository
 ) {
-    /** Actualizar usuario mediante caso de uso **/
-    suspend operator fun invoke(id: Int, user: UserModel): Result<Unit> {
-        return userApiRepository.updateUser(id, user)
+    /** Insertar usuario mediante caso de uso **/
+    suspend operator fun invoke(user: UserModel): Result<Unit> {
+        return userApiRepository.insertRemoteUser(user)
     }
 }

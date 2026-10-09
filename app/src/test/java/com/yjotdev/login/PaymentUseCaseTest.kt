@@ -12,7 +12,7 @@ import com.yjotdev.login.domain.core.Result
 import com.yjotdev.login.domain.model.PaymentModel
 import com.yjotdev.login.domain.model.ValidateModel
 import com.yjotdev.login.domain.repository.PaymentApiRepository
-import com.yjotdev.login.domain.usecase.payment.FindPaymentsUseCase
+import com.yjotdev.login.domain.usecase.payment.GetRemotePaymentsUseCase
 import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
 
 /**
@@ -21,13 +21,13 @@ import com.yjotdev.login.domain.usecase.payment.ValidatePaymentUseCase
 class PaymentUseCaseTest {
 
     private lateinit var paymentApiRepository: PaymentApiRepository
-    private lateinit var findPaymentsUseCase: FindPaymentsUseCase
+    private lateinit var getRemotePaymentsUseCase: GetRemotePaymentsUseCase
     private lateinit var validatePaymentUseCase: ValidatePaymentUseCase
 
     @Before
     fun setUp() {
         paymentApiRepository = mockk()
-        findPaymentsUseCase = FindPaymentsUseCase(paymentApiRepository)
+        getRemotePaymentsUseCase = GetRemotePaymentsUseCase(paymentApiRepository)
         validatePaymentUseCase = ValidatePaymentUseCase(paymentApiRepository)
     }
 
@@ -36,15 +36,15 @@ class PaymentUseCaseTest {
         // Given
         val userId = 1
         val fakePayments = listOf(PaymentModel(id = 100, amount = 50.0f, money = "USD"))
-        coEvery { paymentApiRepository.selectPayments(userId) } returns Result.Success(fakePayments)
+        coEvery { paymentApiRepository.getRemotePayments(userId) } returns Result.Success(fakePayments)
 
         // When
-        val result = findPaymentsUseCase(userId)
+        val result = getRemotePaymentsUseCase(userId)
 
         // Then
         assertTrue(result is Result.Success)
         assertEquals(fakePayments, (result as Result.Success).data)
-        coVerify(exactly = 1) { paymentApiRepository.selectPayments(userId) }
+        coVerify(exactly = 1) { paymentApiRepository.getRemotePayments(userId) }
     }
 
     @Test
@@ -52,15 +52,15 @@ class PaymentUseCaseTest {
         // Given
         val userId = 1
         val exception = Exception("Error al obtener historial de pagos")
-        coEvery { paymentApiRepository.selectPayments(userId) } returns Result.Error(exception)
+        coEvery { paymentApiRepository.getRemotePayments(userId) } returns Result.Error(exception)
 
         // When
-        val result = findPaymentsUseCase(userId)
+        val result = getRemotePaymentsUseCase(userId)
 
         // Then
         assertTrue(result is Result.Error)
         assertEquals(exception, (result as Result.Error).exception)
-        coVerify(exactly = 1) { paymentApiRepository.selectPayments(userId) }
+        coVerify(exactly = 1) { paymentApiRepository.getRemotePayments(userId) }
     }
 
     @Test
