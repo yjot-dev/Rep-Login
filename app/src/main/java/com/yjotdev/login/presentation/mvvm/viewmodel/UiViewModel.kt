@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlin.random.Random
 import com.yjotdev.login.presentation.mvvm.state.UiState
 import com.yjotdev.login.presentation.navigation.UiEvent
@@ -72,7 +73,10 @@ class UiViewModel @Inject constructor(
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    init { loadLocalUser() }
+    init {
+        checkExistingUser()
+        observerFlowLocalUser()
+    }
 
     override fun onCleared() {
         cleanState()
@@ -119,14 +123,12 @@ class UiViewModel @Inject constructor(
                     val user = result.data.copy(password = password)
                     insertLocalUserUseCase(user)
                     _uiState.update { it.copy(
-                        user = user,
                         isCompletedLogin = true,
                         isLoading = false
                     )}
                 }
                 is Result.Error -> {
                     _uiState.update { it.copy(
-                        user = UserModel(),
                         isCompletedLogin = false,
                         isLoading = false
                     )}
@@ -357,11 +359,24 @@ class UiViewModel @Inject constructor(
         }
     }
 
-    private fun loadLocalUser() {
+    private fun checkExistingUser() {
+        viewModelScope.launch {
+            val user = getLocalUserUseCase().firstOrNull()
+            if (user != null && user != UserModel()) {
+                _eventChannel.send(UiEvent.Navigate(
+                    R.id.action_login_to_dashboard
+                ))
+            }
+        }
+    }
+
+    private fun observerFlowLocalUser() {
         viewModelScope.launch {
             getLocalUserUseCase().collect { user ->
                 _uiState.update { it.copy(user = user) }
-                if (uiState.value.isCompletedLogin) {
+                // Solo navega en login inicial
+                if (uiState.value.user != UserModel() && uiState.value.isCompletedLogin) {
+                    _uiState.update { it.copy(isCompletedLogin = false) }
                     _eventChannel.send(UiEvent.Navigate(
                         R.id.action_login_to_dashboard
                     ))

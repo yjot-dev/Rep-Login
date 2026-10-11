@@ -119,11 +119,14 @@ class UiViewModelTest {
 
     private lateinit var viewModel: UiViewModel
     private val testDispatcher = StandardTestDispatcher()
+    private var localUserFlow = MutableStateFlow(UserModel())
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         Dispatchers.setMain(testDispatcher)
+        localUserFlow = MutableStateFlow(UserModel())
+        every { getLocalUserUseCase() } returns localUserFlow
         viewModel = UiViewModel(
             getStringUseCase,
             getRemoteUserUseCase,
@@ -169,21 +172,30 @@ class UiViewModelTest {
             name = "testUser",
             password = "password"
         )
-        val localUserFlow = MutableStateFlow(UserModel())
+        val successMessage = "Login successful"
         coEvery { getRemoteUserUseCase(fakeLoginModel) } returns Result.Success(fakeUserRemote)
         coEvery { insertLocalUserUseCase(fakeUserRemote) } answers {
             localUserFlow.value = fakeUserRemote
         }
+        every { getStringUseCase(R.string.toast_login_success) } returns successMessage
 
         // When
+        val eventJob = launch {
+            viewModel.eventChannel.test {
+                assertEquals(UiEvent.Navigate(R.id.action_login_to_dashboard), awaitItem())
+                assertEquals(UiEvent.ShowToast(successMessage), awaitItem())
+            }
+        }
         viewModel.loginUser("testUser", "password")
         advanceUntilIdle()
+        eventJob.cancel()
 
         // Then
         assertEquals(fakeUserRemote, viewModel.uiState.value.user)
         assertFalse(viewModel.uiState.value.isLoading)
         coVerify(exactly = 1) { getRemoteUserUseCase(fakeLoginModel) }
         coVerify(exactly = 1) { insertLocalUserUseCase(fakeUserRemote) }
+        coVerify(exactly = 1) { getStringUseCase(R.string.toast_login_success) }
     }
 
     @Test
