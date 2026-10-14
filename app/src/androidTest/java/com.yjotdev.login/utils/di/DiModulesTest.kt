@@ -36,55 +36,55 @@ abstract class DiModulesTest {
     // --- BINDINGS (Abstracciones) ---
     @Binds
     @Singleton
-    abstract fun bindUserApiRepository(
+    abstract fun bindFakeUserApiRepository(
         impl: FakeUserApiRepositoryImpl
     ): UserApiRepository
 
     @Binds
     @Singleton
-    abstract fun bindUserDaoRepository(
+    abstract fun bindFakeUserDaoRepository(
         impl: FakeUserDaoRepositoryImpl
     ): UserDaoRepository
 
     @Binds
     @Singleton
-    abstract fun bindEmailApiRepository(
+    abstract fun bindFakeEmailApiRepository(
         impl: FakeEmailApiRepositoryImpl
     ): EmailApiRepository
 
     @Binds
     @Singleton
-    abstract fun bindNotificationApiRepository(
+    abstract fun bindFakeNotificationApiRepository(
         impl: FakeNotificationApiRepositoryImpl
     ): NotificationApiRepository
 
     @Binds
     @Singleton
-    abstract fun bindNotificationDaoRepository(
+    abstract fun bindFakeNotificationDaoRepository(
         impl: FakeNotificationDaoRepositoryImpl
     ): NotificationDaoRepository
 
     @Binds
     @Singleton
-    abstract fun bindPaymentApiRepository(
+    abstract fun bindFakePaymentApiRepository(
         impl: FakePaymentApiRepositoryImpl
     ): PaymentApiRepository
 
     @Binds
     @Singleton
-    abstract fun bindPaymentDaoRepository(
+    abstract fun bindFakePaymentDaoRepository(
         impl: FakePaymentDaoRepositoryImpl
     ): PaymentDaoRepository
 
     @Binds
     @Singleton
-    abstract fun bindStringRepository(
+    abstract fun bindFakeStringRepository(
         impl: FakeStringRepositoryImpl
     ): StringRepository
 
     @Binds
     @Singleton
-    abstract fun bindConfigRepository(
+    abstract fun bindFakeConfigRepository(
         impl: FakeConfigRepositoryImpl
     ): ConfigRepository
 
